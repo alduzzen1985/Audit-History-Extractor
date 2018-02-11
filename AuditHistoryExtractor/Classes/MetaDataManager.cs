@@ -34,7 +34,6 @@ namespace AuditHistoryExtractor.AppCode
             MetadataFilterExpression EntityFilter = new MetadataFilterExpression(LogicalOperator.And);
             //EntityFilter.Conditions.Add(new MetadataConditionExpression("IsAuditEnabled", MetadataConditionOperator.Equals, true));
             EntityFilter.Conditions.Add(new MetadataConditionExpression("LogicalName", MetadataConditionOperator.Equals, entityLogicalName));
-
             EntityQueryExpression entityQueryExpression = new EntityQueryExpression()
             {
                 Criteria = EntityFilter

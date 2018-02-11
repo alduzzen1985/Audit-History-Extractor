@@ -1,7 +1,10 @@
-﻿using Microsoft.Crm.Sdk.Messages;
+﻿using AuditHistoryExtractor.Classes;
+using CsvHelper;
+using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,27 +13,28 @@ namespace AuditHistoryExtractor.AppCode
 {
     public class AuditHistoryManager
     {
-        private StringBuilder csvFile;
+        private const string ErrorMessageUnableToWrite = "Impossible write the file. Be sure that the file isn't used";
+
+        CsvWriter csvWriter;
         private IOrganizationService _service;
-        private string separator;
+        private string delimiter;
+        private List<AuditHistoryRecord> lsAuditHistoryRecords;
 
-
-        public AuditHistoryManager(IOrganizationService service, string identificatorField, string separator)
+        public AuditHistoryManager(IOrganizationService service, string identificatorField, string delimiter)
         {
-            csvFile = new StringBuilder();
-            this.separator = separator;
-            csvFile.AppendFormat("Date§Action§System User§{0}§Operation§OldValue§NewValue\n", identificatorField).Replace("§", separator);
+            lsAuditHistoryRecords = new List<AuditHistoryRecord>();
+            this.delimiter = delimiter;
             _service = service;
         }
 
         /// <summary>
-        /// Write a line in the file
+        /// Extract the audit history for the record
         /// </summary>
         /// <param name="entityID">ID of the Account</param>
         /// <param name="identificatorField">Identificator of the Row</param>
         /// <param name="attributeName">Name of the attribute to retrieve for Audit History</param>
         /// <param name="fileName">File to write</param>
-        public void WriteFileAuditHistory(Guid entityID, string entityLogicalName, string identificatorField, string attributeName, string fileName)
+        public void ExtractAuditHistoryForRecord(Guid entityID, string entityLogicalName, string identificatorField, string attributeName)
         {
 
             var attributeChangeHistoryRequest = new RetrieveAttributeChangeHistoryRequest
@@ -51,28 +55,23 @@ namespace AuditHistoryExtractor.AppCode
 
             foreach (var detail in details.AuditDetails)
             {
-                GetLineForCSV(detail, identificatorField);
+                GetRecordChanges(detail, identificatorField);
             }
-            try
-            {
-                System.IO.File.WriteAllText(fileName, csvFile.ToString());
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Impossible write the file. Be sure that the file isn't used");
-            }
+
         }
 
 
         /// <summary>
-        /// Write a line in the file
+        /// Get the record for the Audit History
         /// </summary>
         /// <param name="detail">Audit row retrieved</param>
         /// <param name="identificatorField">Account number</param>
-        private void GetLineForCSV(AuditDetail detail, string identificatorField)
+        private void GetRecordChanges(AuditDetail detail, string identificatorField)
         {
-            Audit record = (Audit)detail.AuditRecord;
-            string date = record.CreatedOn.Value.ToLocalTime().ToString();
+
+
+            Entity record = (Entity)detail.AuditRecord;
+            string date = record.GetAttributeValue<DateTime>("createdon").ToLocalTime().ToString();
             string action = record.FormattedValues["action"];
             string operation = record.FormattedValues["operation"];
             string user = (record["userid"] as EntityReference).Name;
@@ -111,8 +110,17 @@ namespace AuditHistoryExtractor.AppCode
                     newValueRef = attributeDetail.NewValue[attribute.Key] as EntityReference;
 
 
-                    csvFile.AppendFormat("{0}§{1}§{2}§{3}§{4}§{5}§{6}\n", date, action, user, identificatorField, operation, GetValueForCsv(oldValue), GetValueForCsv(newValue)).Replace("§", separator);
-                    Console.WriteLine("Attribute: {0}, old value: {1}, new value: {2}", attribute.Key, GetValueForCsv(oldValue), GetValueForCsv(newValue));
+                    lsAuditHistoryRecords.Add(new AuditHistoryRecord()
+                    {
+                        DateOperation = date,
+                        Action = action,
+                        SystemUser = user,
+                        RecordIdentificator = identificatorField,
+                        Operation = operation,
+                        NewValue = newValue,
+                        OldValue = oldValue
+                    });
+
                 }
 
                 foreach (KeyValuePair<String, object> attribute in attributeDetail.OldValue.Attributes)
@@ -128,8 +136,18 @@ namespace AuditHistoryExtractor.AppCode
                         if (isOldValueAnEntityReference) { oldValue = GetValueEntityReference(attributeDetail.OldValue[attribute.Key] as EntityReference); }
                         else { oldValue = attributeDetail.OldValue[attribute.Key].ToString(); }
 
-                        csvFile.AppendFormat("{0}§{1}§{2}§{3}§{4}§{5}§{6}\n", date, action, user, identificatorField, operation, GetValueForCsv(oldValue), GetValueForCsv(newValue)).Replace("§", separator);
-                        Console.WriteLine("Attribute: {0}, old value: {1}, new value: {2}", attribute.Key, GetValueForCsv(oldValue), GetValueForCsv(newValue));
+
+
+                        lsAuditHistoryRecords.Add(new AuditHistoryRecord()
+                        {
+                            DateOperation = date,
+                            Action = action,
+                            SystemUser = user,
+                            RecordIdentificator = identificatorField,
+                            Operation = operation,
+                            NewValue = newValue,
+                            OldValue = oldValue
+                        });
                     }
                 }
             }
@@ -148,5 +166,24 @@ namespace AuditHistoryExtractor.AppCode
             else return eRef.Name;
         }
 
+
+        public void WriteFile(string fileName)
+        {
+            try
+            {
+                using (TextWriter writer = new StreamWriter(fileName))
+                {
+                    csvWriter = new CsvWriter(writer);
+                    csvWriter.Configuration.Delimiter = delimiter;
+                    csvWriter.Configuration.QuoteAllFields = true;
+                    csvWriter.Configuration.RegisterClassMap(new AuditHistoryRecordMap());
+                    csvWriter.WriteRecords(lsAuditHistoryRecords); // where values implements IEnumerable
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ErrorMessageUnableToWrite);
+            }
+        }
     }
 }

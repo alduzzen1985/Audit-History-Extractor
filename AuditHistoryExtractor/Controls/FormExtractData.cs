@@ -14,6 +14,9 @@ namespace AuditHistoryExtractor.Controls
 {
     public partial class FormExtractData : Form
     {
+        private const string MessageAuditHistoryExtracted = "Audit History extracted successfully";
+        private const string TitleExportSuccess = "Export success";
+
         #region Variables
         IOrganizationService Service;
         public event EventHandler<EventArgs> Canceled;
@@ -63,7 +66,7 @@ namespace AuditHistoryExtractor.Controls
                 }
                 try
                 {
-                    auditHistoryManager.WriteFileAuditHistory(entity.Id, entity.LogicalName, entity.Attributes[identificator].ToString(), fieldToExtract, fileName);
+                    auditHistoryManager.ExtractAuditHistoryForRecord(entity.Id, entity.LogicalName, entity.Attributes[identificator].ToString(), fieldToExtract);
                     BackgroundWorkerExtractAuditHistory.ReportProgress(1, entity[identificator].ToString());
                 }
                 catch (Exception ex)
@@ -74,6 +77,10 @@ namespace AuditHistoryExtractor.Controls
                     return;
                 }
             }
+
+            auditHistoryManager.WriteFile(fileName);
+
+             MessageBox.Show(MessageAuditHistoryExtracted, TitleExportSuccess, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void BackgroundWorkerExtractAuditHistory_ProgressChanged(object sender, ProgressChangedEventArgs e)

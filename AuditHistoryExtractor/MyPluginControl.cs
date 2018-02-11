@@ -17,6 +17,9 @@ using Microsoft.Xrm.Sdk.Metadata;
 using Microsoft.Xrm.Sdk;
 using AuditHistoryExtractor.Controls;
 using System.Diagnostics;
+using System.Resources;
+using System.Reflection;
+using System.Globalization;
 
 namespace AuditHistoryExtractor
 {
@@ -26,6 +29,18 @@ namespace AuditHistoryExtractor
         {
             InitializeComponent();
         }
+
+        #region Messages Constant
+        private const string MessageRetrievingEntities = "Retrieving entities with Enabled Audit";
+        private const string MessageMustBeConnectedToOrganization = "You must be connected to an Organization.";
+        private const string MessageFetchXMLRequired = "A FetchXml is required to filter the data to extract.";
+        private const string MessageValidatingFetchXML = "Validating FetchXml and extracting Data.";
+        private const string MessageMismatchEntitySelectedAndFetchXML = "The Entity in the FetchXML doesn't equal to the Entity to extract the data";
+        private const string MessageNoAuditHistoryForSelectedRecords = "No audit history to extract for the selected records.";
+        private const string MessageToMuchRecords = "More then 5000 records have been extracted. Try to reduce the amount of records to extract.";
+        private const string ErrorMessageFetchXML = "An error in FetchXML has been found : ";
+        private const string TitleNoFetchXML = "No FetchXML Set";
+        #endregion
 
         #region Variables
         string currentEntitySelected;
@@ -42,7 +57,7 @@ namespace AuditHistoryExtractor
         {
             WorkAsync(new WorkAsyncInfo
             {
-                Message = "Retrieving entities with Enabled Audit",
+                Message = MessageRetrievingEntities,
                 Work = (w, e) =>
                 {
                     GetListEntitiesWithAuditEnabled();
@@ -194,23 +209,23 @@ namespace AuditHistoryExtractor
         {
             if (Service == null)
             {
-                DialogResult dialogResult = MessageBox.Show("You must be connected to an Organization.",
-                                "No FetchXML Set",
-                                 MessageBoxButtons.OK);
+                DialogResult dialogResult = MessageBox.Show(MessageMustBeConnectedToOrganization,
+                                TitleNoFetchXML,
+                                 MessageBoxButtons.OK,MessageBoxIcon.Error);
                 return;
             }
 
             if (string.IsNullOrEmpty(txtFetchXML.Text))
             {
-                DialogResult dialogResult = MessageBox.Show("A FetchXml is required to filter the data to extract.",
-                                 "No FetchXML Set",
-                                  MessageBoxButtons.OK);
+                DialogResult dialogResult = MessageBox.Show(MessageFetchXMLRequired,
+                                 TitleNoFetchXML,
+                                  MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             WorkAsync(new WorkAsyncInfo
             {
-                Message = "Validating FetchXml and extracting Data.",
+                Message = MessageValidatingFetchXML,
                 Work = (w, ev) =>
                 {
                     try
@@ -220,24 +235,24 @@ namespace AuditHistoryExtractor
 
                         if (recordsExtracted != null && !recordsExtracted.EntityName.Equals(currentEntitySelected))
                         {
-                            ev.Result = "The Entity in the FetchXML doesn't equal to the Entity to extract the data";
+                            ev.Result = MessageMismatchEntitySelectedAndFetchXML;
                             return;
                         }
                         if (recordsExtracted.Entities.Count == 0)
                         {
-                            ev.Result = "No audit history to extract for the selected records.";
+                            ev.Result = MessageNoAuditHistoryForSelectedRecords;
                             return;
                         }
                         if (recordsExtracted.Entities.Count == 5000)
                         {
-                            ev.Result = "More then 5000 records have been extracted. Try to reduce the amount of records to extract.";
+                            ev.Result = MessageToMuchRecords;
 
                             return;
                         }
                     }
                     catch (Exception ex)
                     {
-                        ev.Result = "An error in FetchXML has been found : " + ex.Message;
+                        ev.Result = ErrorMessageFetchXML + ex.Message;
                     }
                 },
                 ProgressChanged = ev =>
@@ -251,7 +266,7 @@ namespace AuditHistoryExtractor
                     {
                         DialogResult dialogResult = MessageBox.Show(ev.Result.ToString(),
                                 "Error",
-                                 MessageBoxButtons.OK);
+                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                     else
                     {
@@ -274,7 +289,7 @@ namespace AuditHistoryExtractor
             string csvSeparator = ",";
             if (saveFileDialog1.FilterIndex == 1) { csvSeparator = ","; }
             if (saveFileDialog1.FilterIndex == 2) { csvSeparator = ";"; }
-         
+
             var wsmDialog = new FormExtractData(Service, recordsExtracted, csvSeparator);
             wsmDialog.Show();
             wsmDialog.Shown += WsmDialog_Shown;
@@ -293,8 +308,5 @@ namespace AuditHistoryExtractor
 
         #endregion
 
-       
-
-  
     }
 }

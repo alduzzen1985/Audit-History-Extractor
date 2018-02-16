@@ -35,11 +35,12 @@ namespace AuditHistoryExtractor
         private const string MessageMustBeConnectedToOrganization = "You must be connected to an Organization.";
         private const string MessageFetchXMLRequired = "A FetchXml is required to filter the data to extract.";
         private const string MessageValidatingFetchXML = "Validating FetchXml and extracting Data.";
-        private const string MessageMismatchEntitySelectedAndFetchXML = "The Entity in the FetchXML doesn't equal to the Entity to extract the data";
-        private const string MessageNoAuditHistoryForSelectedRecords = "No audit history to extract for the selected records.";
+        private const string MessageMismatchEntitySelectedAndFetchXML = "In the FetchXml you are extracting data for Contact {0} entity instead of the selected entity Account {1}";
+
+        private const string MessageNoAuditHistoryForSelectedRecords = "No audit history data available for selected records.";
         private const string MessageToMuchRecords = "More then 5000 records have been extracted. Try to reduce the amount of records to extract.";
         private const string ErrorMessageFetchXML = "An error in FetchXML has been found : ";
-        private const string TitleNoFetchXML = "No FetchXML Set";
+        private const string TitleNoFetchXML = "No FetchXML Set.";
         #endregion
 
         #region Variables
@@ -200,6 +201,7 @@ namespace AuditHistoryExtractor
             if (e.IsSelected)
             {
                 currentEntitySelected = e.Item.Name;
+                lblSelectedEntity.Text = e.Item.Text;
                 GetListOfFieldsForEntity(currentEntitySelected);
                 FillComboListFields();
             }
@@ -211,7 +213,7 @@ namespace AuditHistoryExtractor
             {
                 DialogResult dialogResult = MessageBox.Show(MessageMustBeConnectedToOrganization,
                                 TitleNoFetchXML,
-                                 MessageBoxButtons.OK,MessageBoxIcon.Error);
+                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 

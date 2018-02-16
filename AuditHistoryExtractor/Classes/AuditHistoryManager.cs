@@ -13,7 +13,7 @@ namespace AuditHistoryExtractor.AppCode
 {
     public class AuditHistoryManager
     {
-        private const string ErrorMessageUnableToWrite = "Impossible write the file. Be sure that the file isn't used";
+        private const string ErrorMessageUnableToWrite = "It is not possible to write the file, ensure that the file isn't being used by another program.";
 
         CsvWriter csvWriter;
         private IOrganizationService _service;
@@ -93,7 +93,9 @@ namespace AuditHistoryExtractor.AppCode
                     if (attributeDetail.OldValue.Contains(attribute.Key))
                     {
                         bool isOldValueAnEntityReference = attributeDetail.OldValue[attribute.Key].GetType().Equals(typeof(EntityReference));
+                        bool isOldValueTypeMoney = attributeDetail.OldValue[attribute.Key].GetType().Equals(typeof(Money));
                         if (isOldValueAnEntityReference) { oldValue = GetValueEntityReference(attributeDetail.OldValue[attribute.Key] as EntityReference); }
+                        else if (isOldValueTypeMoney) { oldValue = (attributeDetail.OldValue[attribute.Key] as Money).Value.ToString(); }
                         else { oldValue = attributeDetail.OldValue[attribute.Key].ToString(); }
                     }
                     else
@@ -103,11 +105,17 @@ namespace AuditHistoryExtractor.AppCode
 
 
                     bool isNewValueAnEntityReference = attributeDetail.NewValue[attribute.Key].GetType().Equals(typeof(EntityReference));
+                    bool isTypeMoney = attributeDetail.NewValue[attribute.Key].GetType().Equals(typeof(Money));
+
+
                     if (isNewValueAnEntityReference) { newValue = GetValueEntityReference(attributeDetail.NewValue[attribute.Key] as EntityReference); }
+                    else if (isTypeMoney) { newValue = (attributeDetail.NewValue[attribute.Key] as Money).Value.ToString(); }
                     else { newValue = attributeDetail.NewValue[attribute.Key].ToString(); }
 
 
                     newValueRef = attributeDetail.NewValue[attribute.Key] as EntityReference;
+
+
 
 
                     lsAuditHistoryRecords.Add(new AuditHistoryRecord()
@@ -133,7 +141,9 @@ namespace AuditHistoryExtractor.AppCode
                         String oldValue = "";
 
                         bool isOldValueAnEntityReference = attributeDetail.OldValue[attribute.Key].GetType().Equals(typeof(EntityReference));
+                        bool isOldValueTypeMoney = attributeDetail.OldValue[attribute.Key].GetType().Equals(typeof(Money));
                         if (isOldValueAnEntityReference) { oldValue = GetValueEntityReference(attributeDetail.OldValue[attribute.Key] as EntityReference); }
+                        else if (isOldValueTypeMoney) { oldValue = (attributeDetail.OldValue[attribute.Key] as Money).Value.ToString(); }
                         else { oldValue = attributeDetail.OldValue[attribute.Key].ToString(); }
 
 

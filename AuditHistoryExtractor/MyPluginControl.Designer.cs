@@ -51,6 +51,8 @@
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.lblSelectedEntity = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.toolStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -106,7 +108,7 @@
             // 
             // txtFetchXML
             // 
-            this.txtFetchXML.Location = new System.Drawing.Point(6, 104);
+            this.txtFetchXML.Location = new System.Drawing.Point(6, 127);
             this.txtFetchXML.Multiline = true;
             this.txtFetchXML.Name = "txtFetchXML";
             this.txtFetchXML.Size = new System.Drawing.Size(564, 286);
@@ -193,9 +195,9 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(11, 86);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(116, 17);
+            this.label2.Size = new System.Drawing.Size(178, 17);
             this.label2.TabIndex = 28;
-            this.label2.Text = "Audit history field";
+            this.label2.Text = "Audit history field to extract";
             // 
             // label1
             // 
@@ -209,7 +211,7 @@
             // cmbFieldToExtract
             // 
             this.cmbFieldToExtract.FormattingEnabled = true;
-            this.cmbFieldToExtract.Location = new System.Drawing.Point(149, 83);
+            this.cmbFieldToExtract.Location = new System.Drawing.Point(200, 83);
             this.cmbFieldToExtract.Name = "cmbFieldToExtract";
             this.cmbFieldToExtract.Size = new System.Drawing.Size(411, 24);
             this.cmbFieldToExtract.TabIndex = 26;
@@ -217,7 +219,7 @@
             // cmbPrimaryKey
             // 
             this.cmbPrimaryKey.FormattingEnabled = true;
-            this.cmbPrimaryKey.Location = new System.Drawing.Point(149, 32);
+            this.cmbPrimaryKey.Location = new System.Drawing.Point(200, 32);
             this.cmbPrimaryKey.Name = "cmbPrimaryKey";
             this.cmbPrimaryKey.Size = new System.Drawing.Size(411, 24);
             this.cmbPrimaryKey.TabIndex = 25;
@@ -261,32 +263,54 @@
             this.groupBox1.Controls.Add(this.cmbFieldToExtract);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Location = new System.Drawing.Point(487, 485);
+            this.groupBox1.Location = new System.Drawing.Point(487, 517);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(593, 138);
+            this.groupBox1.Size = new System.Drawing.Size(661, 138);
             this.groupBox1.TabIndex = 36;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Fields Selection";
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.lblSelectedEntity);
+            this.groupBox2.Controls.Add(this.label3);
             this.groupBox2.Controls.Add(this.label5);
             this.groupBox2.Controls.Add(this.txtFetchXML);
             this.groupBox2.Controls.Add(this.linkLabel1);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Location = new System.Drawing.Point(487, 55);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(593, 405);
+            this.groupBox2.Size = new System.Drawing.Size(661, 433);
             this.groupBox2.TabIndex = 37;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Filter Data ";
             // 
+            // lblSelectedEntity
+            // 
+            this.lblSelectedEntity.AutoSize = true;
+            this.lblSelectedEntity.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSelectedEntity.ForeColor = System.Drawing.Color.Red;
+            this.lblSelectedEntity.Location = new System.Drawing.Point(130, 101);
+            this.lblSelectedEntity.Name = "lblSelectedEntity";
+            this.lblSelectedEntity.Size = new System.Drawing.Size(14, 17);
+            this.lblSelectedEntity.TabIndex = 37;
+            this.lblSelectedEntity.Text = "-";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(9, 101);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(114, 17);
+            this.label3.TabIndex = 36;
+            this.label3.Text = "Selected Entity : ";
+            // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.btnExtractAuditHistory);
-            this.groupBox3.Location = new System.Drawing.Point(487, 665);
+            this.groupBox3.Location = new System.Drawing.Point(487, 697);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(593, 84);
+            this.groupBox3.Size = new System.Drawing.Size(661, 84);
             this.groupBox3.TabIndex = 38;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Actions";
@@ -341,5 +365,7 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lblSelectedEntity;
     }
 }

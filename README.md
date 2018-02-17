@@ -16,7 +16,7 @@ Add your fetch XML to select the records that you want to extract the audit hist
    
    
   </li>
-     <li><br/>As result you'll get an Excel in CSV format like the Screenshot below with all changes listed for the field with the old value and the new value displayed.
+     <li>As result you'll get an Excel in CSV format like the Screenshot below with all changes listed for the field with the old value and the new value displayed.<br/>
   
   <br/><img src="./PictureDocumentation/4.png"/>
 </li>

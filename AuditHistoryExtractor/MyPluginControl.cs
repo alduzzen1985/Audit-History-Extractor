@@ -30,12 +30,12 @@ namespace AuditHistoryExtractor
             InitializeComponent();
         }
 
-        #region Messages Constant
+        #region Messages Constants
         private const string MessageRetrievingEntities = "Retrieving entities with Enabled Audit";
         private const string MessageMustBeConnectedToOrganization = "You must be connected to an Organization.";
         private const string MessageFetchXMLRequired = "A FetchXml is required to filter the data to extract.";
         private const string MessageValidatingFetchXML = "Validating FetchXml and extracting Data.";
-        private const string MessageMismatchEntitySelectedAndFetchXML = "In the FetchXml you are extracting data for Contact {0} entity instead of the selected entity Account {1}";
+        private const string MessageMismatchEntitySelectedAndFetchXML = "In the FetchXml you are extracting data for {0} entity instead of the selected entity {1}";
 
         private const string MessageNoAuditHistoryForSelectedRecords = "No audit history data available for selected records.";
         private const string MessageToMuchRecords = "More then 5000 records have been extracted. Try to reduce the amount of records to extract.";
@@ -237,7 +237,7 @@ namespace AuditHistoryExtractor
 
                         if (recordsExtracted != null && !recordsExtracted.EntityName.Equals(currentEntitySelected))
                         {
-                            ev.Result = MessageMismatchEntitySelectedAndFetchXML;
+                            ev.Result = string.Format(MessageMismatchEntitySelectedAndFetchXML, recordsExtracted, currentEntitySelected);
                             return;
                         }
                         if (recordsExtracted.Entities.Count == 0)

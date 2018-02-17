@@ -211,7 +211,7 @@
             // cmbFieldToExtract
             // 
             this.cmbFieldToExtract.FormattingEnabled = true;
-            this.cmbFieldToExtract.Location = new System.Drawing.Point(200, 83);
+            this.cmbFieldToExtract.Location = new System.Drawing.Point(227, 83);
             this.cmbFieldToExtract.Name = "cmbFieldToExtract";
             this.cmbFieldToExtract.Size = new System.Drawing.Size(411, 24);
             this.cmbFieldToExtract.TabIndex = 26;
@@ -219,7 +219,7 @@
             // cmbPrimaryKey
             // 
             this.cmbPrimaryKey.FormattingEnabled = true;
-            this.cmbPrimaryKey.Location = new System.Drawing.Point(200, 32);
+            this.cmbPrimaryKey.Location = new System.Drawing.Point(227, 32);
             this.cmbPrimaryKey.Name = "cmbPrimaryKey";
             this.cmbPrimaryKey.Size = new System.Drawing.Size(411, 24);
             this.cmbPrimaryKey.TabIndex = 25;
@@ -268,7 +268,7 @@
             this.groupBox1.Size = new System.Drawing.Size(661, 138);
             this.groupBox1.TabIndex = 36;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Fields Selection";
+            this.groupBox1.Text = "Audit History Selection";
             // 
             // groupBox2
             // 

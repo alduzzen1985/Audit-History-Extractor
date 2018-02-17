@@ -18,12 +18,14 @@ namespace AuditHistoryExtractor.AppCode
         CsvWriter csvWriter;
         private IOrganizationService _service;
         private string delimiter;
+        private string identificatorField;
         private List<AuditHistoryRecord> lsAuditHistoryRecords;
 
         public AuditHistoryManager(IOrganizationService service, string identificatorField, string delimiter)
         {
             lsAuditHistoryRecords = new List<AuditHistoryRecord>();
             this.delimiter = delimiter;
+            this.identificatorField = identificatorField;
             _service = service;
         }
 
@@ -69,7 +71,7 @@ namespace AuditHistoryExtractor.AppCode
         private void GetRecordChanges(AuditDetail detail, string identificatorField)
         {
 
-
+            String oldValue = "(no value)", newValue = "(no value)";
             Entity record = (Entity)detail.AuditRecord;
             string date = record.GetAttributeValue<DateTime>("createdon").ToLocalTime().ToString();
             string action = record.FormattedValues["action"];
@@ -87,36 +89,10 @@ namespace AuditHistoryExtractor.AppCode
                 // Display the old and new attribute values.
                 foreach (KeyValuePair<String, object> attribute in attributeDetail.NewValue.Attributes)
                 {
-                    String oldValue = "(no value)", newValue = "(no value)";
+                    
 
-                    //TODO Display the lookup values of those attributes that do not contain strings.
-                    if (attributeDetail.OldValue.Contains(attribute.Key))
-                    {
-                        bool isOldValueAnEntityReference = attributeDetail.OldValue[attribute.Key].GetType().Equals(typeof(EntityReference));
-                        bool isOldValueTypeMoney = attributeDetail.OldValue[attribute.Key].GetType().Equals(typeof(Money));
-                        if (isOldValueAnEntityReference) { oldValue = GetValueEntityReference(attributeDetail.OldValue[attribute.Key] as EntityReference); }
-                        else if (isOldValueTypeMoney) { oldValue = (attributeDetail.OldValue[attribute.Key] as Money).Value.ToString(); }
-                        else { oldValue = attributeDetail.OldValue[attribute.Key].ToString(); }
-                    }
-                    else
-                    {
-                        oldValue = string.Empty;
-                    }
-
-
-                    bool isNewValueAnEntityReference = attributeDetail.NewValue[attribute.Key].GetType().Equals(typeof(EntityReference));
-                    bool isTypeMoney = attributeDetail.NewValue[attribute.Key].GetType().Equals(typeof(Money));
-
-
-                    if (isNewValueAnEntityReference) { newValue = GetValueEntityReference(attributeDetail.NewValue[attribute.Key] as EntityReference); }
-                    else if (isTypeMoney) { newValue = (attributeDetail.NewValue[attribute.Key] as Money).Value.ToString(); }
-                    else { newValue = attributeDetail.NewValue[attribute.Key].ToString(); }
-
-
-                    newValueRef = attributeDetail.NewValue[attribute.Key] as EntityReference;
-
-
-
+                    oldValue = GetValue(attributeDetail.OldValue, attribute.Key);
+                    newValue = GetValue(attributeDetail.NewValue, attribute.Key);
 
                     lsAuditHistoryRecords.Add(new AuditHistoryRecord()
                     {
@@ -135,19 +111,10 @@ namespace AuditHistoryExtractor.AppCode
                 {
                     if (!attributeDetail.NewValue.Contains(attribute.Key))
                     {
-                        String newValue = "(no value)";
+                         newValue = "(no value)";
+                         oldValue = GetValue(attributeDetail.OldValue, attribute.Key);
 
-                        //TODO Display the lookup values of those attributes that do not contain strings.
-                        String oldValue = "";
-
-                        bool isOldValueAnEntityReference = attributeDetail.OldValue[attribute.Key].GetType().Equals(typeof(EntityReference));
-                        bool isOldValueTypeMoney = attributeDetail.OldValue[attribute.Key].GetType().Equals(typeof(Money));
-                        if (isOldValueAnEntityReference) { oldValue = GetValueEntityReference(attributeDetail.OldValue[attribute.Key] as EntityReference); }
-                        else if (isOldValueTypeMoney) { oldValue = (attributeDetail.OldValue[attribute.Key] as Money).Value.ToString(); }
-                        else { oldValue = attributeDetail.OldValue[attribute.Key].ToString(); }
-
-
-
+             
                         lsAuditHistoryRecords.Add(new AuditHistoryRecord()
                         {
                             DateOperation = date,
@@ -162,6 +129,22 @@ namespace AuditHistoryExtractor.AppCode
                 }
             }
         }
+
+
+        private string GetValue(Entity attributeAuditHistoryDetail, string fieldKey)
+        {
+            string value = string.Empty;
+            if (attributeAuditHistoryDetail.Contains(fieldKey))
+            {
+                bool isOldValueAnEntityReference = attributeAuditHistoryDetail[fieldKey].GetType().Equals(typeof(EntityReference));
+                bool isOldValueTypeMoney = attributeAuditHistoryDetail[fieldKey].GetType().Equals(typeof(Money));
+                if (isOldValueAnEntityReference) { value = GetValueEntityReference(attributeAuditHistoryDetail[fieldKey] as EntityReference); }
+                else if (isOldValueTypeMoney) { value = (attributeAuditHistoryDetail[fieldKey] as Money).Value.ToString(); }
+                else { value = attributeAuditHistoryDetail[fieldKey].ToString(); }
+            }
+            return value;
+        }
+
 
 
         private string GetValueForCsv(string value)
@@ -186,7 +169,7 @@ namespace AuditHistoryExtractor.AppCode
                     csvWriter = new CsvWriter(writer);
                     csvWriter.Configuration.Delimiter = delimiter;
                     csvWriter.Configuration.QuoteAllFields = true;
-                    csvWriter.Configuration.RegisterClassMap(new AuditHistoryRecordMap());
+                    csvWriter.Configuration.RegisterClassMap(new AuditHistoryRecordMap(identificatorField));
                     csvWriter.WriteRecords(lsAuditHistoryRecords); // where values implements IEnumerable
                 }
             }

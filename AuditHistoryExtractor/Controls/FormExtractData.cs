@@ -43,6 +43,8 @@ namespace AuditHistoryExtractor.Controls
             {
                 progressExportData.Step = 1;
                 progressExportData.Maximum = entitiesList.Entities.Count;
+                this.Focus();
+
                 BackgroundWorkerExtractAuditHistory.RunWorkerAsync();
             }
         }

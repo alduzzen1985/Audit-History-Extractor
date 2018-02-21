@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("AuditHistoryExtractor")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Aldo Gillone")]
+[assembly: AssemblyCompany("Aldo G.")]
 [assembly: AssemblyProduct("AuditHistoryExtractor")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // È possibile specificare tutti i valori oppure impostare valori predefiniti per i numeri relativi alla revisione e alla build
 // usando l'asterisco '*' come illustrato di seguito:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("10.0.1.13")]
-[assembly: AssemblyFileVersion("10.0.1.13")]
+[assembly: AssemblyVersion("10.0.1.14")]
+[assembly: AssemblyFileVersion("10.0.1.14")]

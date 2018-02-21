@@ -34,33 +34,33 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.tbFromEntitiesEnabled = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.txtFetchXML = new System.Windows.Forms.TextBox();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPageAuditEnabled = new System.Windows.Forms.TabPage();
-            this.lstEntitiesWithAuditEnabled = new System.Windows.Forms.ListView();
-            this.tabPageAuditDisabled = new System.Windows.Forms.TabPage();
-            this.lstEntitiesWithAuditDisabled = new System.Windows.Forms.ListView();
             this.btnExtractAuditHistory = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.cmbFieldToExtract = new System.Windows.Forms.ComboBox();
             this.cmbPrimaryKey = new System.Windows.Forms.ComboBox();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.lblSelectedEntity = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.txtFetchXML = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.lblSelectedEntity = new System.Windows.Forms.Label();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.tabPageAuditDisabled = new System.Windows.Forms.TabPage();
+            this.lstEntitiesWithAuditDisabled = new System.Windows.Forms.ListView();
+            this.tabPageAuditEnabled = new System.Windows.Forms.TabPage();
+            this.lstEntitiesWithAuditEnabled = new System.Windows.Forms.ListView();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
             this.toolStrip1.SuspendLayout();
-            this.tabControl1.SuspendLayout();
-            this.tabPageAuditEnabled.SuspendLayout();
-            this.tabPageAuditDisabled.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.tabPageAuditDisabled.SuspendLayout();
+            this.tabPageAuditEnabled.SuspendLayout();
+            this.tabControl1.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStrip1
@@ -105,76 +105,6 @@
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(6, 27);
-            // 
-            // txtFetchXML
-            // 
-            this.txtFetchXML.Location = new System.Drawing.Point(6, 127);
-            this.txtFetchXML.Multiline = true;
-            this.txtFetchXML.Name = "txtFetchXML";
-            this.txtFetchXML.Size = new System.Drawing.Size(564, 286);
-            this.txtFetchXML.TabIndex = 30;
-            // 
-            // tabControl1
-            // 
-            this.tabControl1.Controls.Add(this.tabPageAuditEnabled);
-            this.tabControl1.Controls.Add(this.tabPageAuditDisabled);
-            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.tabControl1.Location = new System.Drawing.Point(0, 27);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(460, 787);
-            this.tabControl1.TabIndex = 32;
-            // 
-            // tabPageAuditEnabled
-            // 
-            this.tabPageAuditEnabled.Controls.Add(this.lstEntitiesWithAuditEnabled);
-            this.tabPageAuditEnabled.Location = new System.Drawing.Point(4, 25);
-            this.tabPageAuditEnabled.Name = "tabPageAuditEnabled";
-            this.tabPageAuditEnabled.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageAuditEnabled.Size = new System.Drawing.Size(452, 758);
-            this.tabPageAuditEnabled.TabIndex = 0;
-            this.tabPageAuditEnabled.Text = "Entities With Audit Enabled";
-            this.tabPageAuditEnabled.UseVisualStyleBackColor = true;
-            // 
-            // lstEntitiesWithAuditEnabled
-            // 
-            this.lstEntitiesWithAuditEnabled.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.lstEntitiesWithAuditEnabled.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lstEntitiesWithAuditEnabled.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.lstEntitiesWithAuditEnabled.Location = new System.Drawing.Point(3, 3);
-            this.lstEntitiesWithAuditEnabled.MultiSelect = false;
-            this.lstEntitiesWithAuditEnabled.Name = "lstEntitiesWithAuditEnabled";
-            this.lstEntitiesWithAuditEnabled.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.lstEntitiesWithAuditEnabled.Size = new System.Drawing.Size(446, 752);
-            this.lstEntitiesWithAuditEnabled.TabIndex = 16;
-            this.lstEntitiesWithAuditEnabled.UseCompatibleStateImageBehavior = false;
-            this.lstEntitiesWithAuditEnabled.View = System.Windows.Forms.View.List;
-            this.lstEntitiesWithAuditEnabled.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.lstEntities_ItemSelectionChanged_1);
-            // 
-            // tabPageAuditDisabled
-            // 
-            this.tabPageAuditDisabled.Controls.Add(this.lstEntitiesWithAuditDisabled);
-            this.tabPageAuditDisabled.Location = new System.Drawing.Point(4, 25);
-            this.tabPageAuditDisabled.Name = "tabPageAuditDisabled";
-            this.tabPageAuditDisabled.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageAuditDisabled.Size = new System.Drawing.Size(452, 758);
-            this.tabPageAuditDisabled.TabIndex = 1;
-            this.tabPageAuditDisabled.Text = "Entities with Audit Disabled";
-            this.tabPageAuditDisabled.UseVisualStyleBackColor = true;
-            // 
-            // lstEntitiesWithAuditDisabled
-            // 
-            this.lstEntitiesWithAuditDisabled.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.lstEntitiesWithAuditDisabled.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lstEntitiesWithAuditDisabled.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.lstEntitiesWithAuditDisabled.Location = new System.Drawing.Point(3, 3);
-            this.lstEntitiesWithAuditDisabled.Name = "lstEntitiesWithAuditDisabled";
-            this.lstEntitiesWithAuditDisabled.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.lstEntitiesWithAuditDisabled.Size = new System.Drawing.Size(446, 752);
-            this.lstEntitiesWithAuditDisabled.TabIndex = 33;
-            this.lstEntitiesWithAuditDisabled.UseCompatibleStateImageBehavior = false;
-            this.lstEntitiesWithAuditDisabled.View = System.Windows.Forms.View.List;
-            this.lstEntitiesWithAuditDisabled.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.lstEntities_ItemSelectionChanged_1);
             // 
             // btnExtractAuditHistory
             // 
@@ -228,35 +158,6 @@
             // 
             this.saveFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.saveFileDialog1_FileOk_1);
             // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 38);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(470, 17);
-            this.label4.TabIndex = 33;
-            this.label4.Text = "A FetchXML is required to filter the records for the audit history to extract.";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(6, 71);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(270, 17);
-            this.label5.TabIndex = 34;
-            this.label5.Text = "You can build your Fetch XML from here :";
-            // 
-            // linkLabel1
-            // 
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(295, 71);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(38, 17);
-            this.linkLabel1.TabIndex = 35;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "LINK";
-            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
-            // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.cmbPrimaryKey);
@@ -269,6 +170,73 @@
             this.groupBox1.TabIndex = 36;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Audit History Selection";
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.btnExtractAuditHistory);
+            this.groupBox3.Location = new System.Drawing.Point(487, 697);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(661, 84);
+            this.groupBox3.TabIndex = 38;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Actions";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(6, 38);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(470, 17);
+            this.label4.TabIndex = 33;
+            this.label4.Text = "A FetchXML is required to filter the records for the audit history to extract.";
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(295, 71);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(38, 17);
+            this.linkLabel1.TabIndex = 35;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "LINK";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            // 
+            // txtFetchXML
+            // 
+            this.txtFetchXML.Location = new System.Drawing.Point(6, 127);
+            this.txtFetchXML.Multiline = true;
+            this.txtFetchXML.Name = "txtFetchXML";
+            this.txtFetchXML.Size = new System.Drawing.Size(564, 286);
+            this.txtFetchXML.TabIndex = 30;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(6, 71);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(270, 17);
+            this.label5.TabIndex = 34;
+            this.label5.Text = "You can build your Fetch XML from here :";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(9, 101);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(114, 17);
+            this.label3.TabIndex = 36;
+            this.label3.Text = "Selected Entity : ";
+            // 
+            // lblSelectedEntity
+            // 
+            this.lblSelectedEntity.AutoSize = true;
+            this.lblSelectedEntity.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSelectedEntity.ForeColor = System.Drawing.Color.Red;
+            this.lblSelectedEntity.Location = new System.Drawing.Point(130, 101);
+            this.lblSelectedEntity.Name = "lblSelectedEntity";
+            this.lblSelectedEntity.Size = new System.Drawing.Size(14, 17);
+            this.lblSelectedEntity.TabIndex = 37;
+            this.lblSelectedEntity.Text = "-";
             // 
             // groupBox2
             // 
@@ -285,40 +253,73 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Filter Data ";
             // 
-            // lblSelectedEntity
+            // tabPageAuditDisabled
             // 
-            this.lblSelectedEntity.AutoSize = true;
-            this.lblSelectedEntity.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSelectedEntity.ForeColor = System.Drawing.Color.Red;
-            this.lblSelectedEntity.Location = new System.Drawing.Point(130, 101);
-            this.lblSelectedEntity.Name = "lblSelectedEntity";
-            this.lblSelectedEntity.Size = new System.Drawing.Size(14, 17);
-            this.lblSelectedEntity.TabIndex = 37;
-            this.lblSelectedEntity.Text = "-";
+            this.tabPageAuditDisabled.Controls.Add(this.lstEntitiesWithAuditDisabled);
+            this.tabPageAuditDisabled.Location = new System.Drawing.Point(4, 25);
+            this.tabPageAuditDisabled.Name = "tabPageAuditDisabled";
+            this.tabPageAuditDisabled.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageAuditDisabled.Size = new System.Drawing.Size(452, 758);
+            this.tabPageAuditDisabled.TabIndex = 1;
+            this.tabPageAuditDisabled.Text = "Entities with Audit Disabled";
+            this.tabPageAuditDisabled.UseVisualStyleBackColor = true;
             // 
-            // label3
+            // lstEntitiesWithAuditDisabled
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(9, 101);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(114, 17);
-            this.label3.TabIndex = 36;
-            this.label3.Text = "Selected Entity : ";
+            this.lstEntitiesWithAuditDisabled.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.lstEntitiesWithAuditDisabled.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lstEntitiesWithAuditDisabled.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.lstEntitiesWithAuditDisabled.Location = new System.Drawing.Point(3, 3);
+            this.lstEntitiesWithAuditDisabled.Name = "lstEntitiesWithAuditDisabled";
+            this.lstEntitiesWithAuditDisabled.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.lstEntitiesWithAuditDisabled.Size = new System.Drawing.Size(446, 752);
+            this.lstEntitiesWithAuditDisabled.TabIndex = 33;
+            this.lstEntitiesWithAuditDisabled.UseCompatibleStateImageBehavior = false;
+            this.lstEntitiesWithAuditDisabled.View = System.Windows.Forms.View.List;
+            this.lstEntitiesWithAuditDisabled.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.lstEntities_ItemSelectionChanged_1);
             // 
-            // groupBox3
+            // tabPageAuditEnabled
             // 
-            this.groupBox3.Controls.Add(this.btnExtractAuditHistory);
-            this.groupBox3.Location = new System.Drawing.Point(487, 697);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(661, 84);
-            this.groupBox3.TabIndex = 38;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Actions";
+            this.tabPageAuditEnabled.Controls.Add(this.lstEntitiesWithAuditEnabled);
+            this.tabPageAuditEnabled.Location = new System.Drawing.Point(4, 25);
+            this.tabPageAuditEnabled.Name = "tabPageAuditEnabled";
+            this.tabPageAuditEnabled.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageAuditEnabled.Size = new System.Drawing.Size(452, 758);
+            this.tabPageAuditEnabled.TabIndex = 0;
+            this.tabPageAuditEnabled.Text = "Entities With Audit Enabled";
+            this.tabPageAuditEnabled.UseVisualStyleBackColor = true;
+            // 
+            // lstEntitiesWithAuditEnabled
+            // 
+            this.lstEntitiesWithAuditEnabled.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.lstEntitiesWithAuditEnabled.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lstEntitiesWithAuditEnabled.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.lstEntitiesWithAuditEnabled.Location = new System.Drawing.Point(3, 3);
+            this.lstEntitiesWithAuditEnabled.MultiSelect = false;
+            this.lstEntitiesWithAuditEnabled.Name = "lstEntitiesWithAuditEnabled";
+            this.lstEntitiesWithAuditEnabled.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.lstEntitiesWithAuditEnabled.Size = new System.Drawing.Size(446, 752);
+            this.lstEntitiesWithAuditEnabled.TabIndex = 16;
+            this.lstEntitiesWithAuditEnabled.UseCompatibleStateImageBehavior = false;
+            this.lstEntitiesWithAuditEnabled.View = System.Windows.Forms.View.List;
+            this.lstEntitiesWithAuditEnabled.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.lstEntities_ItemSelectionChanged_1);
+            // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.tabPageAuditEnabled);
+            this.tabControl1.Controls.Add(this.tabPageAuditDisabled);
+            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.tabControl1.Location = new System.Drawing.Point(0, 27);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(460, 787);
+            this.tabControl1.TabIndex = 32;
             // 
             // MyPluginControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScroll = true;
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -328,14 +329,14 @@
             this.Size = new System.Drawing.Size(1173, 814);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
-            this.tabControl1.ResumeLayout(false);
-            this.tabPageAuditEnabled.ResumeLayout(false);
-            this.tabPageAuditDisabled.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
+            this.tabPageAuditDisabled.ResumeLayout(false);
+            this.tabPageAuditEnabled.ResumeLayout(false);
+            this.tabControl1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -347,25 +348,25 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton tbFromEntitiesEnabled;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.TextBox txtFetchXML;
-        private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPageAuditEnabled;
-        private System.Windows.Forms.ListView lstEntitiesWithAuditEnabled;
-        private System.Windows.Forms.TabPage tabPageAuditDisabled;
         private System.Windows.Forms.Button btnExtractAuditHistory;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox cmbFieldToExtract;
         private System.Windows.Forms.ComboBox cmbPrimaryKey;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
-        private System.Windows.Forms.ListView lstEntitiesWithAuditDisabled;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.TextBox txtFetchXML;
+        private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label lblSelectedEntity;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.TabPage tabPageAuditDisabled;
+        private System.Windows.Forms.ListView lstEntitiesWithAuditDisabled;
+        private System.Windows.Forms.TabPage tabPageAuditEnabled;
+        private System.Windows.Forms.ListView lstEntitiesWithAuditEnabled;
+        private System.Windows.Forms.TabControl tabControl1;
     }
 }

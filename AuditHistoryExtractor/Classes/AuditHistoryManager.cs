@@ -20,6 +20,9 @@ namespace AuditHistoryExtractor.AppCode
         private string delimiter;
         private string identificatorField;
         private List<AuditHistoryRecord> lsAuditHistoryRecords;
+        private OptionSetManager optionSetManager;
+
+
 
         public AuditHistoryManager(IOrganizationService service, string identificatorField, string delimiter)
         {
@@ -42,7 +45,8 @@ namespace AuditHistoryExtractor.AppCode
             var attributeChangeHistoryRequest = new RetrieveAttributeChangeHistoryRequest
             {
                 Target = new EntityReference(entityLogicalName, entityID),
-                AttributeLogicalName = attributeName
+                AttributeLogicalName = attributeName,
+
             };
 
             RetrieveRecordChangeHistoryRequest changeRequest = new RetrieveRecordChangeHistoryRequest();
@@ -89,7 +93,7 @@ namespace AuditHistoryExtractor.AppCode
                 // Display the old and new attribute values.
                 foreach (KeyValuePair<String, object> attribute in attributeDetail.NewValue.Attributes)
                 {
-                    
+
 
                     oldValue = GetValue(attributeDetail.OldValue, attribute.Key);
                     newValue = GetValue(attributeDetail.NewValue, attribute.Key);
@@ -111,10 +115,10 @@ namespace AuditHistoryExtractor.AppCode
                 {
                     if (!attributeDetail.NewValue.Contains(attribute.Key))
                     {
-                         newValue = "(no value)";
-                         oldValue = GetValue(attributeDetail.OldValue, attribute.Key);
+                        newValue = "(no value)";
+                        oldValue = GetValue(attributeDetail.OldValue, attribute.Key);
 
-             
+
                         lsAuditHistoryRecords.Add(new AuditHistoryRecord()
                         {
                             DateOperation = date,
@@ -138,8 +142,23 @@ namespace AuditHistoryExtractor.AppCode
             {
                 bool isOldValueAnEntityReference = attributeAuditHistoryDetail[fieldKey].GetType().Equals(typeof(EntityReference));
                 bool isOldValueTypeMoney = attributeAuditHistoryDetail[fieldKey].GetType().Equals(typeof(Money));
+                bool isTypeOptionSet = attributeAuditHistoryDetail[fieldKey].GetType().Equals(typeof(OptionSetValue));
+
+
                 if (isOldValueAnEntityReference) { value = GetValueEntityReference(attributeAuditHistoryDetail[fieldKey] as EntityReference); }
                 else if (isOldValueTypeMoney) { value = (attributeAuditHistoryDetail[fieldKey] as Money).Value.ToString(); }
+                else if (isTypeOptionSet)
+                {
+                    OptionSetValue optSetValue = (attributeAuditHistoryDetail[fieldKey] as OptionSetValue);
+
+                    if (optionSetManager == null)
+                    {
+                        optionSetManager = new OptionSetManager(_service);
+                        optionSetManager.SetupOptionSetValues(attributeAuditHistoryDetail.LogicalName, fieldKey);
+                    }
+
+                    value = optionSetManager.GetDescriptionOptionSetValue(optSetValue.Value);
+                }
                 else { value = attributeAuditHistoryDetail[fieldKey].ToString(); }
             }
             return value;

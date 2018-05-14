@@ -34,6 +34,7 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.tbFromEntitiesEnabled = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.tbOpenFetchXMLBuilder = new System.Windows.Forms.ToolStripButton();
             this.btnExtractAuditHistory = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -49,6 +50,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.lblSelectedEntity = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.tabPageAuditDisabled = new System.Windows.Forms.TabPage();
             this.lstEntitiesWithAuditDisabled = new System.Windows.Forms.ListView();
             this.tabPageAuditEnabled = new System.Windows.Forms.TabPage();
@@ -70,7 +72,8 @@
             this.tbClose,
             this.toolStripSeparator1,
             this.tbFromEntitiesEnabled,
-            this.toolStripSeparator2});
+            this.toolStripSeparator2,
+            this.tbOpenFetchXMLBuilder});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(1173, 27);
@@ -105,6 +108,15 @@
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(6, 27);
+            // 
+            // tbOpenFetchXMLBuilder
+            // 
+            this.tbOpenFetchXMLBuilder.Image = ((System.Drawing.Image)(resources.GetObject("tbOpenFetchXMLBuilder.Image")));
+            this.tbOpenFetchXMLBuilder.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tbOpenFetchXMLBuilder.Name = "tbOpenFetchXMLBuilder";
+            this.tbOpenFetchXMLBuilder.Size = new System.Drawing.Size(274, 24);
+            this.tbOpenFetchXMLBuilder.Text = "Create Query from FetchXML Builder";
+            this.tbOpenFetchXMLBuilder.Click += new System.EventHandler(this.tbOpenFetchXMLBuilder_Click);
             // 
             // btnExtractAuditHistory
             // 
@@ -240,6 +252,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.label6);
             this.groupBox2.Controls.Add(this.lblSelectedEntity);
             this.groupBox2.Controls.Add(this.label3);
             this.groupBox2.Controls.Add(this.label5);
@@ -252,6 +265,15 @@
             this.groupBox2.TabIndex = 37;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Filter Data ";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(339, 71);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(174, 17);
+            this.label6.TabIndex = 38;
+            this.label6.Text = "or using FetchXML Builder";
             // 
             // tabPageAuditDisabled
             // 
@@ -368,5 +390,7 @@
         private System.Windows.Forms.TabPage tabPageAuditEnabled;
         private System.Windows.Forms.ListView lstEntitiesWithAuditEnabled;
         private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.ToolStripButton tbOpenFetchXMLBuilder;
+        private System.Windows.Forms.Label label6;
     }
 }

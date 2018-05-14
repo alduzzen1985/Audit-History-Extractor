@@ -20,10 +20,13 @@ using System.Diagnostics;
 using System.Resources;
 using System.Reflection;
 using System.Globalization;
+using XrmToolBox.Extensibility.Interfaces;
+using XrmToolBox;
+using XrmToolBox.New;
 
 namespace AuditHistoryExtractor
 {
-    public partial class MyPluginControl : PluginControlBase
+    public partial class MyPluginControl : PluginControlBase, IMessageBusHost
     {
         public MyPluginControl()
         {
@@ -36,11 +39,16 @@ namespace AuditHistoryExtractor
         private const string MessageFetchXMLRequired = "A FetchXml is required to filter the data to extract.";
         private const string MessageValidatingFetchXML = "Validating FetchXml and extracting Data.";
         private const string MessageMismatchEntitySelectedAndFetchXML = "In the FetchXml you are extracting data for {0} entity instead of the selected entity {1}";
+        private const string MessageFetchXMLBuilderNotFound = "FetchXML Builder not found. Please install it";
 
         private const string MessageNoAuditHistoryForSelectedRecords = "No audit history data available for selected records.";
         private const string MessageToMuchRecords = "More then 5000 records have been extracted. Try to reduce the amount of records to extract.";
         private const string ErrorMessageFetchXML = "An error in FetchXML has been found : ";
         private const string TitleNoFetchXML = "No FetchXML Set.";
+        private const string TitleNoFetchXMLBuilder = "Fetch XML Builder Error.";
+
+
+
         #endregion
 
         #region Variables
@@ -51,6 +59,8 @@ namespace AuditHistoryExtractor
         private List<ListViewItem> itemsWithAuditEnabled;
         private List<ListViewItem> itemsWithAuditDisabled;
         private List<ComboBoxEntityField> listFieldsForEntity;
+
+        public event EventHandler<MessageBusEventArgs> OnOutgoingMessage;
         #endregion
 
         #region Methods to fill entities and fields
@@ -138,6 +148,8 @@ namespace AuditHistoryExtractor
                 {
                     listFieldsForEntity.Add(new ComboBoxEntityField(attributeMetadataInfo));
                 }
+
+
             }
         }
 
@@ -209,6 +221,8 @@ namespace AuditHistoryExtractor
 
         private void btnExtractAuditHistory_Click_1(object sender, EventArgs e)
         {
+
+
             if (Service == null)
             {
                 DialogResult dialogResult = MessageBox.Show(MessageMustBeConnectedToOrganization,
@@ -307,8 +321,54 @@ namespace AuditHistoryExtractor
             ProcessStartInfo sInfo = new ProcessStartInfo("http://www.sql2fetchxml.com/");
             Process.Start(sInfo);
         }
-
         #endregion
+
+
+
+        #region FetchXML Builder 
+
+        private void tbOpenFetchXMLBuilder_Click(object sender, EventArgs e)
+        {
+            string fetchXMLBuilderName = "FetchXML Builder";
+            if (IsPluginInstalled(fetchXMLBuilderName))
+            {
+                OnOutgoingMessage(this, new MessageBusEventArgs("FetchXML Builder")
+                {
+                    TargetArgument = txtFetchXML.Text
+                });
+
+            }
+            else
+            {
+                MessageBox.Show(MessageFetchXMLBuilderNotFound,
+                                  TitleNoFetchXMLBuilder,
+                                   MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        public void OnIncomingMessage(MessageBusEventArgs message)
+        {
+            if (message.SourcePlugin == "FetchXML Builder" &&
+                message.TargetArgument as string != null)
+            {
+                txtFetchXML.Text = message.TargetArgument as string;
+            }
+        }
+
+        /// <summary>
+        /// Check if the Plugin is installed. Temporary solution to avoid recursive Message 
+        /// </summary>
+        /// <param name="pluginName">Plugin to verify if exists</param>
+        /// <returns></returns>
+        private bool IsPluginInstalled(string pluginName)
+        {
+            PluginManagerExtended pluginsManager = new PluginManagerExtended(new PluginsForm()) { IsWatchingForNewPlugins = true };
+            pluginsManager.Initialize();
+            var plugin = pluginsManager.ValidatedPlugins.FirstOrDefault(p => p.Metadata.Name == pluginName);
+            return plugin != null;
+        }
+
+        #endregion 
 
     }
 }

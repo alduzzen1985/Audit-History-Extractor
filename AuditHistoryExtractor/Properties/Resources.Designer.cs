@@ -59,14 +59,5 @@ namespace AuditHistoryExtractor.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Cerca una stringa localizzata simile a TEST.
-        /// </summary>
-        internal static string String1 {
-            get {
-                return ResourceManager.GetString("String1", resourceCulture);
-            }
-        }
     }
 }

@@ -12,6 +12,8 @@
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -104,9 +106,12 @@
     </Reference>
     <Reference Include="XrmToolBox, Version=1.2018.4.22, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\XrmToolBoxPackage.1.2018.4.22\lib\net462\XrmToolBox.exe</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="XrmToolBox.Extensibility, Version=1.2017.7.10, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\XrmToolBoxPackage.1.2018.4.22\lib\net462\XrmToolBox.Extensibility.dll</HintPath>
+      <IlMerge>False</IlMerge>
+      <Private>True</Private>
     </Reference>
     <Reference Include="XrmToolBox.PluginsStore, Version=1.2017.10.7, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\XrmToolBoxPackage.1.2018.4.22\lib\net462\XrmToolBox.PluginsStore.dll</HintPath>
@@ -141,6 +146,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="ILMerge.exe.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <None Include="XrmToolBox.exe.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -170,11 +178,29 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-if $(ConfigurationName) == Debug (
-  IF NOT EXIST Plugins mkdir Plugins
-  move /Y AuditHistoryExtractor.dll Plugins
-  move /Y AuditHistoryExtractor.pdb Plugins
-)</PostBuildEvent>
+    <PostBuildEvent>if $(ConfigurationName) == Debug (
+      IF NOT EXIST Plugins mkdir Plugins
+      move /Y AuditHistoryExtractor.dll Plugins
+      move /Y AuditHistoryExtractor.pdb Plugins
+      move /Y CsvHelper.dll Plugins
+      )
+</PostBuildEvent>
   </PropertyGroup>
+  <Import Project="..\packages\ILRepack.MSBuild.Task.1.0.9\build\ILRepack.MSBuild.Task.targets" Condition="Exists('..\packages\ILRepack.MSBuild.Task.1.0.9\build\ILRepack.MSBuild.Task.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Questo progetto fa riferimento a uno o più pacchetti NuGet che non sono presenti in questo computer. Usare lo strumento di ripristino dei pacchetti NuGet per scaricarli. Per altre informazioni, vedere http://go.microsoft.com/fwlink/?LinkID=322105. Il file mancante è {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\ILRepack.MSBuild.Task.1.0.9\build\ILRepack.MSBuild.Task.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\ILRepack.MSBuild.Task.1.0.9\build\ILRepack.MSBuild.Task.targets'))" />
+  </Target>
+  <!-- ILRepack -->
+  <UsingTask TaskName="ILRepack.MSBuild.Task" AssemblyFile="$(SolutionDir)\packages\ILRepack.MSBuild.Task.1.0.9\build\ILRepack.MSBuild.Task.dll" />
+  <Target Name="MergeLibraries" Condition="'$(Configuration)' == 'Release'" BeforeTargets="PostBuildEvent">
+    <ItemGroup>
+      <InputAssemblies Include="$(OutputPath)\$(AssemblyName).dll" />
+      <InputAssemblies Include="$(OutputPath)\CsvHelper.dll" />
+    </ItemGroup>
+    <ILRepack Parallel="true" Internalize="true" InputAssemblies="@(InputAssemblies)" TargetKind="dll" OutputFile="$(OutputPath)\DLLRelease\AuditHistoryExtractor.dll" />
+    <Message Text="Execution ILRepack" Importance="high" />
+  </Target>
 </Project>

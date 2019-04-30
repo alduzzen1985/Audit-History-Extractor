@@ -13,6 +13,13 @@ namespace AuditHistoryExtractor.AppCode
         public string Text { set; get; }
         public string AttributeType { set; get; }
 
+
+        public ComboBoxEntityField()
+        {
+
+        }
+
+
         public ComboBoxEntityField(AttributeMetadata attributeMetadataInfo)
         {
             if (attributeMetadataInfo.DisplayName.UserLocalizedLabel != null)

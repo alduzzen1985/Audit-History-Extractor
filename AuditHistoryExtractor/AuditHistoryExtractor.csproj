@@ -118,12 +118,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\AuditHistory.cs" />
     <Compile Include="Classes\AuditHistoryManager.cs" />
     <Compile Include="Classes\AuditHistoryRecordMap.cs" />
-    <Compile Include="Classes\AuditHistoryRecord.cs" />
+    <Compile Include="Classes\ComboBoxEntities.cs" />
     <Compile Include="Classes\ComboBoxEntityField.cs" />
+    <Compile Include="Classes\CSVHelper.cs" />
+    <Compile Include="Classes\FetchXMLHelper.cs" />
     <Compile Include="Classes\MetaDataManager.cs" />
     <Compile Include="Classes\OptionSetManager.cs" />
+    <Compile Include="Classes\ViewDetail.cs" />
     <Compile Include="Controls\FormExtractData.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -146,10 +150,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="ILMerge.exe.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\AuditHistoryExtractor.Classes.AuditHistory.datasource" />
     <None Include="XrmToolBox.exe.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -175,6 +177,7 @@
     <Content Include="Icons\FXB.jpg" />
     <Content Include="Icons\logo80x80.png" />
     <Content Include="Icons\logo32x32.png" />
+    <Content Include="Icons\preview24x24.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
@@ -200,7 +203,7 @@
       <InputAssemblies Include="$(OutputPath)\$(AssemblyName).dll" />
       <InputAssemblies Include="$(OutputPath)\CsvHelper.dll" />
     </ItemGroup>
-    <ILRepack Parallel="true" Internalize="true" InputAssemblies="@(InputAssemblies)" TargetKind="dll" OutputFile="$(OutputPath)\DLLRelease\AuditHistoryExtractor.dll" />
-    <Message Text="Execution ILRepack" Importance="high" />
+    <ILRepack Parallel="true" Internalize="true" InputAssemblies="@(InputAssemblies)" TargetKind="dll" OutputFile="$(OutputPath)DLLRelease\AuditHistoryExtractor.dll" />
+    <Message Text="Execution ILRepack : DLL Merged --&gt; $(OutputPath)DLLRelease\AuditHistoryExtractor.dll" Importance="high" />
   </Target>
 </Project>

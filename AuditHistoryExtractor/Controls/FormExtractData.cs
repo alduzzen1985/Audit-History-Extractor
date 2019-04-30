@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using AuditHistoryExtractor.Classes;
 
 namespace AuditHistoryExtractor.Controls
 {
@@ -17,9 +18,15 @@ namespace AuditHistoryExtractor.Controls
         private const string MessageAuditHistoryExtracted = "Audit History extracted successfully";
         private const string TitleExportSuccess = "Export success";
 
+        public delegate void ExtractCompleted(List<AuditHistory> lsAuditHistory);
+        public event ExtractCompleted OnExtractCompleted;
+
         #region Variables
         IOrganizationService Service;
-        public event EventHandler<EventArgs> Canceled;
+
+
+        List<AuditHistory> lsStory = new List<AuditHistory>();
+
         EntityCollection entitiesList;
         string identificator, fieldToExtract, fileName, separator;
         #endregion
@@ -33,7 +40,7 @@ namespace AuditHistoryExtractor.Controls
             InitializeComponent();
         }
 
-        public void ExportDataInCSV(string fileName, string identificator, string fieldToExtract)
+        public void RetriveAuditHistoryForRecords(string identificator)
         {
             this.fileName = fileName;
             this.identificator = identificator;
@@ -58,7 +65,7 @@ namespace AuditHistoryExtractor.Controls
 
         private void BackgroundWorkerExtractAuditHistory_DoWork(object sender, DoWorkEventArgs e)
         {
-            AuditHistoryManager auditHistoryManager = new AuditHistoryManager(Service, identificator, separator);
+            AuditHistoryManager auditHistoryManager = new AuditHistoryManager(Service);
             foreach (Entity entity in entitiesList.Entities)
             {
                 if (BackgroundWorkerExtractAuditHistory.CancellationPending)
@@ -68,21 +75,20 @@ namespace AuditHistoryExtractor.Controls
                 }
                 try
                 {
-                    auditHistoryManager.ExtractAuditHistoryForRecord(entity.Id, entity.LogicalName, entity.Attributes[identificator].ToString(), fieldToExtract);
-                    BackgroundWorkerExtractAuditHistory.ReportProgress(1, entity[identificator].ToString());
+                    string keyValue = string.IsNullOrEmpty(entity.GetAttributeValue<string>(identificator)) ? string.Empty : entity.GetAttributeValue<string>(identificator);
+                    lsStory.AddRange(auditHistoryManager.GetAuditHistoryForRecord(entity.Id, entity.LogicalName, entity.GetAttributeValue<string>(identificator)));
+                    BackgroundWorkerExtractAuditHistory.ReportProgress(1, keyValue);
                 }
                 catch (Exception ex)
                 {
-                    DialogResult dialogResult = MessageBox.Show(ex.Message,
-                               "Error",
-                                MessageBoxButtons.OK);
+                    DialogResult dialogResult = MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK);
                     return;
                 }
             }
 
-            auditHistoryManager.WriteFile(fileName);
 
-             MessageBox.Show(MessageAuditHistoryExtracted, TitleExportSuccess, MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            //MessageBox.Show(MessageAuditHistoryExtracted, TitleExportSuccess, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void BackgroundWorkerExtractAuditHistory_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -93,6 +99,10 @@ namespace AuditHistoryExtractor.Controls
 
         private void BackgroundWorkerExtractAuditHistory_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            if (OnExtractCompleted != null)
+            {
+                OnExtractCompleted(lsStory);
+            }
             this.Close();
         }
         #endregion

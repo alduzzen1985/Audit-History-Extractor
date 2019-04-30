@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MyPluginControl));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.tbClose = new System.Windows.Forms.ToolStripButton();
@@ -36,33 +37,46 @@
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.tbOpenFetchXMLBuilder = new System.Windows.Forms.ToolStripButton();
             this.btnExtractAuditHistory = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.cmbFieldToExtract = new System.Windows.Forms.ComboBox();
             this.cmbPrimaryKey = new System.Windows.Forms.ComboBox();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.label4 = new System.Windows.Forms.Label();
+            this.grpActions = new System.Windows.Forms.GroupBox();
+            this.btnPreview = new System.Windows.Forms.Button();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.txtFetchXML = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.lblSelectedEntity = new System.Windows.Forms.Label();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.grpFilterByFetchXml = new System.Windows.Forms.GroupBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.tabPageAuditDisabled = new System.Windows.Forms.TabPage();
-            this.lstEntitiesWithAuditDisabled = new System.Windows.Forms.ListView();
-            this.tabPageAuditEnabled = new System.Windows.Forms.TabPage();
-            this.lstEntitiesWithAuditEnabled = new System.Windows.Forms.ListView();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.lblViews = new System.Windows.Forms.Label();
+            this.cmbViews = new System.Windows.Forms.ComboBox();
+            this.lblEntities = new System.Windows.Forms.Label();
+            this.cmbEntities = new System.Windows.Forms.ComboBox();
+            this.rdbView = new System.Windows.Forms.RadioButton();
+            this.rdbFetchXml = new System.Windows.Forms.RadioButton();
+            this.chkPersonalView = new System.Windows.Forms.CheckBox();
+            this.lblFilterDataBy = new System.Windows.Forms.Label();
+            this.grpFilterByView = new System.Windows.Forms.GroupBox();
+            this.grpFilterMethod = new System.Windows.Forms.GroupBox();
+            this.dtGrvPreview = new System.Windows.Forms.DataGridView();
+            this.recordKeyValueDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.createdOnDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.usernameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.operationDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.actionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.attributeNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.oldValueDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.newValueDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.auditHistoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.grpPreview = new System.Windows.Forms.GroupBox();
+            this.lblAuditNotEnabled = new System.Windows.Forms.Label();
             this.toolStrip1.SuspendLayout();
-            this.groupBox1.SuspendLayout();
-            this.groupBox3.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.tabPageAuditDisabled.SuspendLayout();
-            this.tabPageAuditEnabled.SuspendLayout();
-            this.tabControl1.SuspendLayout();
+            this.grpActions.SuspendLayout();
+            this.grpFilterByFetchXml.SuspendLayout();
+            this.grpFilterByView.SuspendLayout();
+            this.grpFilterMethod.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dtGrvPreview)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.auditHistoryBindingSource)).BeginInit();
+            this.grpPreview.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStrip1
@@ -76,7 +90,7 @@
             this.tbOpenFetchXMLBuilder});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(1173, 27);
+            this.toolStrip1.Size = new System.Drawing.Size(1728, 27);
             this.toolStrip1.TabIndex = 3;
             this.toolStrip1.Text = "Get Entities";
             // 
@@ -116,52 +130,36 @@
             this.tbOpenFetchXMLBuilder.Name = "tbOpenFetchXMLBuilder";
             this.tbOpenFetchXMLBuilder.Size = new System.Drawing.Size(274, 24);
             this.tbOpenFetchXMLBuilder.Text = "Create Query from FetchXML Builder";
+            this.tbOpenFetchXMLBuilder.Visible = false;
             this.tbOpenFetchXMLBuilder.Click += new System.EventHandler(this.tbOpenFetchXMLBuilder_Click);
             // 
             // btnExtractAuditHistory
             // 
             this.btnExtractAuditHistory.Image = ((System.Drawing.Image)(resources.GetObject("btnExtractAuditHistory.Image")));
-            this.btnExtractAuditHistory.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnExtractAuditHistory.Location = new System.Drawing.Point(14, 40);
+            this.btnExtractAuditHistory.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnExtractAuditHistory.Location = new System.Drawing.Point(252, 36);
             this.btnExtractAuditHistory.Name = "btnExtractAuditHistory";
             this.btnExtractAuditHistory.Size = new System.Drawing.Size(212, 38);
             this.btnExtractAuditHistory.TabIndex = 29;
-            this.btnExtractAuditHistory.Text = "  Extract Audit History";
-            this.btnExtractAuditHistory.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.btnExtractAuditHistory.Text = "  Export to CSV";
             this.btnExtractAuditHistory.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnExtractAuditHistory.UseMnemonic = false;
             this.btnExtractAuditHistory.UseVisualStyleBackColor = true;
-            this.btnExtractAuditHistory.Click += new System.EventHandler(this.btnExtractAuditHistory_Click_1);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(11, 86);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(178, 17);
-            this.label2.TabIndex = 28;
-            this.label2.Text = "Audit history field to extract";
+            this.btnExtractAuditHistory.Click += new System.EventHandler(this.btnExtractAuditHistory_Click);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(11, 35);
+            this.label1.Location = new System.Drawing.Point(6, 78);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(112, 17);
+            this.label1.Size = new System.Drawing.Size(118, 17);
             this.label1.TabIndex = 27;
-            this.label1.Text = "Record Identifier";
-            // 
-            // cmbFieldToExtract
-            // 
-            this.cmbFieldToExtract.FormattingEnabled = true;
-            this.cmbFieldToExtract.Location = new System.Drawing.Point(227, 83);
-            this.cmbFieldToExtract.Name = "cmbFieldToExtract";
-            this.cmbFieldToExtract.Size = new System.Drawing.Size(411, 24);
-            this.cmbFieldToExtract.TabIndex = 26;
+            this.label1.Text = "Primary Key Field";
             // 
             // cmbPrimaryKey
             // 
             this.cmbPrimaryKey.FormattingEnabled = true;
-            this.cmbPrimaryKey.Location = new System.Drawing.Point(227, 32);
+            this.cmbPrimaryKey.Location = new System.Drawing.Point(146, 75);
             this.cmbPrimaryKey.Name = "cmbPrimaryKey";
             this.cmbPrimaryKey.Size = new System.Drawing.Size(411, 24);
             this.cmbPrimaryKey.TabIndex = 25;
@@ -170,42 +168,34 @@
             // 
             this.saveFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.saveFileDialog1_FileOk_1);
             // 
-            // groupBox1
+            // grpActions
             // 
-            this.groupBox1.Controls.Add(this.cmbPrimaryKey);
-            this.groupBox1.Controls.Add(this.cmbFieldToExtract);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Location = new System.Drawing.Point(487, 517);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(661, 138);
-            this.groupBox1.TabIndex = 36;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Audit History Selection";
+            this.grpActions.Controls.Add(this.btnPreview);
+            this.grpActions.Controls.Add(this.btnExtractAuditHistory);
+            this.grpActions.Location = new System.Drawing.Point(15, 663);
+            this.grpActions.Name = "grpActions";
+            this.grpActions.Size = new System.Drawing.Size(765, 111);
+            this.grpActions.TabIndex = 38;
+            this.grpActions.TabStop = false;
+            this.grpActions.Text = "Actions";
+            this.grpActions.Visible = false;
             // 
-            // groupBox3
+            // btnPreview
             // 
-            this.groupBox3.Controls.Add(this.btnExtractAuditHistory);
-            this.groupBox3.Location = new System.Drawing.Point(487, 697);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(661, 84);
-            this.groupBox3.TabIndex = 38;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Actions";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 38);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(470, 17);
-            this.label4.TabIndex = 33;
-            this.label4.Text = "A FetchXML is required to filter the records for the audit history to extract.";
+            this.btnPreview.Image = global::AuditHistoryExtractor.Properties.Resources.preview24x24;
+            this.btnPreview.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnPreview.Location = new System.Drawing.Point(23, 36);
+            this.btnPreview.Name = "btnPreview";
+            this.btnPreview.Size = new System.Drawing.Size(203, 38);
+            this.btnPreview.TabIndex = 30;
+            this.btnPreview.Text = "Preview Data";
+            this.btnPreview.UseVisualStyleBackColor = true;
+            this.btnPreview.Click += new System.EventHandler(this.btnPreview_Click);
             // 
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(295, 71);
+            this.linkLabel1.Location = new System.Drawing.Point(287, 29);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(38, 17);
             this.linkLabel1.TabIndex = 35;
@@ -215,150 +205,280 @@
             // 
             // txtFetchXML
             // 
-            this.txtFetchXML.Location = new System.Drawing.Point(6, 127);
+            this.txtFetchXML.Location = new System.Drawing.Point(9, 49);
             this.txtFetchXML.Multiline = true;
             this.txtFetchXML.Name = "txtFetchXML";
-            this.txtFetchXML.Size = new System.Drawing.Size(564, 286);
+            this.txtFetchXML.Size = new System.Drawing.Size(750, 287);
             this.txtFetchXML.TabIndex = 30;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(6, 71);
+            this.label5.Location = new System.Drawing.Point(6, 29);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(270, 17);
             this.label5.TabIndex = 34;
             this.label5.Text = "You can build your Fetch XML from here :";
             // 
-            // label3
+            // grpFilterByFetchXml
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(9, 101);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(114, 17);
-            this.label3.TabIndex = 36;
-            this.label3.Text = "Selected Entity : ";
-            // 
-            // lblSelectedEntity
-            // 
-            this.lblSelectedEntity.AutoSize = true;
-            this.lblSelectedEntity.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSelectedEntity.ForeColor = System.Drawing.Color.Red;
-            this.lblSelectedEntity.Location = new System.Drawing.Point(130, 101);
-            this.lblSelectedEntity.Name = "lblSelectedEntity";
-            this.lblSelectedEntity.Size = new System.Drawing.Size(14, 17);
-            this.lblSelectedEntity.TabIndex = 37;
-            this.lblSelectedEntity.Text = "-";
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.label6);
-            this.groupBox2.Controls.Add(this.lblSelectedEntity);
-            this.groupBox2.Controls.Add(this.label3);
-            this.groupBox2.Controls.Add(this.label5);
-            this.groupBox2.Controls.Add(this.txtFetchXML);
-            this.groupBox2.Controls.Add(this.linkLabel1);
-            this.groupBox2.Controls.Add(this.label4);
-            this.groupBox2.Location = new System.Drawing.Point(487, 55);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(661, 433);
-            this.groupBox2.TabIndex = 37;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Filter Data ";
+            this.grpFilterByFetchXml.AutoSize = true;
+            this.grpFilterByFetchXml.Controls.Add(this.label6);
+            this.grpFilterByFetchXml.Controls.Add(this.label5);
+            this.grpFilterByFetchXml.Controls.Add(this.txtFetchXML);
+            this.grpFilterByFetchXml.Controls.Add(this.linkLabel1);
+            this.grpFilterByFetchXml.Location = new System.Drawing.Point(15, 321);
+            this.grpFilterByFetchXml.Name = "grpFilterByFetchXml";
+            this.grpFilterByFetchXml.Size = new System.Drawing.Size(765, 357);
+            this.grpFilterByFetchXml.TabIndex = 37;
+            this.grpFilterByFetchXml.TabStop = false;
+            this.grpFilterByFetchXml.Text = "Filter Data with FetchXML";
+            this.grpFilterByFetchXml.Visible = false;
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(339, 71);
+            this.label6.Location = new System.Drawing.Point(333, 29);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(174, 17);
+            this.label6.Size = new System.Drawing.Size(243, 17);
             this.label6.TabIndex = 38;
-            this.label6.Text = "or using FetchXML Builder";
+            this.label6.Text = "or using the FetchXML Builder Button";
             // 
-            // tabPageAuditDisabled
+            // lblViews
             // 
-            this.tabPageAuditDisabled.Controls.Add(this.lstEntitiesWithAuditDisabled);
-            this.tabPageAuditDisabled.Location = new System.Drawing.Point(4, 25);
-            this.tabPageAuditDisabled.Name = "tabPageAuditDisabled";
-            this.tabPageAuditDisabled.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageAuditDisabled.Size = new System.Drawing.Size(452, 758);
-            this.tabPageAuditDisabled.TabIndex = 1;
-            this.tabPageAuditDisabled.Text = "Entities with Audit Disabled";
-            this.tabPageAuditDisabled.UseVisualStyleBackColor = true;
+            this.lblViews.AutoSize = true;
+            this.lblViews.Location = new System.Drawing.Point(6, 33);
+            this.lblViews.Name = "lblViews";
+            this.lblViews.Size = new System.Drawing.Size(44, 17);
+            this.lblViews.TabIndex = 39;
+            this.lblViews.Text = "Views";
             // 
-            // lstEntitiesWithAuditDisabled
+            // cmbViews
             // 
-            this.lstEntitiesWithAuditDisabled.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.lstEntitiesWithAuditDisabled.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lstEntitiesWithAuditDisabled.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.lstEntitiesWithAuditDisabled.Location = new System.Drawing.Point(3, 3);
-            this.lstEntitiesWithAuditDisabled.Name = "lstEntitiesWithAuditDisabled";
-            this.lstEntitiesWithAuditDisabled.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.lstEntitiesWithAuditDisabled.Size = new System.Drawing.Size(446, 752);
-            this.lstEntitiesWithAuditDisabled.TabIndex = 33;
-            this.lstEntitiesWithAuditDisabled.UseCompatibleStateImageBehavior = false;
-            this.lstEntitiesWithAuditDisabled.View = System.Windows.Forms.View.List;
-            this.lstEntitiesWithAuditDisabled.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.lstEntities_ItemSelectionChanged_1);
+            this.cmbViews.FormattingEnabled = true;
+            this.cmbViews.Location = new System.Drawing.Point(74, 33);
+            this.cmbViews.Name = "cmbViews";
+            this.cmbViews.Size = new System.Drawing.Size(390, 24);
+            this.cmbViews.TabIndex = 40;
+            this.cmbViews.SelectedIndexChanged += new System.EventHandler(this.cmbViews_SelectedIndexChanged);
             // 
-            // tabPageAuditEnabled
+            // lblEntities
             // 
-            this.tabPageAuditEnabled.Controls.Add(this.lstEntitiesWithAuditEnabled);
-            this.tabPageAuditEnabled.Location = new System.Drawing.Point(4, 25);
-            this.tabPageAuditEnabled.Name = "tabPageAuditEnabled";
-            this.tabPageAuditEnabled.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageAuditEnabled.Size = new System.Drawing.Size(452, 758);
-            this.tabPageAuditEnabled.TabIndex = 0;
-            this.tabPageAuditEnabled.Text = "Entities With Audit Enabled";
-            this.tabPageAuditEnabled.UseVisualStyleBackColor = true;
+            this.lblEntities.AutoSize = true;
+            this.lblEntities.Location = new System.Drawing.Point(6, 37);
+            this.lblEntities.Name = "lblEntities";
+            this.lblEntities.Size = new System.Drawing.Size(43, 17);
+            this.lblEntities.TabIndex = 41;
+            this.lblEntities.Text = "Entity";
             // 
-            // lstEntitiesWithAuditEnabled
+            // cmbEntities
             // 
-            this.lstEntitiesWithAuditEnabled.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.lstEntitiesWithAuditEnabled.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lstEntitiesWithAuditEnabled.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.lstEntitiesWithAuditEnabled.Location = new System.Drawing.Point(3, 3);
-            this.lstEntitiesWithAuditEnabled.MultiSelect = false;
-            this.lstEntitiesWithAuditEnabled.Name = "lstEntitiesWithAuditEnabled";
-            this.lstEntitiesWithAuditEnabled.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.lstEntitiesWithAuditEnabled.Size = new System.Drawing.Size(446, 752);
-            this.lstEntitiesWithAuditEnabled.TabIndex = 16;
-            this.lstEntitiesWithAuditEnabled.UseCompatibleStateImageBehavior = false;
-            this.lstEntitiesWithAuditEnabled.View = System.Windows.Forms.View.List;
-            this.lstEntitiesWithAuditEnabled.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.lstEntities_ItemSelectionChanged_1);
+            this.cmbEntities.FormattingEnabled = true;
+            this.cmbEntities.Location = new System.Drawing.Point(146, 34);
+            this.cmbEntities.Name = "cmbEntities";
+            this.cmbEntities.Size = new System.Drawing.Size(411, 24);
+            this.cmbEntities.TabIndex = 42;
+            this.cmbEntities.SelectedIndexChanged += new System.EventHandler(this.cmbEntities_SelectedIndexChanged);
             // 
-            // tabControl1
+            // rdbView
             // 
-            this.tabControl1.Controls.Add(this.tabPageAuditEnabled);
-            this.tabControl1.Controls.Add(this.tabPageAuditDisabled);
-            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.tabControl1.Location = new System.Drawing.Point(0, 27);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(460, 787);
-            this.tabControl1.TabIndex = 32;
+            this.rdbView.AutoSize = true;
+            this.rdbView.Location = new System.Drawing.Point(146, 116);
+            this.rdbView.Name = "rdbView";
+            this.rdbView.Size = new System.Drawing.Size(58, 21);
+            this.rdbView.TabIndex = 43;
+            this.rdbView.TabStop = true;
+            this.rdbView.Text = "View";
+            this.rdbView.UseVisualStyleBackColor = true;
+            this.rdbView.CheckedChanged += new System.EventHandler(this.rdbView_CheckedChanged);
+            // 
+            // rdbFetchXml
+            // 
+            this.rdbFetchXml.AutoSize = true;
+            this.rdbFetchXml.Location = new System.Drawing.Point(213, 116);
+            this.rdbFetchXml.Name = "rdbFetchXml";
+            this.rdbFetchXml.Size = new System.Drawing.Size(92, 21);
+            this.rdbFetchXml.TabIndex = 44;
+            this.rdbFetchXml.TabStop = true;
+            this.rdbFetchXml.Text = "FetchXML";
+            this.rdbFetchXml.UseVisualStyleBackColor = true;
+            this.rdbFetchXml.CheckedChanged += new System.EventHandler(this.rdbFetchXml_CheckedChanged);
+            // 
+            // chkPersonalView
+            // 
+            this.chkPersonalView.AutoSize = true;
+            this.chkPersonalView.Location = new System.Drawing.Point(486, 33);
+            this.chkPersonalView.Name = "chkPersonalView";
+            this.chkPersonalView.Size = new System.Drawing.Size(157, 21);
+            this.chkPersonalView.TabIndex = 43;
+            this.chkPersonalView.Text = "Show Personal View";
+            this.chkPersonalView.UseVisualStyleBackColor = true;
+            this.chkPersonalView.CheckedChanged += new System.EventHandler(this.chkPersonalView_CheckedChanged);
+            // 
+            // lblFilterDataBy
+            // 
+            this.lblFilterDataBy.AutoSize = true;
+            this.lblFilterDataBy.Location = new System.Drawing.Point(6, 118);
+            this.lblFilterDataBy.Name = "lblFilterDataBy";
+            this.lblFilterDataBy.Size = new System.Drawing.Size(123, 17);
+            this.lblFilterDataBy.TabIndex = 46;
+            this.lblFilterDataBy.Text = "Filter Data using : ";
+            // 
+            // grpFilterByView
+            // 
+            this.grpFilterByView.AutoSize = true;
+            this.grpFilterByView.Controls.Add(this.chkPersonalView);
+            this.grpFilterByView.Controls.Add(this.lblViews);
+            this.grpFilterByView.Controls.Add(this.cmbViews);
+            this.grpFilterByView.Location = new System.Drawing.Point(15, 212);
+            this.grpFilterByView.Name = "grpFilterByView";
+            this.grpFilterByView.Size = new System.Drawing.Size(765, 83);
+            this.grpFilterByView.TabIndex = 44;
+            this.grpFilterByView.TabStop = false;
+            this.grpFilterByView.Text = "Filter by View";
+            this.grpFilterByView.Visible = false;
+            // 
+            // grpFilterMethod
+            // 
+            this.grpFilterMethod.AutoSize = true;
+            this.grpFilterMethod.Controls.Add(this.lblAuditNotEnabled);
+            this.grpFilterMethod.Controls.Add(this.cmbPrimaryKey);
+            this.grpFilterMethod.Controls.Add(this.label1);
+            this.grpFilterMethod.Controls.Add(this.lblFilterDataBy);
+            this.grpFilterMethod.Controls.Add(this.rdbView);
+            this.grpFilterMethod.Controls.Add(this.lblEntities);
+            this.grpFilterMethod.Controls.Add(this.rdbFetchXml);
+            this.grpFilterMethod.Controls.Add(this.cmbEntities);
+            this.grpFilterMethod.Location = new System.Drawing.Point(15, 42);
+            this.grpFilterMethod.Name = "grpFilterMethod";
+            this.grpFilterMethod.Size = new System.Drawing.Size(765, 164);
+            this.grpFilterMethod.TabIndex = 47;
+            this.grpFilterMethod.TabStop = false;
+            this.grpFilterMethod.Text = "Filter Method";
+            // 
+            // dtGrvPreview
+            // 
+            this.dtGrvPreview.AutoGenerateColumns = false;
+            this.dtGrvPreview.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dtGrvPreview.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.dtGrvPreview.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.recordKeyValueDataGridViewTextBoxColumn,
+            this.createdOnDataGridViewTextBoxColumn,
+            this.usernameDataGridViewTextBoxColumn,
+            this.operationDataGridViewTextBoxColumn,
+            this.actionDataGridViewTextBoxColumn,
+            this.attributeNameDataGridViewTextBoxColumn,
+            this.oldValueDataGridViewTextBoxColumn,
+            this.newValueDataGridViewTextBoxColumn});
+            this.dtGrvPreview.DataSource = this.auditHistoryBindingSource;
+            this.dtGrvPreview.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dtGrvPreview.Location = new System.Drawing.Point(3, 18);
+            this.dtGrvPreview.Name = "dtGrvPreview";
+            this.dtGrvPreview.RowTemplate.Height = 24;
+            this.dtGrvPreview.Size = new System.Drawing.Size(902, 829);
+            this.dtGrvPreview.TabIndex = 48;
+            // 
+            // recordKeyValueDataGridViewTextBoxColumn
+            // 
+            this.recordKeyValueDataGridViewTextBoxColumn.DataPropertyName = "RecordKeyValue";
+            this.recordKeyValueDataGridViewTextBoxColumn.HeaderText = "RecordKeyValue";
+            this.recordKeyValueDataGridViewTextBoxColumn.Name = "recordKeyValueDataGridViewTextBoxColumn";
+            // 
+            // createdOnDataGridViewTextBoxColumn
+            // 
+            this.createdOnDataGridViewTextBoxColumn.DataPropertyName = "CreatedOn";
+            this.createdOnDataGridViewTextBoxColumn.HeaderText = "CreatedOn";
+            this.createdOnDataGridViewTextBoxColumn.Name = "createdOnDataGridViewTextBoxColumn";
+            // 
+            // usernameDataGridViewTextBoxColumn
+            // 
+            this.usernameDataGridViewTextBoxColumn.DataPropertyName = "Username";
+            this.usernameDataGridViewTextBoxColumn.HeaderText = "Username";
+            this.usernameDataGridViewTextBoxColumn.Name = "usernameDataGridViewTextBoxColumn";
+            // 
+            // operationDataGridViewTextBoxColumn
+            // 
+            this.operationDataGridViewTextBoxColumn.DataPropertyName = "Operation";
+            this.operationDataGridViewTextBoxColumn.HeaderText = "Operation";
+            this.operationDataGridViewTextBoxColumn.Name = "operationDataGridViewTextBoxColumn";
+            // 
+            // actionDataGridViewTextBoxColumn
+            // 
+            this.actionDataGridViewTextBoxColumn.DataPropertyName = "Action";
+            this.actionDataGridViewTextBoxColumn.HeaderText = "Action";
+            this.actionDataGridViewTextBoxColumn.Name = "actionDataGridViewTextBoxColumn";
+            // 
+            // attributeNameDataGridViewTextBoxColumn
+            // 
+            this.attributeNameDataGridViewTextBoxColumn.DataPropertyName = "AttributeName";
+            this.attributeNameDataGridViewTextBoxColumn.HeaderText = "AttributeName";
+            this.attributeNameDataGridViewTextBoxColumn.Name = "attributeNameDataGridViewTextBoxColumn";
+            // 
+            // oldValueDataGridViewTextBoxColumn
+            // 
+            this.oldValueDataGridViewTextBoxColumn.DataPropertyName = "OldValue";
+            this.oldValueDataGridViewTextBoxColumn.HeaderText = "OldValue";
+            this.oldValueDataGridViewTextBoxColumn.Name = "oldValueDataGridViewTextBoxColumn";
+            // 
+            // newValueDataGridViewTextBoxColumn
+            // 
+            this.newValueDataGridViewTextBoxColumn.DataPropertyName = "NewValue";
+            this.newValueDataGridViewTextBoxColumn.HeaderText = "NewValue";
+            this.newValueDataGridViewTextBoxColumn.Name = "newValueDataGridViewTextBoxColumn";
+            // 
+            // auditHistoryBindingSource
+            // 
+            this.auditHistoryBindingSource.DataSource = typeof(AuditHistoryExtractor.Classes.AuditHistory);
+            // 
+            // grpPreview
+            // 
+            this.grpPreview.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.grpPreview.Controls.Add(this.dtGrvPreview);
+            this.grpPreview.Location = new System.Drawing.Point(800, 42);
+            this.grpPreview.Name = "grpPreview";
+            this.grpPreview.Size = new System.Drawing.Size(908, 850);
+            this.grpPreview.TabIndex = 49;
+            this.grpPreview.TabStop = false;
+            this.grpPreview.Text = "Preview";
+            // 
+            // lblAuditNotEnabled
+            // 
+            this.lblAuditNotEnabled.AutoSize = true;
+            this.lblAuditNotEnabled.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblAuditNotEnabled.ForeColor = System.Drawing.Color.Red;
+            this.lblAuditNotEnabled.Location = new System.Drawing.Point(564, 36);
+            this.lblAuditNotEnabled.Name = "lblAuditNotEnabled";
+            this.lblAuditNotEnabled.Size = new System.Drawing.Size(141, 17);
+            this.lblAuditNotEnabled.TabIndex = 47;
+            this.lblAuditNotEnabled.Text = "Audit not enabled.";
+            this.lblAuditNotEnabled.Visible = false;
             // 
             // MyPluginControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
-            this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.tabControl1);
+            this.Controls.Add(this.grpPreview);
+            this.Controls.Add(this.grpFilterMethod);
+            this.Controls.Add(this.grpFilterByView);
+            this.Controls.Add(this.grpActions);
+            this.Controls.Add(this.grpFilterByFetchXml);
             this.Controls.Add(this.toolStrip1);
             this.Name = "MyPluginControl";
-            this.Size = new System.Drawing.Size(1173, 814);
+            this.Size = new System.Drawing.Size(1728, 968);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            this.tabPageAuditDisabled.ResumeLayout(false);
-            this.tabPageAuditEnabled.ResumeLayout(false);
-            this.tabControl1.ResumeLayout(false);
+            this.grpActions.ResumeLayout(false);
+            this.grpFilterByFetchXml.ResumeLayout(false);
+            this.grpFilterByFetchXml.PerformLayout();
+            this.grpFilterByView.ResumeLayout(false);
+            this.grpFilterByView.PerformLayout();
+            this.grpFilterMethod.ResumeLayout(false);
+            this.grpFilterMethod.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dtGrvPreview)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.auditHistoryBindingSource)).EndInit();
+            this.grpPreview.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -371,26 +491,38 @@
         private System.Windows.Forms.ToolStripButton tbFromEntitiesEnabled;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.Button btnExtractAuditHistory;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox cmbFieldToExtract;
         private System.Windows.Forms.ComboBox cmbPrimaryKey;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.GroupBox grpActions;
         private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.TextBox txtFetchXML;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label lblSelectedEntity;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.TabPage tabPageAuditDisabled;
-        private System.Windows.Forms.ListView lstEntitiesWithAuditDisabled;
-        private System.Windows.Forms.TabPage tabPageAuditEnabled;
-        private System.Windows.Forms.ListView lstEntitiesWithAuditEnabled;
-        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.GroupBox grpFilterByFetchXml;
         private System.Windows.Forms.ToolStripButton tbOpenFetchXMLBuilder;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label lblViews;
+        private System.Windows.Forms.ComboBox cmbViews;
+        private System.Windows.Forms.Label lblEntities;
+        private System.Windows.Forms.ComboBox cmbEntities;
+        private System.Windows.Forms.RadioButton rdbView;
+        private System.Windows.Forms.RadioButton rdbFetchXml;
+        private System.Windows.Forms.CheckBox chkPersonalView;
+        private System.Windows.Forms.Label lblFilterDataBy;
+        private System.Windows.Forms.GroupBox grpFilterByView;
+        private System.Windows.Forms.GroupBox grpFilterMethod;
+        private System.Windows.Forms.DataGridView dtGrvPreview;
+        private System.Windows.Forms.GroupBox grpPreview;
+        private System.Windows.Forms.Button btnPreview;
+        private System.Windows.Forms.BindingSource auditHistoryBindingSource;
+        private System.Windows.Forms.DataGridViewTextBoxColumn recordKeyValueDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn createdOnDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn usernameDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn operationDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn actionDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn attributeNameDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn oldValueDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn newValueDataGridViewTextBoxColumn;
+        private System.Windows.Forms.Label lblAuditNotEnabled;
     }
 }

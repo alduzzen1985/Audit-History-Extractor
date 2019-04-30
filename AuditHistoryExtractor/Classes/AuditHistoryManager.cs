@@ -13,125 +13,23 @@ namespace AuditHistoryExtractor.AppCode
 {
     public class AuditHistoryManager
     {
-        private const string ErrorMessageUnableToWrite = "It is not possible to write the file, ensure that the file isn't being used by another program.";
-
-        CsvWriter csvWriter;
         private IOrganizationService _service;
-        private string delimiter;
+       
         private string identificatorField;
-        private List<AuditHistoryRecord> lsAuditHistoryRecords;
+
         private OptionSetManager optionSetManager;
 
 
 
         public AuditHistoryManager(IOrganizationService service, string identificatorField, string delimiter)
         {
-            lsAuditHistoryRecords = new List<AuditHistoryRecord>();
-            this.delimiter = delimiter;
             this.identificatorField = identificatorField;
             _service = service;
         }
 
-        /// <summary>
-        /// Extract the audit history for the record
-        /// </summary>
-        /// <param name="entityID">ID of the Account</param>
-        /// <param name="identificatorField">Identificator of the Row</param>
-        /// <param name="attributeName">Name of the attribute to retrieve for Audit History</param>
-        /// <param name="fileName">File to write</param>
-        public void ExtractAuditHistoryForRecord(Guid entityID, string entityLogicalName, string identificatorField, string attributeName)
+        public AuditHistoryManager(IOrganizationService service)
         {
-
-            var attributeChangeHistoryRequest = new RetrieveAttributeChangeHistoryRequest
-            {
-                Target = new EntityReference(entityLogicalName, entityID),
-                AttributeLogicalName = attributeName,
-
-            };
-
-            RetrieveRecordChangeHistoryRequest changeRequest = new RetrieveRecordChangeHistoryRequest();
-            changeRequest.Target = new EntityReference(entityLogicalName, entityID);
-
-            RetrieveRecordChangeHistoryResponse changeResponse = (RetrieveRecordChangeHistoryResponse)_service.Execute(changeRequest);
-            AuditDetailCollection details = changeResponse.AuditDetailCollection;
-
-            var attributeChangeHistoryResponse = (RetrieveAttributeChangeHistoryResponse)_service.Execute(attributeChangeHistoryRequest);
-
-            details = attributeChangeHistoryResponse.AuditDetailCollection;
-
-            foreach (var detail in details.AuditDetails)
-            {
-                GetRecordChanges(detail, identificatorField);
-            }
-
-        }
-
-
-        /// <summary>
-        /// Get the record for the Audit History
-        /// </summary>
-        /// <param name="detail">Audit row retrieved</param>
-        /// <param name="identificatorField">Account number</param>
-        private void GetRecordChanges(AuditDetail detail, string identificatorField)
-        {
-
-            String oldValue = "(no value)", newValue = "(no value)";
-            Entity record = (Entity)detail.AuditRecord;
-            string date = record.GetAttributeValue<DateTime>("createdon").ToLocalTime().ToString();
-            string action = record.FormattedValues["action"];
-            string operation = record.FormattedValues["operation"];
-            string user = (record["userid"] as EntityReference).Name;
-
-            EntityReference newValueRef = null;
-
-
-            var detailType = detail.GetType();
-            if (detailType == typeof(AttributeAuditDetail))
-            {
-                var attributeDetail = (AttributeAuditDetail)detail;
-
-                // Display the old and new attribute values.
-                foreach (KeyValuePair<String, object> attribute in attributeDetail.NewValue.Attributes)
-                {
-
-
-                    oldValue = GetValue(attributeDetail.OldValue, attribute.Key);
-                    newValue = GetValue(attributeDetail.NewValue, attribute.Key);
-
-                    lsAuditHistoryRecords.Add(new AuditHistoryRecord()
-                    {
-                        DateOperation = date,
-                        Action = action,
-                        SystemUser = user,
-                        RecordIdentificator = identificatorField,
-                        Operation = operation,
-                        NewValue = newValue,
-                        OldValue = oldValue
-                    });
-
-                }
-
-                foreach (KeyValuePair<String, object> attribute in attributeDetail.OldValue.Attributes)
-                {
-                    if (!attributeDetail.NewValue.Contains(attribute.Key))
-                    {
-                        newValue = "(no value)";
-                        oldValue = GetValue(attributeDetail.OldValue, attribute.Key);
-
-
-                        lsAuditHistoryRecords.Add(new AuditHistoryRecord()
-                        {
-                            DateOperation = date,
-                            Action = action,
-                            SystemUser = user,
-                            RecordIdentificator = identificatorField,
-                            Operation = operation,
-                            NewValue = newValue,
-                            OldValue = oldValue
-                        });
-                    }
-                }
-            }
+            _service = service;
         }
 
 
@@ -179,23 +77,105 @@ namespace AuditHistoryExtractor.AppCode
         }
 
 
-        public void WriteFile(string fileName)
+        public List<AuditHistory> GetAuditHistoryForRecord(Guid entityID, string entityLogicalName, string recordKeyValue)
         {
-            try
+            List<AuditHistory> auditHistoryForRecord = new List<AuditHistory>();
+            RetrieveRecordChangeHistoryRequest changeRequest = new RetrieveRecordChangeHistoryRequest();
+            //  EntityReference refe = auditRecord.GetAttributeValue<EntityReference>("objectid");
+            changeRequest.Target = new EntityReference(entityLogicalName, entityID);
+            
+            RetrieveRecordChangeHistoryResponse changeResponse = (RetrieveRecordChangeHistoryResponse)_service.Execute(changeRequest);
+            AuditDetailCollection details = changeResponse.AuditDetailCollection;
+            foreach (AuditDetail detail in details.AuditDetails)
             {
-                using (TextWriter writer = new StreamWriter(fileName))
+            
+                AuditHistory change = DisplayAuditDetails(detail);
+                if (change != null)
                 {
-                    csvWriter = new CsvWriter(writer);
-                    csvWriter.Configuration.Delimiter = delimiter;
-                    csvWriter.Configuration.QuoteAllFields = true;
-                    csvWriter.Configuration.RegisterClassMap(new AuditHistoryRecordMap(identificatorField));
-                    csvWriter.WriteRecords(lsAuditHistoryRecords); // where values implements IEnumerable
+                    change.RecordKeyValue = recordKeyValue;
+                    auditHistoryForRecord.Add(change);
+   
                 }
             }
-            catch (Exception ex)
+            return auditHistoryForRecord;
+
+        }
+
+
+        private AuditHistory DisplayAuditDetails(AuditDetail detail)
+        {
+            AuditHistory auditHistory = new AuditHistory();
+
+
+            // Write out some of the change history information in the audit record. 
+            Entity record = (Entity)detail.AuditRecord;
+
+            Console.WriteLine("\nAudit record created on: {0}", record.GetAttributeValue<DateTime>("createdon").ToLocalTime());
+            Console.WriteLine("Entity: {0}, Action: {1}, Operation: {2}, Transaction Id {3}", record.GetAttributeValue<EntityReference>("objectid").LogicalName, record.FormattedValues["action"], record.FormattedValues["operation"], record.GetAttributeValue<Guid>("auditid").ToString());
+
+            auditHistory.EntityName = record.GetAttributeValue<EntityReference>("objectid").LogicalName;
+            auditHistory.CreatedOn = record.GetAttributeValue<DateTime>("createdon");
+            auditHistory.ActionId = record.GetAttributeValue<OptionSetValue>("action").Value;
+            auditHistory.OperationId = record.GetAttributeValue<OptionSetValue>("operation").Value;
+            auditHistory.AuditId = record.GetAttributeValue<Guid>("auditid");
+            auditHistory.UserId = record.GetAttributeValue<EntityReference>("userid").Id;
+            auditHistory.RecordId = record.GetAttributeValue<EntityReference>("objectid").Id;
+
+
+            if (record.FormattedValues.Contains("action")) { auditHistory.Action = record.FormattedValues["action"]; }
+            if (record.FormattedValues.Contains("operation")) { auditHistory.Operation = record.FormattedValues["operation"]; }
+            if (record.GetAttributeValue<EntityReference>("userid") != null) { auditHistory.Username = record.GetAttributeValue<EntityReference>("userid").Name; }
+
+
+            Console.WriteLine("USER : {0}", record.GetAttributeValue<EntityReference>("userid").Name);
+            // Show additional details for certain AuditDetail sub-types.
+            var detailType = detail.GetType();
+            if (detailType == typeof(AttributeAuditDetail) && ((AttributeAuditDetail)detail).NewValue != null)
             {
-                throw new Exception(ErrorMessageUnableToWrite);
+                var attributeDetail = (AttributeAuditDetail)detail;
+
+                // Display the old and new attribute values.
+                foreach (KeyValuePair<String, object> attribute in attributeDetail.NewValue.Attributes)
+                {
+                    String oldValue = "(no value)", newValue = "(no value)";
+
+                    //TODO Display the lookup values of those attributes that do not contain strings.
+                    if (attributeDetail.OldValue.Contains(attribute.Key))
+                    {
+                        oldValue = GetValue(attributeDetail.OldValue, attribute.Key);
+                    }
+
+                    newValue = GetValue(attributeDetail.NewValue, attribute.Key);
+
+                    Console.WriteLine("Attribute: {0}, old value: {1}, new value: {2}", attribute.Key, oldValue, newValue);
+
+
+                    auditHistory.OldValue = oldValue;
+                    auditHistory.NewValue = newValue;
+                    auditHistory.AttributeName = attribute.Key;
+                }
+
+                foreach (KeyValuePair<String, object> attribute in attributeDetail.OldValue.Attributes)
+                {
+                    if (!attributeDetail.NewValue.Contains(attribute.Key))
+                    {
+                        String newValue = "(no value)";
+
+                        //TODO Display the lookup values of those attributes that do not contain strings.
+                        String oldValue = GetValue(attributeDetail.OldValue, attribute.Key);// attributeDetail.OldValue[attribute.Key].ToString();
+                        Console.WriteLine("Attribute: {0}, old value: {1}, new value: {2}", attribute.Key, oldValue, newValue);
+
+                        auditHistory.OldValue = oldValue;
+                        auditHistory.NewValue = newValue;
+                        auditHistory.AttributeName = attribute.Key;
+                    }
+                }
             }
+            else
+            {
+                auditHistory = null;
+            }
+            return auditHistory;
         }
     }
 }

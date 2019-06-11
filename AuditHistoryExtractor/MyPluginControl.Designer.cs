@@ -57,6 +57,7 @@
             this.lblFilterDataBy = new System.Windows.Forms.Label();
             this.grpFilterByView = new System.Windows.Forms.GroupBox();
             this.grpFilterMethod = new System.Windows.Forms.GroupBox();
+            this.lblAuditHistoryNotEnabled = new System.Windows.Forms.Label();
             this.dtGrvPreview = new System.Windows.Forms.DataGridView();
             this.recordKeyValueDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.createdOnDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -68,7 +69,11 @@
             this.newValueDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.auditHistoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.grpPreview = new System.Windows.Forms.GroupBox();
-            this.lblAuditNotEnabled = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lblField = new System.Windows.Forms.Label();
+            this.cmbFields = new System.Windows.Forms.ComboBox();
+            this.rdSpecificField = new System.Windows.Forms.RadioButton();
+            this.rdAllFields = new System.Windows.Forms.RadioButton();
             this.toolStrip1.SuspendLayout();
             this.grpActions.SuspendLayout();
             this.grpFilterByFetchXml.SuspendLayout();
@@ -77,6 +82,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dtGrvPreview)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.auditHistoryBindingSource)).BeginInit();
             this.grpPreview.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStrip1
@@ -172,7 +178,7 @@
             // 
             this.grpActions.Controls.Add(this.btnPreview);
             this.grpActions.Controls.Add(this.btnExtractAuditHistory);
-            this.grpActions.Location = new System.Drawing.Point(15, 663);
+            this.grpActions.Location = new System.Drawing.Point(15, 799);
             this.grpActions.Name = "grpActions";
             this.grpActions.Size = new System.Drawing.Size(765, 111);
             this.grpActions.TabIndex = 38;
@@ -227,7 +233,7 @@
             this.grpFilterByFetchXml.Controls.Add(this.label5);
             this.grpFilterByFetchXml.Controls.Add(this.txtFetchXML);
             this.grpFilterByFetchXml.Controls.Add(this.linkLabel1);
-            this.grpFilterByFetchXml.Location = new System.Drawing.Point(15, 321);
+            this.grpFilterByFetchXml.Location = new System.Drawing.Point(15, 432);
             this.grpFilterByFetchXml.Name = "grpFilterByFetchXml";
             this.grpFilterByFetchXml.Size = new System.Drawing.Size(765, 357);
             this.grpFilterByFetchXml.TabIndex = 37;
@@ -330,7 +336,7 @@
             this.grpFilterByView.Controls.Add(this.chkPersonalView);
             this.grpFilterByView.Controls.Add(this.lblViews);
             this.grpFilterByView.Controls.Add(this.cmbViews);
-            this.grpFilterByView.Location = new System.Drawing.Point(15, 212);
+            this.grpFilterByView.Location = new System.Drawing.Point(15, 335);
             this.grpFilterByView.Name = "grpFilterByView";
             this.grpFilterByView.Size = new System.Drawing.Size(765, 83);
             this.grpFilterByView.TabIndex = 44;
@@ -341,7 +347,7 @@
             // grpFilterMethod
             // 
             this.grpFilterMethod.AutoSize = true;
-            this.grpFilterMethod.Controls.Add(this.lblAuditNotEnabled);
+            this.grpFilterMethod.Controls.Add(this.lblAuditHistoryNotEnabled);
             this.grpFilterMethod.Controls.Add(this.cmbPrimaryKey);
             this.grpFilterMethod.Controls.Add(this.label1);
             this.grpFilterMethod.Controls.Add(this.lblFilterDataBy);
@@ -355,6 +361,18 @@
             this.grpFilterMethod.TabIndex = 47;
             this.grpFilterMethod.TabStop = false;
             this.grpFilterMethod.Text = "Filter Method";
+            // 
+            // lblAuditHistoryNotEnabled
+            // 
+            this.lblAuditHistoryNotEnabled.AutoSize = true;
+            this.lblAuditHistoryNotEnabled.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblAuditHistoryNotEnabled.ForeColor = System.Drawing.Color.Red;
+            this.lblAuditHistoryNotEnabled.Location = new System.Drawing.Point(564, 37);
+            this.lblAuditHistoryNotEnabled.Name = "lblAuditHistoryNotEnabled";
+            this.lblAuditHistoryNotEnabled.Size = new System.Drawing.Size(192, 17);
+            this.lblAuditHistoryNotEnabled.TabIndex = 47;
+            this.lblAuditHistoryNotEnabled.Text = "Audit History not enabled";
+            this.lblAuditHistoryNotEnabled.Visible = false;
             // 
             // dtGrvPreview
             // 
@@ -442,23 +460,68 @@
             this.grpPreview.TabStop = false;
             this.grpPreview.Text = "Preview";
             // 
-            // lblAuditNotEnabled
+            // groupBox1
             // 
-            this.lblAuditNotEnabled.AutoSize = true;
-            this.lblAuditNotEnabled.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblAuditNotEnabled.ForeColor = System.Drawing.Color.Red;
-            this.lblAuditNotEnabled.Location = new System.Drawing.Point(564, 36);
-            this.lblAuditNotEnabled.Name = "lblAuditNotEnabled";
-            this.lblAuditNotEnabled.Size = new System.Drawing.Size(141, 17);
-            this.lblAuditNotEnabled.TabIndex = 47;
-            this.lblAuditNotEnabled.Text = "Audit not enabled.";
-            this.lblAuditNotEnabled.Visible = false;
+            this.groupBox1.Controls.Add(this.lblField);
+            this.groupBox1.Controls.Add(this.cmbFields);
+            this.groupBox1.Controls.Add(this.rdSpecificField);
+            this.groupBox1.Controls.Add(this.rdAllFields);
+            this.groupBox1.Location = new System.Drawing.Point(15, 212);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(765, 114);
+            this.groupBox1.TabIndex = 50;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "View Audit History for";
+            // 
+            // lblField
+            // 
+            this.lblField.AutoSize = true;
+            this.lblField.Location = new System.Drawing.Point(6, 76);
+            this.lblField.Name = "lblField";
+            this.lblField.Size = new System.Drawing.Size(38, 17);
+            this.lblField.TabIndex = 3;
+            this.lblField.Text = "Field";
+            this.lblField.Visible = false;
+            // 
+            // cmbFields
+            // 
+            this.cmbFields.FormattingEnabled = true;
+            this.cmbFields.Location = new System.Drawing.Point(74, 76);
+            this.cmbFields.Name = "cmbFields";
+            this.cmbFields.Size = new System.Drawing.Size(390, 24);
+            this.cmbFields.TabIndex = 2;
+            this.cmbFields.Visible = false;
+            // 
+            // rdSpecificField
+            // 
+            this.rdSpecificField.AutoSize = true;
+            this.rdSpecificField.Location = new System.Drawing.Point(162, 36);
+            this.rdSpecificField.Name = "rdSpecificField";
+            this.rdSpecificField.Size = new System.Drawing.Size(143, 21);
+            this.rdSpecificField.TabIndex = 1;
+            this.rdSpecificField.Text = "Only specific Field";
+            this.rdSpecificField.UseVisualStyleBackColor = true;
+            this.rdSpecificField.CheckedChanged += new System.EventHandler(this.rdSpecificField_CheckedChanged);
+            // 
+            // rdAllFields
+            // 
+            this.rdAllFields.AutoSize = true;
+            this.rdAllFields.Checked = true;
+            this.rdAllFields.Location = new System.Drawing.Point(9, 36);
+            this.rdAllFields.Name = "rdAllFields";
+            this.rdAllFields.Size = new System.Drawing.Size(144, 21);
+            this.rdAllFields.TabIndex = 0;
+            this.rdAllFields.TabStop = true;
+            this.rdAllFields.Text = "All Fields changed";
+            this.rdAllFields.UseVisualStyleBackColor = true;
+            this.rdAllFields.CheckedChanged += new System.EventHandler(this.rdAllFields_CheckedChanged);
             // 
             // MyPluginControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.grpPreview);
             this.Controls.Add(this.grpFilterMethod);
             this.Controls.Add(this.grpFilterByView);
@@ -479,6 +542,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dtGrvPreview)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.auditHistoryBindingSource)).EndInit();
             this.grpPreview.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -523,6 +588,11 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn attributeNameDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn oldValueDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn newValueDataGridViewTextBoxColumn;
-        private System.Windows.Forms.Label lblAuditNotEnabled;
+        private System.Windows.Forms.Label lblAuditHistoryNotEnabled;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Label lblField;
+        private System.Windows.Forms.ComboBox cmbFields;
+        private System.Windows.Forms.RadioButton rdSpecificField;
+        private System.Windows.Forms.RadioButton rdAllFields;
     }
 }

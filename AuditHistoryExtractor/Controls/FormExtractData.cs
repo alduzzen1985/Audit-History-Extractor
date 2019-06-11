@@ -28,23 +28,26 @@ namespace AuditHistoryExtractor.Controls
         List<AuditHistory> lsStory = new List<AuditHistory>();
 
         EntityCollection entitiesList;
-        string identificator, fieldToExtract, fileName, separator;
+        string identificator, fieldToExtract, fileName;
+        bool allFields;
         #endregion
 
         #region Business Logics
-        public FormExtractData(IOrganizationService service, EntityCollection entitiesList, string separator)
+        public FormExtractData(IOrganizationService service, EntityCollection entitiesList)
         {
             Service = service;
             this.entitiesList = entitiesList;
-            this.separator = separator;
+    
             InitializeComponent();
         }
 
-        public void RetriveAuditHistoryForRecords(string identificator)
+        public void RetriveAuditHistoryForRecords(string identificator, bool allFields, string fieldToExtract)
         {
             this.fileName = fileName;
             this.identificator = identificator;
+
             this.fieldToExtract = fieldToExtract;
+            this.allFields = allFields;
 
             if (BackgroundWorkerExtractAuditHistory.IsBusy != true)
             {
@@ -76,7 +79,18 @@ namespace AuditHistoryExtractor.Controls
                 try
                 {
                     string keyValue = string.IsNullOrEmpty(entity.GetAttributeValue<string>(identificator)) ? string.Empty : entity.GetAttributeValue<string>(identificator);
-                    lsStory.AddRange(auditHistoryManager.GetAuditHistoryForRecord(entity.Id, entity.LogicalName, entity.GetAttributeValue<string>(identificator)));
+
+                    if (allFields)
+                    {
+                        lsStory.AddRange(auditHistoryManager.GetAuditHistoryForRecord(entity.Id, entity.LogicalName, entity.GetAttributeValue<string>(identificator)));
+                    }
+                    else
+                    {
+                        lsStory.AddRange(auditHistoryManager.GetAuditHistoryForRecordAndField(entity.Id, entity.LogicalName, fieldToExtract, entity.GetAttributeValue<string>(identificator)));
+
+                    }
+
+
                     BackgroundWorkerExtractAuditHistory.ReportProgress(1, keyValue);
                 }
                 catch (Exception ex)

@@ -31,23 +31,20 @@ namespace AuditHistoryExtractor.AppCode
 
 
 
-        public static List<EntityMetadata> GetFieldListForEntity(IOrganizationService service, string entityLogicalName)
+        public static List<EntityMetadata> GetStringFieldsFieldListForEntity(IOrganizationService service, string entityLogicalName)
         {
             MetadataFilterExpression EntityFilter = new MetadataFilterExpression(LogicalOperator.And);
             EntityFilter.Conditions.Add(new MetadataConditionExpression("LogicalName", MetadataConditionOperator.Equals, entityLogicalName));
-
 
             MetadataConditionExpression metadataExpression = new MetadataConditionExpression("AttributeType", MetadataConditionOperator.Equals, AttributeTypeCode.String);
             MetadataFilterExpression AttributeFilter = new
             MetadataFilterExpression(LogicalOperator.And);
             AttributeFilter.Conditions.Add(metadataExpression);
 
-
             AttributeQueryExpression Attributefilters = new AttributeQueryExpression()
             {
                 Criteria = AttributeFilter
             };
-
 
             EntityQueryExpression entityQueryExpression = new EntityQueryExpression()
             {
@@ -59,6 +56,23 @@ namespace AuditHistoryExtractor.AppCode
             RetrieveMetadataChangesResponse initialRequest = GetMetadataChanges(service, entityQueryExpression, null, DeletedMetadataFilters.All);
             return initialRequest.EntityMetadata.ToList();
         }
+
+        public static List<EntityMetadata> GetListFieldsForEntity(IOrganizationService service, string entityLogicalName)
+        {
+            MetadataFilterExpression EntityFilter = new MetadataFilterExpression(LogicalOperator.And);
+            EntityFilter.Conditions.Add(new MetadataConditionExpression("LogicalName", MetadataConditionOperator.Equals, entityLogicalName));
+            EntityQueryExpression entityQueryExpression = new EntityQueryExpression()
+            {
+                Criteria = EntityFilter,
+            };
+            RetrieveMetadataChangesResponse initialRequest = GetMetadataChanges(service, entityQueryExpression, null, DeletedMetadataFilters.All);
+            return initialRequest.EntityMetadata.ToList();
+
+        }
+
+
+
+
 
 
         private static RetrieveMetadataChangesResponse GetMetadataChanges(IOrganizationService service, EntityQueryExpression entityQueryExpression, String clientVersionStamp, DeletedMetadataFilters deletedMetadataFilter)

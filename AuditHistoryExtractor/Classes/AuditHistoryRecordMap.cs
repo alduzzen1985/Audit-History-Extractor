@@ -16,9 +16,11 @@ namespace AuditHistoryExtractor.Classes
             Map(m => m.RecordKeyValue).Name(fieldIdentificatorName);
             Map(m => m.Username).Name("User");
             Map(m => m.Action).Name("Action");
+            Map(m => m.AttributeName).Name("Attribute Name");
             Map(m => m.OldValue).Name("Old Value");
             Map(m => m.NewValue).Name("New Value");
-            
+
+
         }
     }
 }

@@ -41,13 +41,15 @@ namespace AuditHistoryExtractor
         private const string MessageValidatingFetchXML = "Validating FetchXml and extracting Data.";
         private const string MessageMismatchEntitySelectedAndFetchXML = "In the FetchXml you are extracting data for {0} entity instead of the selected entity {1}";
         private const string MessageFetchXMLBuilderNotFound = "FetchXML Builder not found. Please install it";
+        private const string MessageOldVersion = "Dynamic CRM version 8 or newer is required";
+
 
         private const string MessageNoAuditHistoryForSelectedRecords = "No audit history data available for selected records.";
         private const string MessageToMuchRecords = "More then 5000 records have been extracted. Try to reduce the amount of records to extract.";
         private const string ErrorMessageFetchXML = "An error in FetchXML has been found : ";
         private const string TitleNoFetchXML = "No FetchXML Set.";
         private const string TitleNoFetchXMLBuilder = "Fetch XML Builder Error.";
-
+        private const string TitleVersionNotValid = "Version not valid.";
 
         private const string RetrievingEntityViewAndFields = "Retrieving Entity Detail";
         private const string FileSavedSuccessfully = "File saved successfully !";
@@ -62,12 +64,17 @@ namespace AuditHistoryExtractor
         FetchExpression fetchExpressionRecordsToExtract;
         EntityCollection recordsExtracted;
         private enum RetrieveAuditHistoryMode { Preview = 1, Download = 2 };
-        private List<ComboBoxEntityField> listFieldsForEntity;
+        private List<ComboBoxEntityField> listTextFieldsForEntity;
+        private List<ComboBoxEntityField> listAllFieldsForEntity;
         private List<ComboBoxEntities> listEntities;
 
 
         List<ViewDetail> lsViewsForEntity;
-        List<EntityMetadata> lsFieldsForEntity;
+        List<EntityMetadata> lsStringFieldsForEntity;
+        List<EntityMetadata> lsAllFields;
+
+
+
 
         public event EventHandler<MessageBusEventArgs> OnOutgoingMessage;
         #endregion
@@ -121,22 +128,41 @@ namespace AuditHistoryExtractor
         /// <param name="entityLogicalName"></param>
         public void FillComboListFieldsForEntity(string entityLogicalName)
         {
-
-            listFieldsForEntity = lsFieldsForEntity[0].Attributes.Where(x => x.DisplayName.UserLocalizedLabel != null).Select(x => new ComboBoxEntityField()
+            if (lsStringFieldsForEntity != null)
             {
-                Value = x.LogicalName,
-                AttributeType = x.AttributeTypeName.Value,
-                Text = x.DisplayName.UserLocalizedLabel.Label + " (" + x.LogicalName + ")"
-            }).ToList();
+                listTextFieldsForEntity = lsStringFieldsForEntity[0].Attributes.Where(x => x.DisplayName.UserLocalizedLabel != null).Select(x => new ComboBoxEntityField()
+                {
+                    Value = x.LogicalName,
+                    AttributeType = x.AttributeTypeName.Value,
+                    Text = x.DisplayName.UserLocalizedLabel.Label + " (" + x.LogicalName + ")"
+                }).ToList();
 
-            cmbPrimaryKey.DataSource = null;
-            cmbPrimaryKey.Items.Clear();
-            cmbPrimaryKey.DisplayMember = "Text";
-            cmbPrimaryKey.ValueMember = "Value";
-            cmbPrimaryKey.DataSource = listFieldsForEntity.OrderBy(o => o.Text).ToList();
-            if (lsFieldsForEntity[0].PrimaryNameAttribute != null)
-            {
-                cmbPrimaryKey.SelectedItem = listFieldsForEntity.Where(x => x.Value == lsFieldsForEntity[0].PrimaryNameAttribute).FirstOrDefault();
+                cmbPrimaryKey.DataSource = null;
+                cmbPrimaryKey.Items.Clear();
+                cmbPrimaryKey.DisplayMember = "Text";
+                cmbPrimaryKey.ValueMember = "Value";
+                cmbPrimaryKey.DataSource = listTextFieldsForEntity.OrderBy(o => o.Text).ToList();
+                if (lsStringFieldsForEntity[0].PrimaryNameAttribute != null)
+                {
+                    cmbPrimaryKey.SelectedItem = listTextFieldsForEntity.Where(x => x.Value == lsStringFieldsForEntity[0].PrimaryNameAttribute).FirstOrDefault();
+                }
+
+
+                listAllFieldsForEntity = lsAllFields[0].Attributes.Where(x => x.DisplayName.UserLocalizedLabel != null).Select(x => new ComboBoxEntityField()
+                {
+                    Value = x.LogicalName,
+                    AttributeType = x.AttributeTypeName.Value,
+                    Text = x.DisplayName.UserLocalizedLabel.Label + " (" + x.LogicalName + ")"
+                }).ToList();
+
+
+                cmbFields.DataSource = null;
+                cmbFields.Items.Clear();
+                cmbFields.DisplayMember = "Text";
+                cmbFields.ValueMember = "Value";
+                cmbFields.DataSource = listAllFieldsForEntity.OrderBy(o => o.Text).ToList();
+
+
             }
 
         }
@@ -154,7 +180,28 @@ namespace AuditHistoryExtractor
 
         private void tbFromEntitiesEnabled_Click(object sender, EventArgs e)
         {
-            ExecuteMethod(RetrieveAndFillEntitiesList);
+            if (ConnectionDetail != null && !string.IsNullOrEmpty(ConnectionDetail.OrganizationVersion))
+            {
+                int version = 0;
+                int.TryParse(ConnectionDetail.OrganizationVersion.Split('.')[0], out version);
+
+                if (version < 8)
+                {
+                    MessageBox.Show(MessageOldVersion,
+                         TitleVersionNotValid,
+                          MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    ExecuteMethod(RetrieveAndFillEntitiesList);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please, connect to CRM.",
+                       "No connection",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
 
@@ -176,6 +223,7 @@ namespace AuditHistoryExtractor
             if (selectedValue != null)
             {
                 FillComboBoxesFieldaAndViews(selectedValue);
+
             }
         }
 
@@ -271,7 +319,7 @@ namespace AuditHistoryExtractor
         private void FillComboBoxesFieldaAndViews(ComboBoxEntities selectedEntity)
         {
 
-            lblAuditNotEnabled.Visible = !selectedEntity.IsAuditEnabled;
+            lblAuditHistoryNotEnabled.Visible = !selectedEntity.IsAuditEnabled;
 
             WorkAsync(new WorkAsyncInfo
             {
@@ -289,8 +337,8 @@ namespace AuditHistoryExtractor
                             lsViewsForEntity = MetaDataManager.GetListViews(Service, selectedEntity.LogicalName, selectedEntity.ObjectTypeCode, true);
                         }
 
-
-                        lsFieldsForEntity = MetaDataManager.GetFieldListForEntity(Service, selectedEntity.LogicalName);
+                        lsAllFields = MetaDataManager.GetListFieldsForEntity(Service, selectedEntity.LogicalName);
+                        lsStringFieldsForEntity = MetaDataManager.GetStringFieldsFieldListForEntity(Service, selectedEntity.LogicalName);
                     }
                     catch (Exception ex)
                     {
@@ -370,7 +418,7 @@ namespace AuditHistoryExtractor
 
             currentEntitySelected = (cmbEntities.SelectedItem as ComboBoxEntities).LogicalName;
             ComboBoxEntityField cmbPrimaryKeySelectedItem = cmbPrimaryKey.SelectedItem as ComboBoxEntityField;
-
+            ComboBoxEntityField cmbField = cmbFields.SelectedItem as ComboBoxEntityField;
 
 
             WorkAsync(new WorkAsyncInfo
@@ -417,15 +465,18 @@ namespace AuditHistoryExtractor
                 },
                 PostWorkCallBack = ev =>
                 {
+
+
+
                     if (ev.Result != null && ev.Result.GetType().Equals(typeof(String)))
                     {
                         DialogResult dialogResult = MessageBox.Show(ev.Result.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                     else
                     {
-                        var wsmDialog = new FormExtractData(Service, ev.Result as EntityCollection, ",");
+                        var wsmDialog = new FormExtractData(Service, ev.Result as EntityCollection);
                         wsmDialog.Show();
-                        wsmDialog.RetriveAuditHistoryForRecords(cmbPrimaryKeySelectedItem.Value);
+                        wsmDialog.RetriveAuditHistoryForRecords(cmbPrimaryKeySelectedItem.Value, rdAllFields.Checked, cmbField.Value);
 
                         if (retrieveMode == RetrieveAuditHistoryMode.Preview)
                         {
@@ -522,6 +573,14 @@ namespace AuditHistoryExtractor
             }
         }
 
+        private void rdSpecificField_CheckedChanged(object sender, EventArgs e)
+        {
+            lblField.Visible = cmbFields.Visible = true;
+        }
 
+        private void rdAllFields_CheckedChanged(object sender, EventArgs e)
+        {
+            lblField.Visible = cmbFields.Visible = false;
+        }
     }
 }

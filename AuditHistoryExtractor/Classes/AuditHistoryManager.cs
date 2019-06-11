@@ -14,18 +14,13 @@ namespace AuditHistoryExtractor.AppCode
     public class AuditHistoryManager
     {
         private IOrganizationService _service;
-       
-        private string identificatorField;
+
+
 
         private OptionSetManager optionSetManager;
 
 
 
-        public AuditHistoryManager(IOrganizationService service, string identificatorField, string delimiter)
-        {
-            this.identificatorField = identificatorField;
-            _service = service;
-        }
 
         public AuditHistoryManager(IOrganizationService service)
         {
@@ -81,50 +76,76 @@ namespace AuditHistoryExtractor.AppCode
         {
             List<AuditHistory> auditHistoryForRecord = new List<AuditHistory>();
             RetrieveRecordChangeHistoryRequest changeRequest = new RetrieveRecordChangeHistoryRequest();
-            //  EntityReference refe = auditRecord.GetAttributeValue<EntityReference>("objectid");
             changeRequest.Target = new EntityReference(entityLogicalName, entityID);
-            
+
             RetrieveRecordChangeHistoryResponse changeResponse = (RetrieveRecordChangeHistoryResponse)_service.Execute(changeRequest);
             AuditDetailCollection details = changeResponse.AuditDetailCollection;
             foreach (AuditDetail detail in details.AuditDetails)
             {
-            
-                AuditHistory change = DisplayAuditDetails(detail);
-                if (change != null)
-                {
-                    change.RecordKeyValue = recordKeyValue;
-                    auditHistoryForRecord.Add(change);
-   
-                }
+
+                auditHistoryForRecord.AddRange(GetRecordChanges(detail, recordKeyValue));
+                //if (change != null)
+                //{
+                //    change.RecordKeyValue = recordKeyValue;
+                //    auditHistoryForRecord.Add(change);
+                //}
             }
             return auditHistoryForRecord;
 
         }
 
 
-        private AuditHistory DisplayAuditDetails(AuditDetail detail)
+        /// <summary>
+        /// Extract the audit history for the record and a specific Field
+        /// </summary>
+        /// <param name="entityID">ID of the Account</param>
+        /// <param name="identificatorField">Identificator of the Row</param>
+        /// <param name="attributeName">Name of the attribute to retrieve for Audit History</param>
+        /// <param name="fileName">File to write</param>
+        public List<AuditHistory> GetAuditHistoryForRecordAndField(Guid entityID, string entityLogicalName, string attributeName, string recordKeyValue)
+        {
+            List<AuditHistory> auditHistoryForRecord = new List<AuditHistory>();
+            var attributeChangeHistoryRequest = new RetrieveAttributeChangeHistoryRequest
+            {
+                Target = new EntityReference(entityLogicalName, entityID),
+                AttributeLogicalName = attributeName,
+
+            };
+
+            RetrieveRecordChangeHistoryRequest changeRequest = new RetrieveRecordChangeHistoryRequest();
+            changeRequest.Target = new EntityReference(entityLogicalName, entityID);
+
+            RetrieveRecordChangeHistoryResponse changeResponse = (RetrieveRecordChangeHistoryResponse)_service.Execute(changeRequest);
+            AuditDetailCollection details = changeResponse.AuditDetailCollection;
+
+            var attributeChangeHistoryResponse = (RetrieveAttributeChangeHistoryResponse)_service.Execute(attributeChangeHistoryRequest);
+            details = attributeChangeHistoryResponse.AuditDetailCollection;
+
+            foreach (var detail in details.AuditDetails)
+            {
+                //AuditHistory change = GetRecordChanges(detail);
+
+                auditHistoryForRecord.AddRange(GetRecordChanges(detail, recordKeyValue));
+                //if (change != null)
+                //{
+                //    change.RecordKeyValue = recordKeyValue;
+                //    auditHistoryForRecord.Add(change);
+                //}
+            }
+            return auditHistoryForRecord;
+        }
+
+
+        private List<AuditHistory> GetRecordChanges(AuditDetail detail, string recordKeyValue = "")
         {
             AuditHistory auditHistory = new AuditHistory();
-
-
-            // Write out some of the change history information in the audit record. 
             Entity record = (Entity)detail.AuditRecord;
+            List<AuditHistory> lsChanges = new List<AuditHistory>();
+            // Write out some of the change history information in the audit record. 
+            
 
             Console.WriteLine("\nAudit record created on: {0}", record.GetAttributeValue<DateTime>("createdon").ToLocalTime());
             Console.WriteLine("Entity: {0}, Action: {1}, Operation: {2}, Transaction Id {3}", record.GetAttributeValue<EntityReference>("objectid").LogicalName, record.FormattedValues["action"], record.FormattedValues["operation"], record.GetAttributeValue<Guid>("auditid").ToString());
-
-            auditHistory.EntityName = record.GetAttributeValue<EntityReference>("objectid").LogicalName;
-            auditHistory.CreatedOn = record.GetAttributeValue<DateTime>("createdon");
-            auditHistory.ActionId = record.GetAttributeValue<OptionSetValue>("action").Value;
-            auditHistory.OperationId = record.GetAttributeValue<OptionSetValue>("operation").Value;
-            auditHistory.AuditId = record.GetAttributeValue<Guid>("auditid");
-            auditHistory.UserId = record.GetAttributeValue<EntityReference>("userid").Id;
-            auditHistory.RecordId = record.GetAttributeValue<EntityReference>("objectid").Id;
-
-
-            if (record.FormattedValues.Contains("action")) { auditHistory.Action = record.FormattedValues["action"]; }
-            if (record.FormattedValues.Contains("operation")) { auditHistory.Operation = record.FormattedValues["operation"]; }
-            if (record.GetAttributeValue<EntityReference>("userid") != null) { auditHistory.Username = record.GetAttributeValue<EntityReference>("userid").Name; }
 
 
             Console.WriteLine("USER : {0}", record.GetAttributeValue<EntityReference>("userid").Name);
@@ -137,6 +158,9 @@ namespace AuditHistoryExtractor.AppCode
                 // Display the old and new attribute values.
                 foreach (KeyValuePair<String, object> attribute in attributeDetail.NewValue.Attributes)
                 {
+                    auditHistory = new AuditHistory();
+                    FillAuditRecordWithBaseInfo(auditHistory, record);
+                    auditHistory.RecordKeyValue = recordKeyValue;
                     String oldValue = "(no value)", newValue = "(no value)";
 
                     //TODO Display the lookup values of those attributes that do not contain strings.
@@ -153,12 +177,18 @@ namespace AuditHistoryExtractor.AppCode
                     auditHistory.OldValue = oldValue;
                     auditHistory.NewValue = newValue;
                     auditHistory.AttributeName = attribute.Key;
+
+
+
+                    lsChanges.Add(auditHistory);
                 }
 
                 foreach (KeyValuePair<String, object> attribute in attributeDetail.OldValue.Attributes)
                 {
                     if (!attributeDetail.NewValue.Contains(attribute.Key))
                     {
+                        auditHistory = new AuditHistory();
+                        FillAuditRecordWithBaseInfo(auditHistory, record);
                         String newValue = "(no value)";
 
                         //TODO Display the lookup values of those attributes that do not contain strings.
@@ -168,6 +198,8 @@ namespace AuditHistoryExtractor.AppCode
                         auditHistory.OldValue = oldValue;
                         auditHistory.NewValue = newValue;
                         auditHistory.AttributeName = attribute.Key;
+
+                        lsChanges.Add(auditHistory);
                     }
                 }
             }
@@ -175,7 +207,21 @@ namespace AuditHistoryExtractor.AppCode
             {
                 auditHistory = null;
             }
-            return auditHistory;
+            return lsChanges;
+        }
+
+        private static void FillAuditRecordWithBaseInfo(AuditHistory auditHistory, Entity record)
+        {
+            auditHistory.EntityName = record.GetAttributeValue<EntityReference>("objectid").LogicalName;
+            auditHistory.CreatedOn = record.GetAttributeValue<DateTime>("createdon");
+            auditHistory.ActionId = record.GetAttributeValue<OptionSetValue>("action").Value;
+            auditHistory.OperationId = record.GetAttributeValue<OptionSetValue>("operation").Value;
+            auditHistory.AuditId = record.GetAttributeValue<Guid>("auditid");
+            auditHistory.UserId = record.GetAttributeValue<EntityReference>("userid").Id;
+            auditHistory.RecordId = record.GetAttributeValue<EntityReference>("objectid").Id;
+            if (record.FormattedValues.Contains("action")) { auditHistory.Action = record.FormattedValues["action"]; }
+            if (record.FormattedValues.Contains("operation")) { auditHistory.Operation = record.FormattedValues["operation"]; }
+            if (record.GetAttributeValue<EntityReference>("userid") != null) { auditHistory.Username = record.GetAttributeValue<EntityReference>("userid").Name; }
         }
     }
 }

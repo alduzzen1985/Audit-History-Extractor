@@ -47,8 +47,9 @@ namespace AuditHistoryExtractor.AppCode
                     if (optionSetManager == null)
                     {
                         optionSetManager = new OptionSetManager(_service);
-                        optionSetManager.SetupOptionSetValues(attributeAuditHistoryDetail.LogicalName, fieldKey);
                     }
+
+                    optionSetManager.SetupOptionSetValues(attributeAuditHistoryDetail.LogicalName, fieldKey);
 
                     value = optionSetManager.GetDescriptionOptionSetValue(optSetValue.Value);
                 }

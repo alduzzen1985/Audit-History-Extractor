@@ -18,6 +18,9 @@ namespace AuditHistoryExtractor.AppCode
 
 
         private OptionSetManager optionSetManager;
+        
+        //a Dictionary to store the optionSet managers for all options fields in the entity
+        private Dictionary<string, OptionSetManager> optionSetsManagersDict = new Dictionary<string, OptionSetManager>();
 
 
 
@@ -44,13 +47,18 @@ namespace AuditHistoryExtractor.AppCode
                 {
                     OptionSetValue optSetValue = (attributeAuditHistoryDetail[fieldKey] as OptionSetValue);
 
-                    if (optionSetManager == null)
+                    
+                    //if the field was called before, the value will be taken from dictionary
+                    if (optionSetsManagersDict.ContainsKey(fieldKey))
+                    {
+                        optionSetManager = optionSetsManagersDict[fieldKey];
+                    }
+                    else// otherwise a new optionSetManager object will be created and added to the dictionary
                     {
                         optionSetManager = new OptionSetManager(_service);
                         optionSetManager.SetupOptionSetValues(attributeAuditHistoryDetail.LogicalName, fieldKey);
+                        optionSetsManagersDict.Add(fieldKey, optionSetManager);
                     }
-
-                    value = optionSetManager.GetDescriptionOptionSetValue(optSetValue.Value);
                 }
                 else { value = attributeAuditHistoryDetail[fieldKey].ToString(); }
             }

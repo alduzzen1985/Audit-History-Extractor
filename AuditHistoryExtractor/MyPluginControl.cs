@@ -302,9 +302,8 @@ namespace AuditHistoryExtractor
         /// <returns></returns>
         private bool IsPluginInstalled(string pluginName)
         {
-            PluginManagerExtended pluginsManager = new PluginManagerExtended(new PluginsForm()) { IsWatchingForNewPlugins = true };
-            pluginsManager.Initialize();
-            var plugin = pluginsManager.ValidatedPlugins.FirstOrDefault(p => p.Metadata.Name == pluginName);
+            PluginManagerExtended.Instance.IsWatchingForNewPlugins = true;
+            var plugin = PluginManagerExtended.Instance.ValidatedPlugins.FirstOrDefault(p => p.Metadata.Name == pluginName);
             return plugin != null;
         }
 

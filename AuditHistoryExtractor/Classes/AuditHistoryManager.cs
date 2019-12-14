@@ -1,13 +1,8 @@
 ﻿using AuditHistoryExtractor.Classes;
-using CsvHelper;
 using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AuditHistoryExtractor.AppCode
 {

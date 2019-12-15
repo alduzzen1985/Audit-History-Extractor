@@ -3,11 +3,6 @@ using AuditHistoryExtractor.AppCode;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using AuditHistoryExtractor.Classes;
 
@@ -27,13 +22,13 @@ namespace AuditHistoryExtractor.Controls
 
         List<AuditHistory> lsStory = new List<AuditHistory>();
 
-        EntityCollection entitiesList;
+        List<Entity> entitiesList;
         string identificator, fieldToExtract, fileName;
         bool allFields;
         #endregion
 
         #region Business Logics
-        public FormExtractData(IOrganizationService service, EntityCollection entitiesList)
+        public FormExtractData(IOrganizationService service, List<Entity> entitiesList)
         {
             Service = service;
             this.entitiesList = entitiesList;
@@ -41,7 +36,7 @@ namespace AuditHistoryExtractor.Controls
             InitializeComponent();
         }
 
-        public void RetriveAuditHistoryForRecords(string identificator, bool allFields, string fieldToExtract)
+        public void RetrieveAuditHistoryForRecords(string identificator, bool allFields, string fieldToExtract)
         {
             this.fileName = fileName;
             this.identificator = identificator;
@@ -52,7 +47,7 @@ namespace AuditHistoryExtractor.Controls
             if (BackgroundWorkerExtractAuditHistory.IsBusy != true)
             {
                 progressExportData.Step = 1;
-                progressExportData.Maximum = entitiesList.Entities.Count;
+                progressExportData.Maximum = entitiesList.Count;
                 this.Focus();
 
                 BackgroundWorkerExtractAuditHistory.RunWorkerAsync();
@@ -69,7 +64,7 @@ namespace AuditHistoryExtractor.Controls
         private void BackgroundWorkerExtractAuditHistory_DoWork(object sender, DoWorkEventArgs e)
         {
             AuditHistoryManager auditHistoryManager = new AuditHistoryManager(Service);
-            foreach (Entity entity in entitiesList.Entities)
+            foreach (Entity entity in entitiesList)
             {
                 if (BackgroundWorkerExtractAuditHistory.CancellationPending)
                 {

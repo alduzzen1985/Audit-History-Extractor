@@ -51,14 +51,9 @@ namespace AuditHistoryExtractor.Classes
 
         public static string AddAttributeFilter(string fetchXML, string attributeToAdd)
         {
-
-            StringReader stringReader = new StringReader(fetchXML);
-            XmlTextReader reader = new XmlTextReader(stringReader);
-
             // Load document
             XmlDocument doc = new XmlDocument();
-            doc.Load(reader);
-
+            doc.LoadXml(fetchXML);
 
             XmlAttributeCollection attrs = doc.DocumentElement.Attributes;
 
@@ -77,6 +72,31 @@ namespace AuditHistoryExtractor.Classes
 
 
             return doc.InnerXml;
+        }
+
+        public static string AddCookie(string fetchXML, string cookie, int page)
+        {
+            if (page > 1)
+            {
+                XmlDocument doc = new XmlDocument();
+                doc.LoadXml(fetchXML);
+
+                XmlElement fetch = doc.DocumentElement;
+                XmlAttribute cookieAttr = doc.CreateAttribute("cookie");
+                cookieAttr.Value = cookie;
+
+                XmlAttribute pageAttr = doc.CreateAttribute("page");
+                pageAttr.Value = $"{page}";
+
+                fetch.Attributes.Append(cookieAttr);
+                fetch.Attributes.Append(pageAttr);
+
+                return doc.OuterXml;
+            }
+            else
+            {
+                return fetchXML;
+            }
         }
     }
 }

@@ -17,10 +17,7 @@ namespace AuditHistoryExtractor.AppCode
 
 
 
-        private OptionSetManager optionSetManager;
-
-
-
+        private Dictionary<string, OptionSetManager> optionSetManagerDictionary = new Dictionary<string, OptionSetManager>();
 
         public AuditHistoryManager(IOrganizationService service)
         {
@@ -44,13 +41,14 @@ namespace AuditHistoryExtractor.AppCode
                 {
                     OptionSetValue optSetValue = (attributeAuditHistoryDetail[fieldKey] as OptionSetValue);
 
-                    if (optionSetManager == null)
+                    if (!optionSetManagerDictionary.ContainsKey(fieldKey))
                     {
-                        optionSetManager = new OptionSetManager(_service);
+                        var optionSetManager = new OptionSetManager(_service);
                         optionSetManager.SetupOptionSetValues(attributeAuditHistoryDetail.LogicalName, fieldKey);
+                        optionSetManagerDictionary.Add(fieldKey, optionSetManager);
                     }
 
-                    value = optionSetManager.GetDescriptionOptionSetValue(optSetValue.Value);
+                    value = optionSetManagerDictionary[fieldKey].GetDescriptionOptionSetValue(optSetValue.Value);
                 }
                 else { value = attributeAuditHistoryDetail[fieldKey].ToString(); }
             }

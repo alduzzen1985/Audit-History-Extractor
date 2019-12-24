@@ -428,7 +428,7 @@ namespace AuditHistoryExtractor
                             var xml = FetchXMLHelper.AddCookie(newFetch, cookie, page);
                             EntityCollection collection = Service.RetrieveMultiple(new FetchExpression(xml));
 
-                            if (recordsExtracted != null && !collection.EntityName.Equals(currentEntitySelected))
+                            if (collection != null && !collection.EntityName.Equals(currentEntitySelected))
                             {
                                 ev.Result = string.Format(MessageMismatchEntitySelectedAndFetchXML, collection.EntityName, currentEntitySelected);
                                 return;

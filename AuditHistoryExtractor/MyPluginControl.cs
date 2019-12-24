@@ -2,27 +2,17 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using XrmToolBox.Extensibility;
-using Microsoft.Crm.Sdk.Messages;
-using Microsoft.Xrm.Sdk.Metadata.Query;
 using Microsoft.Xrm.Sdk.Query;
-using Microsoft.Xrm.Sdk.Messages;
 using AuditHistoryExtractor.AppCode;
 using Microsoft.Xrm.Sdk.Metadata;
 using Microsoft.Xrm.Sdk;
 using AuditHistoryExtractor.Controls;
 using System.Diagnostics;
-using System.Resources;
-using System.Reflection;
-using System.Globalization;
 using XrmToolBox.Extensibility.Interfaces;
 using XrmToolBox;
-using XrmToolBox.New;
 using AuditHistoryExtractor.Classes;
 
 namespace AuditHistoryExtractor
@@ -62,7 +52,7 @@ namespace AuditHistoryExtractor
         #region Variables
         string currentEntitySelected;
         FetchExpression fetchExpressionRecordsToExtract;
-        EntityCollection recordsExtracted;
+        List<Entity> recordsExtracted;
         private enum RetrieveAuditHistoryMode { Preview = 1, Download = 2 };
         private List<ComboBoxEntityField> listTextFieldsForEntity;
         private List<ComboBoxEntityField> listAllFieldsForEntity;
@@ -302,9 +292,8 @@ namespace AuditHistoryExtractor
         /// <returns></returns>
         private bool IsPluginInstalled(string pluginName)
         {
-            PluginManagerExtended pluginsManager = new PluginManagerExtended(new PluginsForm()) { IsWatchingForNewPlugins = true };
-            pluginsManager.Initialize();
-            var plugin = pluginsManager.ValidatedPlugins.FirstOrDefault(p => p.Metadata.Name == pluginName);
+            PluginManagerExtended.Instance.IsWatchingForNewPlugins = true;
+            var plugin = PluginManagerExtended.Instance.ValidatedPlugins.FirstOrDefault(p => p.Metadata.Name == pluginName);
             return plugin != null;
         }
 
@@ -428,29 +417,41 @@ namespace AuditHistoryExtractor
                 {
                     try
                     {
+                        recordsExtracted = new List<Entity>();
+                        bool moreRecords = false;
+                        int page = 1;
+                        string cookie = string.Empty;
                         string newFetch = FetchXMLHelper.AddAttributeFilter(txtFetchXML.Text, cmbPrimaryKeySelectedItem.Value);
 
-                        fetchExpressionRecordsToExtract = new FetchExpression(newFetch);
-                        recordsExtracted = Service.RetrieveMultiple(fetchExpressionRecordsToExtract);
-
-                        if (recordsExtracted != null && !recordsExtracted.EntityName.Equals(currentEntitySelected))
+                        do
                         {
-                            ev.Result = string.Format(MessageMismatchEntitySelectedAndFetchXML, recordsExtracted.EntityName, currentEntitySelected);
-                            return;
-                        }
-                        if (recordsExtracted.Entities.Count == 0)
-                        {
-                            ev.Result = MessageNoAuditHistoryForSelectedRecords;
-                            return;
-                        }
-                        if (recordsExtracted.Entities.Count == 5000)
-                        {
-                            ev.Result = MessageToMuchRecords;
+                            var xml = FetchXMLHelper.AddCookie(newFetch, cookie, page);
+                            EntityCollection collection = Service.RetrieveMultiple(new FetchExpression(xml));
 
-                            return;
-                        }
+                            if (collection != null && !collection.EntityName.Equals(currentEntitySelected))
+                            {
+                                ev.Result = string.Format(MessageMismatchEntitySelectedAndFetchXML, collection.EntityName, currentEntitySelected);
+                                return;
+                            }
+                            if (page == 1 && collection.Entities.Count == 0)
+                            {
+                                ev.Result = MessageNoAuditHistoryForSelectedRecords;
+                                return;
+                            }
+                            if (collection.Entities.Count > 0)
+                            {
+                                recordsExtracted.AddRange(collection.Entities);
+                                moreRecords = collection.MoreRecords;
 
+                                if (moreRecords)
+                                {
+                                    page++;
+                                    cookie = System.Security.SecurityElement.Escape(collection.PagingCookie);
+                                }
+                            }
 
+                        } while (moreRecords);
+                        
                         ev.Result = recordsExtracted;
                     }
                     catch (Exception ex)
@@ -474,9 +475,9 @@ namespace AuditHistoryExtractor
                     }
                     else
                     {
-                        var wsmDialog = new FormExtractData(Service, ev.Result as EntityCollection);
+                        var wsmDialog = new FormExtractData(Service, ev.Result as List<Entity>);
                         wsmDialog.Show();
-                        wsmDialog.RetriveAuditHistoryForRecords(cmbPrimaryKeySelectedItem.Value, rdAllFields.Checked, cmbField.Value);
+                        wsmDialog.RetrieveAuditHistoryForRecords(cmbPrimaryKeySelectedItem.Value, rdAllFields.Checked, cmbField.Value);
 
                         if (retrieveMode == RetrieveAuditHistoryMode.Preview)
                         {

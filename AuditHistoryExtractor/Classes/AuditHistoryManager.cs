@@ -1,13 +1,8 @@
 ﻿using AuditHistoryExtractor.Classes;
-using CsvHelper;
 using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AuditHistoryExtractor.AppCode
 {
@@ -30,13 +25,13 @@ namespace AuditHistoryExtractor.AppCode
             string value = string.Empty;
             if (attributeAuditHistoryDetail.Contains(fieldKey))
             {
-                bool isOldValueAnEntityReference = attributeAuditHistoryDetail[fieldKey].GetType().Equals(typeof(EntityReference));
-                bool isOldValueTypeMoney = attributeAuditHistoryDetail[fieldKey].GetType().Equals(typeof(Money));
-                bool isTypeOptionSet = attributeAuditHistoryDetail[fieldKey].GetType().Equals(typeof(OptionSetValue));
+                bool isOldValueAnEntityReference = attributeAuditHistoryDetail[fieldKey] is EntityReference;
+                bool isOldValueTypeMoney = attributeAuditHistoryDetail[fieldKey] is Money;
+                bool isTypeOptionSet = attributeAuditHistoryDetail[fieldKey] is OptionSetValue;
 
 
                 if (isOldValueAnEntityReference) { value = GetValueEntityReference(attributeAuditHistoryDetail[fieldKey] as EntityReference); }
-                else if (isOldValueTypeMoney) { value = (attributeAuditHistoryDetail[fieldKey] as Money).Value.ToString(); }
+                else if (isOldValueTypeMoney) { value = (attributeAuditHistoryDetail[fieldKey] as Money)?.Value.ToString(); }
                 else if (isTypeOptionSet)
                 {
                     OptionSetValue optSetValue = (attributeAuditHistoryDetail[fieldKey] as OptionSetValue);
@@ -55,14 +50,11 @@ namespace AuditHistoryExtractor.AppCode
             return value;
         }
 
-
-
         private string GetValueForCsv(string value)
         {
             return string.IsNullOrEmpty(value) ? "(no value)" : value;
         }
-
-
+        
         private string GetValueEntityReference(EntityReference eRef)
         {
             if (eRef == null) { return string.Empty; }
@@ -82,11 +74,6 @@ namespace AuditHistoryExtractor.AppCode
             {
 
                 auditHistoryForRecord.AddRange(GetRecordChanges(detail, recordKeyValue));
-                //if (change != null)
-                //{
-                //    change.RecordKeyValue = recordKeyValue;
-                //    auditHistoryForRecord.Add(change);
-                //}
             }
             return auditHistoryForRecord;
 

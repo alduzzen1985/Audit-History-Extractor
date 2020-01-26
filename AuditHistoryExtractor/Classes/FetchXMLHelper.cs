@@ -74,9 +74,9 @@ namespace AuditHistoryExtractor.Classes
             return doc.InnerXml;
         }
 
-        public static string AddCookie(string fetchXML, string cookie, int page)
+        public static string AddCookie(string fetchXML, string cookie, int page, int count=5000)
         {
-            if (page > 1)
+            if (page >= 1)
             {
                 XmlDocument doc = new XmlDocument();
                 doc.LoadXml(fetchXML);
@@ -88,8 +88,14 @@ namespace AuditHistoryExtractor.Classes
                 XmlAttribute pageAttr = doc.CreateAttribute("page");
                 pageAttr.Value = $"{page}";
 
+                XmlAttribute countAttr = doc.CreateAttribute("count");
+                countAttr.Value = $"{count}";
+        
+
+
                 fetch.Attributes.Append(cookieAttr);
                 fetch.Attributes.Append(pageAttr);
+                fetch.Attributes.Append(countAttr);
 
                 return doc.OuterXml;
             }

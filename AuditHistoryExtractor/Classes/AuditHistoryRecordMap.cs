@@ -13,7 +13,7 @@ namespace AuditHistoryExtractor.Classes
             Map(m => m.AttributeName).Name("Attribute Name");
             Map(m => m.OldValue).Name("Old Value");
             Map(m => m.NewValue).Name("New Value");
-
+            Map(m => m.RecordId).Name("Object Id");
 
         }
     }

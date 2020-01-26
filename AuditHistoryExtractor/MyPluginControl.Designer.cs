@@ -59,6 +59,20 @@
             this.grpFilterMethod = new System.Windows.Forms.GroupBox();
             this.lblAuditHistoryNotEnabled = new System.Windows.Forms.Label();
             this.dtGrvPreview = new System.Windows.Forms.DataGridView();
+            this.auditHistoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.grpPreview = new System.Windows.Forms.GroupBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lblField = new System.Windows.Forms.Label();
+            this.cmbFields = new System.Windows.Forms.ComboBox();
+            this.rdSpecificField = new System.Windows.Forms.RadioButton();
+            this.rdAllFields = new System.Windows.Forms.RadioButton();
+            this.chkEntitiesWithAudit = new System.Windows.Forms.CheckBox();
+            this.btnPrevious = new System.Windows.Forms.Button();
+            this.cmbNumberOfRecords = new System.Windows.Forms.ComboBox();
+            this.btnNext = new System.Windows.Forms.Button();
+            this.lblPage = new System.Windows.Forms.Label();
+            this.lblPageNumber = new System.Windows.Forms.Label();
+            this.RecordId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.recordKeyValueDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.createdOnDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.usernameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -67,13 +81,6 @@
             this.attributeNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.oldValueDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.newValueDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.auditHistoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.grpPreview = new System.Windows.Forms.GroupBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.lblField = new System.Windows.Forms.Label();
-            this.cmbFields = new System.Windows.Forms.ComboBox();
-            this.rdSpecificField = new System.Windows.Forms.RadioButton();
-            this.rdAllFields = new System.Windows.Forms.RadioButton();
             this.toolStrip1.SuspendLayout();
             this.grpActions.SuspendLayout();
             this.grpFilterByFetchXml.SuspendLayout();
@@ -156,7 +163,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 78);
+            this.label1.Location = new System.Drawing.Point(6, 95);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(118, 17);
             this.label1.TabIndex = 27;
@@ -165,7 +172,7 @@
             // cmbPrimaryKey
             // 
             this.cmbPrimaryKey.FormattingEnabled = true;
-            this.cmbPrimaryKey.Location = new System.Drawing.Point(146, 75);
+            this.cmbPrimaryKey.Location = new System.Drawing.Point(146, 92);
             this.cmbPrimaryKey.Name = "cmbPrimaryKey";
             this.cmbPrimaryKey.Size = new System.Drawing.Size(411, 24);
             this.cmbPrimaryKey.TabIndex = 25;
@@ -289,7 +296,7 @@
             // rdbView
             // 
             this.rdbView.AutoSize = true;
-            this.rdbView.Location = new System.Drawing.Point(146, 116);
+            this.rdbView.Location = new System.Drawing.Point(146, 128);
             this.rdbView.Name = "rdbView";
             this.rdbView.Size = new System.Drawing.Size(58, 21);
             this.rdbView.TabIndex = 43;
@@ -301,7 +308,7 @@
             // rdbFetchXml
             // 
             this.rdbFetchXml.AutoSize = true;
-            this.rdbFetchXml.Location = new System.Drawing.Point(213, 116);
+            this.rdbFetchXml.Location = new System.Drawing.Point(213, 128);
             this.rdbFetchXml.Name = "rdbFetchXml";
             this.rdbFetchXml.Size = new System.Drawing.Size(92, 21);
             this.rdbFetchXml.TabIndex = 44;
@@ -324,7 +331,7 @@
             // lblFilterDataBy
             // 
             this.lblFilterDataBy.AutoSize = true;
-            this.lblFilterDataBy.Location = new System.Drawing.Point(6, 118);
+            this.lblFilterDataBy.Location = new System.Drawing.Point(6, 130);
             this.lblFilterDataBy.Name = "lblFilterDataBy";
             this.lblFilterDataBy.Size = new System.Drawing.Size(123, 17);
             this.lblFilterDataBy.TabIndex = 46;
@@ -347,6 +354,7 @@
             // grpFilterMethod
             // 
             this.grpFilterMethod.AutoSize = true;
+            this.grpFilterMethod.Controls.Add(this.chkEntitiesWithAudit);
             this.grpFilterMethod.Controls.Add(this.lblAuditHistoryNotEnabled);
             this.grpFilterMethod.Controls.Add(this.cmbPrimaryKey);
             this.grpFilterMethod.Controls.Add(this.label1);
@@ -357,7 +365,7 @@
             this.grpFilterMethod.Controls.Add(this.cmbEntities);
             this.grpFilterMethod.Location = new System.Drawing.Point(15, 42);
             this.grpFilterMethod.Name = "grpFilterMethod";
-            this.grpFilterMethod.Size = new System.Drawing.Size(765, 164);
+            this.grpFilterMethod.Size = new System.Drawing.Size(765, 170);
             this.grpFilterMethod.TabIndex = 47;
             this.grpFilterMethod.TabStop = false;
             this.grpFilterMethod.Text = "Filter Method";
@@ -367,7 +375,7 @@
             this.lblAuditHistoryNotEnabled.AutoSize = true;
             this.lblAuditHistoryNotEnabled.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblAuditHistoryNotEnabled.ForeColor = System.Drawing.Color.Red;
-            this.lblAuditHistoryNotEnabled.Location = new System.Drawing.Point(564, 37);
+            this.lblAuditHistoryNotEnabled.Location = new System.Drawing.Point(6, 66);
             this.lblAuditHistoryNotEnabled.Name = "lblAuditHistoryNotEnabled";
             this.lblAuditHistoryNotEnabled.Size = new System.Drawing.Size(192, 17);
             this.lblAuditHistoryNotEnabled.TabIndex = 47;
@@ -380,6 +388,7 @@
             this.dtGrvPreview.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dtGrvPreview.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dtGrvPreview.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.RecordId,
             this.recordKeyValueDataGridViewTextBoxColumn,
             this.createdOnDataGridViewTextBoxColumn,
             this.usernameDataGridViewTextBoxColumn,
@@ -393,56 +402,8 @@
             this.dtGrvPreview.Location = new System.Drawing.Point(3, 18);
             this.dtGrvPreview.Name = "dtGrvPreview";
             this.dtGrvPreview.RowTemplate.Height = 24;
-            this.dtGrvPreview.Size = new System.Drawing.Size(902, 829);
+            this.dtGrvPreview.Size = new System.Drawing.Size(902, 797);
             this.dtGrvPreview.TabIndex = 48;
-            // 
-            // recordKeyValueDataGridViewTextBoxColumn
-            // 
-            this.recordKeyValueDataGridViewTextBoxColumn.DataPropertyName = "RecordKeyValue";
-            this.recordKeyValueDataGridViewTextBoxColumn.HeaderText = "RecordKeyValue";
-            this.recordKeyValueDataGridViewTextBoxColumn.Name = "recordKeyValueDataGridViewTextBoxColumn";
-            // 
-            // createdOnDataGridViewTextBoxColumn
-            // 
-            this.createdOnDataGridViewTextBoxColumn.DataPropertyName = "CreatedOn";
-            this.createdOnDataGridViewTextBoxColumn.HeaderText = "CreatedOn";
-            this.createdOnDataGridViewTextBoxColumn.Name = "createdOnDataGridViewTextBoxColumn";
-            // 
-            // usernameDataGridViewTextBoxColumn
-            // 
-            this.usernameDataGridViewTextBoxColumn.DataPropertyName = "Username";
-            this.usernameDataGridViewTextBoxColumn.HeaderText = "Username";
-            this.usernameDataGridViewTextBoxColumn.Name = "usernameDataGridViewTextBoxColumn";
-            // 
-            // operationDataGridViewTextBoxColumn
-            // 
-            this.operationDataGridViewTextBoxColumn.DataPropertyName = "Operation";
-            this.operationDataGridViewTextBoxColumn.HeaderText = "Operation";
-            this.operationDataGridViewTextBoxColumn.Name = "operationDataGridViewTextBoxColumn";
-            // 
-            // actionDataGridViewTextBoxColumn
-            // 
-            this.actionDataGridViewTextBoxColumn.DataPropertyName = "Action";
-            this.actionDataGridViewTextBoxColumn.HeaderText = "Action";
-            this.actionDataGridViewTextBoxColumn.Name = "actionDataGridViewTextBoxColumn";
-            // 
-            // attributeNameDataGridViewTextBoxColumn
-            // 
-            this.attributeNameDataGridViewTextBoxColumn.DataPropertyName = "AttributeName";
-            this.attributeNameDataGridViewTextBoxColumn.HeaderText = "AttributeName";
-            this.attributeNameDataGridViewTextBoxColumn.Name = "attributeNameDataGridViewTextBoxColumn";
-            // 
-            // oldValueDataGridViewTextBoxColumn
-            // 
-            this.oldValueDataGridViewTextBoxColumn.DataPropertyName = "OldValue";
-            this.oldValueDataGridViewTextBoxColumn.HeaderText = "OldValue";
-            this.oldValueDataGridViewTextBoxColumn.Name = "oldValueDataGridViewTextBoxColumn";
-            // 
-            // newValueDataGridViewTextBoxColumn
-            // 
-            this.newValueDataGridViewTextBoxColumn.DataPropertyName = "NewValue";
-            this.newValueDataGridViewTextBoxColumn.HeaderText = "NewValue";
-            this.newValueDataGridViewTextBoxColumn.Name = "newValueDataGridViewTextBoxColumn";
             // 
             // auditHistoryBindingSource
             // 
@@ -455,7 +416,7 @@
             this.grpPreview.Controls.Add(this.dtGrvPreview);
             this.grpPreview.Location = new System.Drawing.Point(800, 42);
             this.grpPreview.Name = "grpPreview";
-            this.grpPreview.Size = new System.Drawing.Size(908, 850);
+            this.grpPreview.Size = new System.Drawing.Size(908, 818);
             this.grpPreview.TabIndex = 49;
             this.grpPreview.TabStop = false;
             this.grpPreview.Text = "Preview";
@@ -516,11 +477,139 @@
             this.rdAllFields.UseVisualStyleBackColor = true;
             this.rdAllFields.CheckedChanged += new System.EventHandler(this.rdAllFields_CheckedChanged);
             // 
+            // chkEntitiesWithAudit
+            // 
+            this.chkEntitiesWithAudit.AutoSize = true;
+            this.chkEntitiesWithAudit.Checked = true;
+            this.chkEntitiesWithAudit.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkEntitiesWithAudit.Location = new System.Drawing.Point(564, 34);
+            this.chkEntitiesWithAudit.Name = "chkEntitiesWithAudit";
+            this.chkEntitiesWithAudit.Size = new System.Drawing.Size(179, 21);
+            this.chkEntitiesWithAudit.TabIndex = 48;
+            this.chkEntitiesWithAudit.Text = "Only with Audit Enabled";
+            this.chkEntitiesWithAudit.UseVisualStyleBackColor = true;
+            this.chkEntitiesWithAudit.CheckedChanged += new System.EventHandler(this.chkEntitiesWithAudit_CheckedChanged);
+            // 
+            // btnPrevious
+            // 
+            this.btnPrevious.Enabled = false;
+            this.btnPrevious.Location = new System.Drawing.Point(1113, 868);
+            this.btnPrevious.Name = "btnPrevious";
+            this.btnPrevious.Size = new System.Drawing.Size(75, 24);
+            this.btnPrevious.TabIndex = 52;
+            this.btnPrevious.Text = "<<";
+            this.btnPrevious.UseVisualStyleBackColor = true;
+            this.btnPrevious.Click += new System.EventHandler(this.btnPrevious_Click);
+            // 
+            // cmbNumberOfRecords
+            // 
+            this.cmbNumberOfRecords.FormattingEnabled = true;
+            this.cmbNumberOfRecords.Items.AddRange(new object[] {
+            "10",
+            "25",
+            "50",
+            "75",
+            "100"});
+            this.cmbNumberOfRecords.Location = new System.Drawing.Point(1194, 868);
+            this.cmbNumberOfRecords.Name = "cmbNumberOfRecords";
+            this.cmbNumberOfRecords.Size = new System.Drawing.Size(66, 24);
+            this.cmbNumberOfRecords.TabIndex = 53;
+            this.cmbNumberOfRecords.Text = "10";
+            this.cmbNumberOfRecords.SelectedIndexChanged += new System.EventHandler(this.cmbNumberOfRecords_SelectedIndexChanged);
+            // 
+            // btnNext
+            // 
+            this.btnNext.Enabled = false;
+            this.btnNext.Location = new System.Drawing.Point(1266, 868);
+            this.btnNext.Name = "btnNext";
+            this.btnNext.Size = new System.Drawing.Size(75, 24);
+            this.btnNext.TabIndex = 54;
+            this.btnNext.Text = ">>";
+            this.btnNext.UseVisualStyleBackColor = true;
+            this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
+            // 
+            // lblPage
+            // 
+            this.lblPage.AutoSize = true;
+            this.lblPage.Location = new System.Drawing.Point(1044, 871);
+            this.lblPage.Name = "lblPage";
+            this.lblPage.Size = new System.Drawing.Size(53, 17);
+            this.lblPage.TabIndex = 55;
+            this.lblPage.Text = "Page : ";
+            // 
+            // lblPageNumber
+            // 
+            this.lblPageNumber.AutoSize = true;
+            this.lblPageNumber.Location = new System.Drawing.Point(1091, 871);
+            this.lblPageNumber.Name = "lblPageNumber";
+            this.lblPageNumber.Size = new System.Drawing.Size(16, 17);
+            this.lblPageNumber.TabIndex = 56;
+            this.lblPageNumber.Text = "1";
+            // 
+            // RecordId
+            // 
+            this.RecordId.DataPropertyName = "RecordId";
+            this.RecordId.HeaderText = "Object Id";
+            this.RecordId.Name = "RecordId";
+            // 
+            // recordKeyValueDataGridViewTextBoxColumn
+            // 
+            this.recordKeyValueDataGridViewTextBoxColumn.DataPropertyName = "RecordKeyValue";
+            this.recordKeyValueDataGridViewTextBoxColumn.HeaderText = "RecordKeyValue";
+            this.recordKeyValueDataGridViewTextBoxColumn.Name = "recordKeyValueDataGridViewTextBoxColumn";
+            // 
+            // createdOnDataGridViewTextBoxColumn
+            // 
+            this.createdOnDataGridViewTextBoxColumn.DataPropertyName = "CreatedOn";
+            this.createdOnDataGridViewTextBoxColumn.HeaderText = "CreatedOn";
+            this.createdOnDataGridViewTextBoxColumn.Name = "createdOnDataGridViewTextBoxColumn";
+            // 
+            // usernameDataGridViewTextBoxColumn
+            // 
+            this.usernameDataGridViewTextBoxColumn.DataPropertyName = "Username";
+            this.usernameDataGridViewTextBoxColumn.HeaderText = "Username";
+            this.usernameDataGridViewTextBoxColumn.Name = "usernameDataGridViewTextBoxColumn";
+            // 
+            // operationDataGridViewTextBoxColumn
+            // 
+            this.operationDataGridViewTextBoxColumn.DataPropertyName = "Operation";
+            this.operationDataGridViewTextBoxColumn.HeaderText = "Operation";
+            this.operationDataGridViewTextBoxColumn.Name = "operationDataGridViewTextBoxColumn";
+            // 
+            // actionDataGridViewTextBoxColumn
+            // 
+            this.actionDataGridViewTextBoxColumn.DataPropertyName = "Action";
+            this.actionDataGridViewTextBoxColumn.HeaderText = "Action";
+            this.actionDataGridViewTextBoxColumn.Name = "actionDataGridViewTextBoxColumn";
+            // 
+            // attributeNameDataGridViewTextBoxColumn
+            // 
+            this.attributeNameDataGridViewTextBoxColumn.DataPropertyName = "AttributeName";
+            this.attributeNameDataGridViewTextBoxColumn.HeaderText = "AttributeName";
+            this.attributeNameDataGridViewTextBoxColumn.Name = "attributeNameDataGridViewTextBoxColumn";
+            // 
+            // oldValueDataGridViewTextBoxColumn
+            // 
+            this.oldValueDataGridViewTextBoxColumn.DataPropertyName = "OldValue";
+            this.oldValueDataGridViewTextBoxColumn.HeaderText = "OldValue";
+            this.oldValueDataGridViewTextBoxColumn.Name = "oldValueDataGridViewTextBoxColumn";
+            // 
+            // newValueDataGridViewTextBoxColumn
+            // 
+            this.newValueDataGridViewTextBoxColumn.DataPropertyName = "NewValue";
+            this.newValueDataGridViewTextBoxColumn.HeaderText = "NewValue";
+            this.newValueDataGridViewTextBoxColumn.Name = "newValueDataGridViewTextBoxColumn";
+            // 
             // MyPluginControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
+            this.Controls.Add(this.lblPageNumber);
+            this.Controls.Add(this.lblPage);
+            this.Controls.Add(this.btnNext);
+            this.Controls.Add(this.cmbNumberOfRecords);
+            this.Controls.Add(this.btnPrevious);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.grpPreview);
             this.Controls.Add(this.grpFilterMethod);
@@ -580,6 +669,19 @@
         private System.Windows.Forms.GroupBox grpPreview;
         private System.Windows.Forms.Button btnPreview;
         private System.Windows.Forms.BindingSource auditHistoryBindingSource;
+        private System.Windows.Forms.Label lblAuditHistoryNotEnabled;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Label lblField;
+        private System.Windows.Forms.ComboBox cmbFields;
+        private System.Windows.Forms.RadioButton rdSpecificField;
+        private System.Windows.Forms.RadioButton rdAllFields;
+        private System.Windows.Forms.CheckBox chkEntitiesWithAudit;
+        private System.Windows.Forms.Button btnPrevious;
+        private System.Windows.Forms.ComboBox cmbNumberOfRecords;
+        private System.Windows.Forms.Button btnNext;
+        private System.Windows.Forms.Label lblPage;
+        private System.Windows.Forms.Label lblPageNumber;
+        private System.Windows.Forms.DataGridViewTextBoxColumn RecordId;
         private System.Windows.Forms.DataGridViewTextBoxColumn recordKeyValueDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn createdOnDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn usernameDataGridViewTextBoxColumn;
@@ -588,11 +690,5 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn attributeNameDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn oldValueDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn newValueDataGridViewTextBoxColumn;
-        private System.Windows.Forms.Label lblAuditHistoryNotEnabled;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Label lblField;
-        private System.Windows.Forms.ComboBox cmbFields;
-        private System.Windows.Forms.RadioButton rdSpecificField;
-        private System.Windows.Forms.RadioButton rdAllFields;
     }
 }

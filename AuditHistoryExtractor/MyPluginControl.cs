@@ -50,6 +50,7 @@ namespace AuditHistoryExtractor
         #endregion
 
         #region Variables
+        private int pageNumber = 1;
         string currentEntitySelected;
         FetchExpression fetchExpressionRecordsToExtract;
         List<Entity> recordsExtracted;
@@ -63,7 +64,10 @@ namespace AuditHistoryExtractor
         List<EntityMetadata> lsStringFieldsForEntity;
         List<EntityMetadata> lsAllFields;
 
-
+        private int NumberOfRecordsToDisplay
+        {
+            get { return string.IsNullOrEmpty(cmbNumberOfRecords.SelectedItem.ToString()) ? 10 : Int32.Parse(cmbNumberOfRecords.SelectedItem.ToString()); }
+        }
 
 
         public event EventHandler<MessageBusEventArgs> OnOutgoingMessage;
@@ -86,7 +90,7 @@ namespace AuditHistoryExtractor
                 },
                 PostWorkCallBack = e =>
                 {
-                    FillListEntities();
+                    FillListEntities(chkEntitiesWithAudit.Checked);
                 },
                 AsyncArgument = null,
                 IsCancelable = true,
@@ -101,13 +105,15 @@ namespace AuditHistoryExtractor
             listEntities = MetaDataManager.GetListEntities(Service);
         }
 
-        private void FillListEntities()
+        private void FillListEntities(bool withAuditEnabled)
         {
             cmbEntities.DataSource = null;
             cmbEntities.Items.Clear();
-            cmbEntities.DataSource = listEntities;
+            cmbEntities.DataSource = listEntities.Where(x => x.IsAuditEnabled == withAuditEnabled).ToList();
             cmbEntities.DisplayMember = "DisplayName";
             cmbEntities.ValueMember = "ObjectTypeCode";
+
+
         }
 
 
@@ -213,7 +219,6 @@ namespace AuditHistoryExtractor
             if (selectedValue != null)
             {
                 FillComboBoxesFieldaAndViews(selectedValue);
-
             }
         }
 
@@ -223,7 +228,8 @@ namespace AuditHistoryExtractor
             {
 
                 txtFetchXML.Text = System.Xml.Linq.XDocument.Parse((cmbViews.SelectedItem as ViewDetail).FetchXML).ToString();
-
+                
+                SetButtonPaging(1);
             }
         }
 
@@ -379,7 +385,7 @@ namespace AuditHistoryExtractor
 
         private void btnPreview_Click(object sender, EventArgs e)
         {
-            RetrieveAuditHistory(RetrieveAuditHistoryMode.Preview);
+            RetrieveAuditHistory(RetrieveAuditHistoryMode.Preview, true, pageNumber, NumberOfRecordsToDisplay);
         }
 
 
@@ -387,7 +393,7 @@ namespace AuditHistoryExtractor
 
 
 
-        private void RetrieveAuditHistory(RetrieveAuditHistoryMode retrieveMode)
+        private void RetrieveAuditHistory(RetrieveAuditHistoryMode retrieveMode, bool previewMode = false, int page = 1, int numberOfRecords = 5000)
         {
             if (Service == null)
             {
@@ -419,13 +425,20 @@ namespace AuditHistoryExtractor
                     {
                         recordsExtracted = new List<Entity>();
                         bool moreRecords = false;
-                        int page = 1;
+                        //int page = 1;
                         string cookie = string.Empty;
+
+
+                        //To retrieve the Identifier of the record
                         string newFetch = FetchXMLHelper.AddAttributeFilter(txtFetchXML.Text, cmbPrimaryKeySelectedItem.Value);
 
                         do
                         {
-                            var xml = FetchXMLHelper.AddCookie(newFetch, cookie, page);
+                            string xml = "";
+
+
+                            xml = FetchXMLHelper.AddCookie(newFetch, cookie, page, numberOfRecords);
+
                             EntityCollection collection = Service.RetrieveMultiple(new FetchExpression(xml));
 
                             if (collection != null && !collection.EntityName.Equals(currentEntitySelected))
@@ -450,8 +463,8 @@ namespace AuditHistoryExtractor
                                 }
                             }
 
-                        } while (moreRecords);
-                        
+                        } while (moreRecords && retrieveMode == RetrieveAuditHistoryMode.Download);
+
                         ev.Result = recordsExtracted;
                     }
                     catch (Exception ex)
@@ -501,6 +514,8 @@ namespace AuditHistoryExtractor
         {
             dtGrvPreview.DataSource = lsAuditHistory;
             SetBackgroundColor();
+            btnNext.Enabled = lsAuditHistory.Count > 0;
+
         }
 
         private void WsmDialog_OnExtractCompletedSave(List<AuditHistory> lsAuditHistory)
@@ -583,5 +598,38 @@ namespace AuditHistoryExtractor
         {
             lblField.Visible = cmbFields.Visible = false;
         }
+
+        private void chkEntitiesWithAudit_CheckedChanged(object sender, EventArgs e)
+        {
+            FillListEntities(chkEntitiesWithAudit.Checked);
+        }
+
+        private void btnNext_Click(object sender, EventArgs e)
+        {
+            SetButtonPaging(pageNumber + 1);
+            RetrieveAuditHistory(RetrieveAuditHistoryMode.Preview, true, pageNumber, NumberOfRecordsToDisplay);
+        }
+
+        private void btnPrevious_Click(object sender, EventArgs e)
+        {
+            SetButtonPaging(pageNumber - 1);
+            RetrieveAuditHistory(RetrieveAuditHistoryMode.Preview, true, pageNumber, NumberOfRecordsToDisplay);
+        }
+
+
+        private void cmbNumberOfRecords_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            pageNumber = 1;
+            lblPageNumber.Text = pageNumber.ToString();
+            RetrieveAuditHistory(RetrieveAuditHistoryMode.Preview, true, pageNumber, NumberOfRecordsToDisplay);
+        }
+
+        private void SetButtonPaging(int page)
+        {
+            pageNumber = page;
+            btnPrevious.Enabled = pageNumber > 1;
+            lblPageNumber.Text = pageNumber.ToString();
+        }
+
     }
 }

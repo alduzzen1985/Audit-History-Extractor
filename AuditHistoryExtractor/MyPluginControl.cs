@@ -14,6 +14,11 @@ using System.Diagnostics;
 using XrmToolBox.Extensibility.Interfaces;
 using XrmToolBox;
 using AuditHistoryExtractor.Classes;
+using AuditHistoryExtractor.Collections;
+using AuditHistoryExtractor.Enums;
+using System.Web.UI.WebControls;
+using AuditHistoryExtractor.Classes.Managers;
+
 
 namespace AuditHistoryExtractor
 {
@@ -22,6 +27,30 @@ namespace AuditHistoryExtractor
         public MyPluginControl()
         {
             InitializeComponent();
+
+
+            chkLstOperations.DataSource = null;
+            chkLstOperations.Items.Clear();
+            chkLstOperations.DataSource = AuditHistoryCollections.operations;
+            chkLstOperations.DisplayMember = "description";
+            chkLstOperations.ValueMember = "operationid";
+
+
+
+            chkLstActions.DataSource = null;
+            chkLstActions.Items.Clear();
+            chkLstActions.DataSource = AuditHistoryCollections.actions;
+            chkLstActions.DisplayMember = "description";
+            chkLstActions.ValueMember = "operationid";
+
+
+
+
+
+
+            //chkLstOperations.DataBind();
+
+
         }
 
         #region Messages Constants
@@ -63,6 +92,10 @@ namespace AuditHistoryExtractor
         List<ViewDetail> lsViewsForEntity;
         List<EntityMetadata> lsStringFieldsForEntity;
         List<EntityMetadata> lsAllFields;
+        List<AuditHistory> lsAuditHistory;
+
+        private List<User> lsUsers;
+        private List<User> lsSelectedUsers;
 
         private int NumberOfRecordsToDisplay
         {
@@ -102,6 +135,7 @@ namespace AuditHistoryExtractor
 
         public void GetListEntities()
         {
+
             listEntities = MetaDataManager.GetListEntities(Service);
         }
 
@@ -181,7 +215,7 @@ namespace AuditHistoryExtractor
                 int version = 0;
                 int.TryParse(ConnectionDetail.OrganizationVersion.Split('.')[0], out version);
 
-                if (version < 8)
+                if (version < 7)
                 {
                     MessageBox.Show(MessageOldVersion,
                          TitleVersionNotValid,
@@ -228,7 +262,7 @@ namespace AuditHistoryExtractor
             {
 
                 txtFetchXML.Text = System.Xml.Linq.XDocument.Parse((cmbViews.SelectedItem as ViewDetail).FetchXML).ToString();
-                
+
                 SetButtonPaging(1);
             }
         }
@@ -391,17 +425,21 @@ namespace AuditHistoryExtractor
 
         #endregion
 
-
-
-        private void RetrieveAuditHistory(RetrieveAuditHistoryMode retrieveMode, bool previewMode = false, int page = 1, int numberOfRecords = 5000)
+        private bool CheckIfConnectedToCrm()
         {
             if (Service == null)
             {
                 DialogResult dialogResult = MessageBox.Show(MessageMustBeConnectedToOrganization,
                                 TitleNoFetchXML,
                                  MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                return false;
             }
+            return true;
+        }
+
+        private void RetrieveAuditHistory(RetrieveAuditHistoryMode retrieveMode, bool previewMode = false, int page = 1, int numberOfRecords = 5000)
+        {
+            if (!CheckIfConnectedToCrm()) { return; }
 
             if (string.IsNullOrEmpty(txtFetchXML.Text))
             {
@@ -512,14 +550,70 @@ namespace AuditHistoryExtractor
 
         private void WsmDialog_OnExtractCompleted(List<AuditHistory> lsAuditHistory)
         {
-            dtGrvPreview.DataSource = lsAuditHistory;
-            SetBackgroundColor();
-            btnNext.Enabled = lsAuditHistory.Count > 0;
-
+            this.lsAuditHistory = lsAuditHistory;
+            FillGrid();
         }
+
+        private void FillGrid()
+        {
+            List<AuditHistory> lsAuditHistoryFiltered = lsAuditHistory;
+
+            if (lsAuditHistoryFiltered == null) { return; }
+
+            if (chkLstOperations.CheckedItems.Count > 0)
+            {
+                List<int> selectedOperations = new List<int>();
+                foreach (Operation operationItem in chkLstOperations.CheckedItems)
+                {
+                    selectedOperations.Add(operationItem.operationid);
+                }
+
+                lsAuditHistoryFiltered = lsAuditHistoryFiltered.Where(x => selectedOperations.Contains(x.OperationId)).ToList();
+            }
+
+            if (chkLstActions.CheckedItems.Count > 0)
+            {
+                List<int> selectedActions = new List<int>();
+                foreach (Operation operationItem in chkLstActions.CheckedItems)
+                {
+                    selectedActions.Add(operationItem.operationid);
+                }
+
+                lsAuditHistoryFiltered = lsAuditHistoryFiltered.Where(x => selectedActions.Contains(x.ActionId)).ToList();
+            }
+
+
+            if (lsSelectedUsers != null && lsSelectedUsers.Count > 0)
+            {
+                lsAuditHistoryFiltered = lsAuditHistoryFiltered.Where(x => (lsSelectedUsers.Select(u => u.UserId).ToList()).Contains(x.UserId)).ToList();
+            }
+
+            if (!string.IsNullOrWhiteSpace(dtpDateFrom.CustomFormat))
+            {
+                lsAuditHistoryFiltered = lsAuditHistoryFiltered.Where(x => x.CreatedOn >= (dtpDateFrom.Value.Date + dtpTimeFrom.Value.TimeOfDay)).ToList();
+            }
+
+
+            if (!string.IsNullOrWhiteSpace(dtpDateTo.CustomFormat))
+            {
+                lsAuditHistoryFiltered = lsAuditHistoryFiltered.Where(x => x.CreatedOn <= (dtpDateTo.Value.Date + dtpTimeTo.Value.TimeOfDay)).ToList();
+            }
+
+            dtGrvPreview.DataSource = lsAuditHistoryFiltered;
+            SetBackgroundColor();
+            btnNext.Enabled = lsAuditHistory != null && lsAuditHistory.Count > 0;
+        }
+
+
 
         private void WsmDialog_OnExtractCompletedSave(List<AuditHistory> lsAuditHistory)
         {
+            List<int> selectedOperations = new List<int>();
+            foreach (Operation operationItem in chkLstOperations.CheckedItems)
+            {
+                selectedOperations.Add(operationItem.operationid);
+            }
+
             string csvSeparator = ",";
             if (saveFileDialog1.FilterIndex == 1) { csvSeparator = ","; }
             if (saveFileDialog1.FilterIndex == 2) { csvSeparator = ";"; }
@@ -528,7 +622,7 @@ namespace AuditHistoryExtractor
 
             try
             {
-                CSVHelper.WriteFile(saveFileDialog1.FileName, csvSeparator, cmbPrimaryKeySelectedItem.Text, lsAuditHistory);
+                CSVHelper.WriteFile(saveFileDialog1.FileName, csvSeparator, cmbPrimaryKeySelectedItem.Text, lsAuditHistory.Where(x => selectedOperations.Contains(x.OperationId)).ToList());
                 DialogResult dialogResult = MessageBox.Show(FileSavedSuccessfully,
                                 TitleExportCSV,
                                  MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -631,5 +725,111 @@ namespace AuditHistoryExtractor
             lblPageNumber.Text = pageNumber.ToString();
         }
 
+        private void chkLstOperations_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            FillGrid();
+        }
+
+        private void dtpDateFrom_ValueChanged(object sender, EventArgs e)
+        {
+            dtpDateFrom.Format = DateTimePickerFormat.Long;
+            dtpTimeFrom.Format = DateTimePickerFormat.Time;
+
+        }
+
+
+
+        private void dtpDateTo_ValueChanged(object sender, EventArgs e)
+        {
+            dtpDateTo.Format = DateTimePickerFormat.Long;
+            dtpTimeTo.Format = DateTimePickerFormat.Time;
+
+        }
+
+        private void btnAddUsers_Click(object sender, EventArgs e)
+        {
+            if (!CheckIfConnectedToCrm()) { return; }
+
+            if (lsUsers == null)
+            {
+                UserHelper userHelper = new UserHelper(Service);
+                lsUsers = userHelper.GetListUsers();
+            }
+
+
+            FormSelectUsers formUsers = new FormSelectUsers(lsUsers);
+            formUsers.OnUserSelected += FormUsers_OnUserSelected;
+            formUsers.Show();
+
+
+
+            /*
+            string[] t = { "A", "B", "C" };
+            //listView1.Items.Add("1", "HELLO", 0);
+
+
+            string[] foodList = new string[]{"Juice", "Coffee",
+          "Cereal & Milk", "Fruit Plate", "Toast & Jelly",
+          "Bagel & Cream Cheese"};
+            string[] foodPrice = new string[]{"1.09", "1.09", "2.19",
+          "2.49", "1.49", "1.49"};
+
+            for (int count = 0; count < foodList.Length; count++)
+            {
+                ListViewItem listItem = new ListViewItem(foodList[count]);
+                listItem.Name = foodList[count];
+                listItem.SubItems.Add(foodPrice[count]);
+                lstSelectedUsers.Items.Add(listItem);
+            }
+
+
+            lstSelectedUsers.Items[foodList[2]].Checked = true;
+            */
+        }
+
+        private void FormUsers_OnUserSelected(List<User> lsUsers)
+        {
+            lsSelectedUsers = lsUsers;
+            lstSelectedUsers.Items.Clear();
+            foreach (User user in lsUsers)
+            {
+                ListViewItem listItem = new ListViewItem(user.FullName);
+                listItem.Name = user.UserId.ToString();
+                listItem.SubItems.Add(user.Username);
+                lstSelectedUsers.Items.Add(listItem);
+            }
+        }
+
+        private void btnApplyFilters_Click(object sender, EventArgs e)
+        {
+            if (!CheckIfConnectedToCrm()) { return; }
+            FillGrid();
+        }
+
+        private void btnClearFrom_Click(object sender, EventArgs e)
+        {
+            dtpDateFrom.Format = DateTimePickerFormat.Custom;
+            dtpDateFrom.CustomFormat = " ";
+            dtpTimeFrom.Format = DateTimePickerFormat.Custom;
+            dtpDateFrom.CustomFormat = " ";
+        }
+
+        private void btnClearTo_Click(object sender, EventArgs e)
+        {
+            dtpDateTo.Format = DateTimePickerFormat.Custom;
+            dtpDateTo.CustomFormat = " ";
+            dtpTimeTo.Format = DateTimePickerFormat.Custom;
+            dtpTimeTo.CustomFormat = " ";
+        }
+
+        private void btnClearUsers_Click(object sender, EventArgs e)
+        {
+            if (!CheckIfConnectedToCrm()) { return; }
+            if (lsSelectedUsers != null)
+            {
+                lsSelectedUsers.Clear();
+            }
+            lstSelectedUsers.Items.Clear();
+        }
     }
 }

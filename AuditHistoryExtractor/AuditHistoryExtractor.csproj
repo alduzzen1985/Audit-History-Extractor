@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\ILMerge.3.0.41\build\ILMerge.props" Condition="Exists('..\packages\ILMerge.3.0.41\build\ILMerge.props')" />
   <Import Project="..\packages\ILRepack.MSBuild.Task.2.0.13\build\ILRepack.MSBuild.Task.props" Condition="Exists('..\packages\ILRepack.MSBuild.Task.2.0.13\build\ILRepack.MSBuild.Task.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -236,7 +237,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Icons\removeFilter.png" />
+    <None Include="Icons\addFilter.png" />
     <Content Include="Icons\addUser22.png" />
+    <None Include="Icons\back.png" />
     <Content Include="Icons\cancel.png" />
     <Content Include="Icons\clear24.png" />
     <Content Include="Icons\excel.png" />
@@ -247,7 +251,9 @@
     <Content Include="Icons\FXB.jpg" />
     <Content Include="Icons\logo80x80.png" />
     <Content Include="Icons\logo32x32.png" />
+    <None Include="Icons\next.png" />
     <Content Include="Icons\preview24x24.png" />
+    <None Include="Resources\removeUser22.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
@@ -274,5 +280,6 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\ILRepack.MSBuild.Task.2.0.13\build\ILRepack.MSBuild.Task.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\ILRepack.MSBuild.Task.2.0.13\build\ILRepack.MSBuild.Task.props'))" />
+    <Error Condition="!Exists('..\packages\ILMerge.3.0.41\build\ILMerge.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\ILMerge.3.0.41\build\ILMerge.props'))" />
   </Target>
 </Project>

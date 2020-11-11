@@ -49,16 +49,18 @@
             this.pnlSearch.Controls.Add(this.txtUser);
             this.pnlSearch.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlSearch.Location = new System.Drawing.Point(0, 0);
+            this.pnlSearch.Margin = new System.Windows.Forms.Padding(2);
             this.pnlSearch.Name = "pnlSearch";
-            this.pnlSearch.Padding = new System.Windows.Forms.Padding(10);
-            this.pnlSearch.Size = new System.Drawing.Size(814, 59);
+            this.pnlSearch.Padding = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.pnlSearch.Size = new System.Drawing.Size(561, 38);
             this.pnlSearch.TabIndex = 0;
             // 
             // btnSearch
             // 
-            this.btnSearch.Location = new System.Drawing.Point(497, 10);
+            this.btnSearch.Location = new System.Drawing.Point(331, 6);
+            this.btnSearch.Margin = new System.Windows.Forms.Padding(2);
             this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Size = new System.Drawing.Size(75, 27);
+            this.btnSearch.Size = new System.Drawing.Size(58, 24);
             this.btnSearch.TabIndex = 2;
             this.btnSearch.Text = "Search";
             this.btnSearch.UseVisualStyleBackColor = true;
@@ -67,17 +69,19 @@
             // lblNameUsername
             // 
             this.lblNameUsername.AutoSize = true;
-            this.lblNameUsername.Location = new System.Drawing.Point(10, 14);
+            this.lblNameUsername.Location = new System.Drawing.Point(5, 12);
+            this.lblNameUsername.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblNameUsername.Name = "lblNameUsername";
-            this.lblNameUsername.Size = new System.Drawing.Size(137, 20);
+            this.lblNameUsername.Size = new System.Drawing.Size(94, 13);
             this.lblNameUsername.TabIndex = 1;
             this.lblNameUsername.Text = "Name / Username";
             // 
             // txtUser
             // 
-            this.txtUser.Location = new System.Drawing.Point(153, 11);
+            this.txtUser.Location = new System.Drawing.Point(103, 8);
+            this.txtUser.Margin = new System.Windows.Forms.Padding(2);
             this.txtUser.Name = "txtUser";
-            this.txtUser.Size = new System.Drawing.Size(325, 26);
+            this.txtUser.Size = new System.Drawing.Size(218, 20);
             this.txtUser.TabIndex = 0;
             this.txtUser.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtUser_KeyPress);
             // 
@@ -89,9 +93,10 @@
             this.clmUserName});
             this.lstViewUsers.Dock = System.Windows.Forms.DockStyle.Top;
             this.lstViewUsers.HideSelection = false;
-            this.lstViewUsers.Location = new System.Drawing.Point(0, 59);
+            this.lstViewUsers.Location = new System.Drawing.Point(0, 38);
+            this.lstViewUsers.Margin = new System.Windows.Forms.Padding(2);
             this.lstViewUsers.Name = "lstViewUsers";
-            this.lstViewUsers.Size = new System.Drawing.Size(814, 395);
+            this.lstViewUsers.Size = new System.Drawing.Size(561, 258);
             this.lstViewUsers.TabIndex = 1;
             this.lstViewUsers.UseCompatibleStateImageBehavior = false;
             this.lstViewUsers.View = System.Windows.Forms.View.Details;
@@ -100,28 +105,30 @@
             // clmFullName
             // 
             this.clmFullName.Text = "Full Name";
-            this.clmFullName.Width = 361;
+            this.clmFullName.Width = 235;
             // 
             // clmUserName
             // 
             this.clmUserName.Text = "User Name";
-            this.clmUserName.Width = 428;
+            this.clmUserName.Width = 288;
             // 
             // panel1
             // 
             this.panel1.Controls.Add(this.btnConfirm);
             this.panel1.Controls.Add(this.btnSelectUnSelectAll);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 454);
+            this.panel1.Location = new System.Drawing.Point(0, 296);
+            this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(814, 69);
+            this.panel1.Size = new System.Drawing.Size(561, 44);
             this.panel1.TabIndex = 2;
             // 
             // btnConfirm
             // 
-            this.btnConfirm.Location = new System.Drawing.Point(613, 17);
+            this.btnConfirm.Location = new System.Drawing.Point(409, 11);
+            this.btnConfirm.Margin = new System.Windows.Forms.Padding(2);
             this.btnConfirm.Name = "btnConfirm";
-            this.btnConfirm.Size = new System.Drawing.Size(179, 40);
+            this.btnConfirm.Size = new System.Drawing.Size(119, 26);
             this.btnConfirm.TabIndex = 4;
             this.btnConfirm.Text = "Confirm";
             this.btnConfirm.UseVisualStyleBackColor = true;
@@ -129,9 +136,10 @@
             // 
             // btnSelectUnSelectAll
             // 
-            this.btnSelectUnSelectAll.Location = new System.Drawing.Point(12, 17);
+            this.btnSelectUnSelectAll.Location = new System.Drawing.Point(8, 11);
+            this.btnSelectUnSelectAll.Margin = new System.Windows.Forms.Padding(2);
             this.btnSelectUnSelectAll.Name = "btnSelectUnSelectAll";
-            this.btnSelectUnSelectAll.Size = new System.Drawing.Size(190, 40);
+            this.btnSelectUnSelectAll.Size = new System.Drawing.Size(127, 26);
             this.btnSelectUnSelectAll.TabIndex = 3;
             this.btnSelectUnSelectAll.Text = "Select / Unselect all";
             this.btnSelectUnSelectAll.UseVisualStyleBackColor = true;
@@ -139,12 +147,13 @@
             // 
             // FormSelectUsers
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(814, 523);
+            this.ClientSize = new System.Drawing.Size(561, 340);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.lstViewUsers);
             this.Controls.Add(this.pnlSearch);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "FormSelectUsers";
             this.Text = "FormSelectUsers";
             this.pnlSearch.ResumeLayout(false);

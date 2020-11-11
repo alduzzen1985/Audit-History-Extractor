@@ -551,14 +551,19 @@ namespace AuditHistoryExtractor
         private void WsmDialog_OnExtractCompleted(List<AuditHistory> lsAuditHistory)
         {
             this.lsAuditHistory = lsAuditHistory;
-            FillGrid();
+
+
+
+            dtGrvPreview.DataSource = FilterData();
+            SetBackgroundColor();
+            btnNext.Enabled = lsAuditHistory != null && lsAuditHistory.Count > 0;
         }
 
-        private void FillGrid()
+        private List<AuditHistory> FilterData()
         {
             List<AuditHistory> lsAuditHistoryFiltered = lsAuditHistory;
 
-            if (lsAuditHistoryFiltered == null) { return; }
+            if (lsAuditHistoryFiltered == null) { return null; }
 
             if (chkLstOperations.CheckedItems.Count > 0)
             {
@@ -599,15 +604,21 @@ namespace AuditHistoryExtractor
                 lsAuditHistoryFiltered = lsAuditHistoryFiltered.Where(x => x.CreatedOn <= (dtpDateTo.Value.Date + dtpTimeTo.Value.TimeOfDay)).ToList();
             }
 
-            dtGrvPreview.DataSource = lsAuditHistoryFiltered;
-            SetBackgroundColor();
-            btnNext.Enabled = lsAuditHistory != null && lsAuditHistory.Count > 0;
+
+
+            return lsAuditHistoryFiltered;
         }
 
 
 
         private void WsmDialog_OnExtractCompletedSave(List<AuditHistory> lsAuditHistory)
         {
+
+            //Fill
+
+            
+
+
             List<int> selectedOperations = new List<int>();
             foreach (Operation operationItem in chkLstOperations.CheckedItems)
             {
@@ -622,7 +633,7 @@ namespace AuditHistoryExtractor
 
             try
             {
-                CSVHelper.WriteFile(saveFileDialog1.FileName, csvSeparator, cmbPrimaryKeySelectedItem.Text, lsAuditHistory.Where(x => selectedOperations.Contains(x.OperationId)).ToList());
+                CSVHelper.WriteFile(saveFileDialog1.FileName, csvSeparator, cmbPrimaryKeySelectedItem.Text, FilterData());
                 DialogResult dialogResult = MessageBox.Show(FileSavedSuccessfully,
                                 TitleExportCSV,
                                  MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -725,10 +736,6 @@ namespace AuditHistoryExtractor
             lblPageNumber.Text = pageNumber.ToString();
         }
 
-        private void chkLstOperations_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            FillGrid();
-        }
 
         private void dtpDateFrom_ValueChanged(object sender, EventArgs e)
         {
@@ -803,23 +810,31 @@ namespace AuditHistoryExtractor
         private void btnApplyFilters_Click(object sender, EventArgs e)
         {
             if (!CheckIfConnectedToCrm()) { return; }
-            FillGrid();
+            
+
+            dtGrvPreview.DataSource = FilterData();
+            SetBackgroundColor();
+            btnNext.Enabled = lsAuditHistory != null && lsAuditHistory.Count > 0;
         }
 
         private void btnClearFrom_Click(object sender, EventArgs e)
         {
-            dtpDateFrom.Format = DateTimePickerFormat.Custom;
-            dtpDateFrom.CustomFormat = " ";
-            dtpTimeFrom.Format = DateTimePickerFormat.Custom;
-            dtpDateFrom.CustomFormat = " ";
+            ClearDateAndTimeField(dtpDateFrom, dtpDateFrom);
         }
+
 
         private void btnClearTo_Click(object sender, EventArgs e)
         {
-            dtpDateTo.Format = DateTimePickerFormat.Custom;
-            dtpDateTo.CustomFormat = " ";
-            dtpTimeTo.Format = DateTimePickerFormat.Custom;
-            dtpTimeTo.CustomFormat = " ";
+            ClearDateAndTimeField(dtpDateTo, dtpTimeTo);
+        }
+
+
+        private void ClearDateAndTimeField(DateTimePicker date, DateTimePicker time)
+        {
+            date.Format = DateTimePickerFormat.Custom;
+            date.CustomFormat = " ";
+            time.Format = DateTimePickerFormat.Custom;
+            time.CustomFormat = " ";
         }
 
         private void btnClearUsers_Click(object sender, EventArgs e)
@@ -830,6 +845,57 @@ namespace AuditHistoryExtractor
                 lsSelectedUsers.Clear();
             }
             lstSelectedUsers.Items.Clear();
+        }
+
+        private void btnRemoveUser_Click(object sender, EventArgs e)
+        {
+
+            foreach (ListViewItem item in lstSelectedUsers.CheckedItems)
+            {
+                lstSelectedUsers.Items.Remove(item);
+            }
+        }
+
+        private void lstSelectedUsers_ItemChecked(object sender, ItemCheckedEventArgs e)
+        {
+            btnRemoveUser.Enabled = lstSelectedUsers.CheckedItems.Count > 0;
+        }
+
+        private void btnClearFilters_Click(object sender, EventArgs e)
+        {
+            lstSelectedUsers.Items.Clear();
+
+            for (int i = 0; i < chkLstActions.Items.Count; i++)
+            {
+                chkLstActions.SetItemChecked(i, false);
+            }
+
+            ClearDateAndTimeField(dtpDateFrom, dtpTimeFrom);
+            ClearDateAndTimeField(dtpDateTo, dtpTimeTo);
+
+            for (int i = 0; i < chkLstOperations.Items.Count; i++)
+            {
+                chkLstOperations.SetItemChecked(i, false);
+            }
+
+
+
+
+        }
+
+        private void pnlPaging_Resize(object sender, EventArgs e)
+        {
+
+        }
+
+        private void GrpPaging_Resize(object sender, EventArgs e)
+        {
+            pnlPaging.Location = new Point()
+            {
+                X = GrpPaging.Width / 2 - pnlPaging.Width / 2,
+                Y = GrpPaging.Height / 2 - pnlPaging.Height / 2
+            };
+            base.OnResize(e);
         }
     }
 }

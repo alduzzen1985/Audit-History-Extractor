@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 using AuditHistoryExtractor.Classes;
+using AuditHistoryExtractor.Classes.Models;
 
 namespace AuditHistoryExtractor.Controls
 {
@@ -13,7 +14,7 @@ namespace AuditHistoryExtractor.Controls
         private const string MessageAuditHistoryExtracted = "Audit History extracted successfully";
         private const string TitleExportSuccess = "Export success";
 
-        public delegate void ExtractCompleted(List<AuditHistory> lsAuditHistory);
+        public delegate void ExtractCompleted(List<AuditHistory> lsAuditHistory, List<Log> lsLogs);
         public event ExtractCompleted OnExtractCompleted;
 
         #region Variables
@@ -21,6 +22,8 @@ namespace AuditHistoryExtractor.Controls
 
 
         List<AuditHistory> lsStory = new List<AuditHistory>();
+        List<Log> lslog = new List<Log>();
+
 
         List<Entity> entitiesList;
         string identificator, fieldToExtract, fileName;
@@ -32,7 +35,7 @@ namespace AuditHistoryExtractor.Controls
         {
             Service = service;
             this.entitiesList = entitiesList;
-    
+
             InitializeComponent();
         }
 
@@ -77,7 +80,7 @@ namespace AuditHistoryExtractor.Controls
 
                     if (allFields)
                     {
-                        lsStory.AddRange(auditHistoryManager.GetAuditHistoryForRecord(entity.Id, entity.LogicalName, entity.GetAttributeValue<string>(identificator)));
+                        lsStory.AddRange(auditHistoryManager.GetAuditHistoryForRecord(entity.Id, entity.LogicalName, entity.GetAttributeValue<string>(identificator), ref lslog));
                     }
                     else
                     {
@@ -110,7 +113,7 @@ namespace AuditHistoryExtractor.Controls
         {
             if (OnExtractCompleted != null)
             {
-                OnExtractCompleted(lsStory);
+                OnExtractCompleted(lsStory, lslog);
             }
             this.Close();
         }

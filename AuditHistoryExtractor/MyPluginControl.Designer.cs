@@ -42,6 +42,11 @@
             this.grpPreview = new System.Windows.Forms.GroupBox();
             this.dtGrvPreview = new System.Windows.Forms.DataGridView();
             this.RecordId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.GrpPaging = new System.Windows.Forms.GroupBox();
+            this.pnlPaging = new System.Windows.Forms.Panel();
+            this.cmbNumberOfRecords = new System.Windows.Forms.ComboBox();
+            this.lblPage = new System.Windows.Forms.Label();
+            this.lblPageNumber = new System.Windows.Forms.Label();
             this.tabOperations = new System.Windows.Forms.TabControl();
             this.tabSearch = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -87,11 +92,8 @@
             this.chkLstOperations = new System.Windows.Forms.CheckedListBox();
             this.grpActions = new System.Windows.Forms.GroupBox();
             this.panel8 = new System.Windows.Forms.Panel();
-            this.GrpPaging = new System.Windows.Forms.GroupBox();
-            this.pnlPaging = new System.Windows.Forms.Panel();
-            this.cmbNumberOfRecords = new System.Windows.Forms.ComboBox();
-            this.lblPage = new System.Windows.Forms.Label();
-            this.lblPageNumber = new System.Windows.Forms.Label();
+            this.tabLogs = new System.Windows.Forms.TabPage();
+            this.dtGrvLogs = new System.Windows.Forms.DataGridView();
             this.btnPrevious = new System.Windows.Forms.Button();
             this.btnNext = new System.Windows.Forms.Button();
             this.btnClearFilters = new System.Windows.Forms.Button();
@@ -106,6 +108,8 @@
             this.tbClose = new System.Windows.Forms.ToolStripButton();
             this.tbFromEntitiesEnabled = new System.Windows.Forms.ToolStripButton();
             this.tbOpenFetchXMLBuilder = new System.Windows.Forms.ToolStripButton();
+            this.StatusImage = new System.Windows.Forms.DataGridViewImageColumn();
+            this.GuidRecord = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.recordKeyValueDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.createdOnDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.usernameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -115,10 +119,17 @@
             this.oldValueDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.newValueDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.auditHistoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.infoLog = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.recordKeyValueDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.messageDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.logBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
+            this.logBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.toolStrip1.SuspendLayout();
             this.panel9.SuspendLayout();
             this.grpPreview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtGrvPreview)).BeginInit();
+            this.GrpPaging.SuspendLayout();
+            this.pnlPaging.SuspendLayout();
             this.tabOperations.SuspendLayout();
             this.tabSearch.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -133,9 +144,11 @@
             this.grpOperations.SuspendLayout();
             this.grpActions.SuspendLayout();
             this.panel8.SuspendLayout();
-            this.GrpPaging.SuspendLayout();
-            this.pnlPaging.SuspendLayout();
+            this.tabLogs.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dtGrvLogs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.auditHistoryBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.logBindingSource1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.logBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // toolStrip1
@@ -149,19 +162,20 @@
             this.tbOpenFetchXMLBuilder});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(1175, 27);
+            this.toolStrip1.Padding = new System.Windows.Forms.Padding(0, 0, 3, 0);
+            this.toolStrip1.Size = new System.Drawing.Size(1762, 38);
             this.toolStrip1.TabIndex = 3;
             this.toolStrip1.Text = "Get Entities";
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 27);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 38);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 27);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 38);
             // 
             // saveFileDialog1
             // 
@@ -171,10 +185,9 @@
             // 
             this.panel9.Controls.Add(this.grpPreview);
             this.panel9.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel9.Location = new System.Drawing.Point(502, 27);
-            this.panel9.Margin = new System.Windows.Forms.Padding(2);
+            this.panel9.Location = new System.Drawing.Point(753, 38);
             this.panel9.Name = "panel9";
-            this.panel9.Size = new System.Drawing.Size(673, 1008);
+            this.panel9.Size = new System.Drawing.Size(1009, 1554);
             this.panel9.TabIndex = 60;
             // 
             // grpPreview
@@ -183,10 +196,10 @@
             this.grpPreview.Controls.Add(this.GrpPaging);
             this.grpPreview.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grpPreview.Location = new System.Drawing.Point(0, 0);
-            this.grpPreview.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.grpPreview.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.grpPreview.Name = "grpPreview";
-            this.grpPreview.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.grpPreview.Size = new System.Drawing.Size(673, 1008);
+            this.grpPreview.Padding = new System.Windows.Forms.Padding(3, 5, 3, 5);
+            this.grpPreview.Size = new System.Drawing.Size(1009, 1554);
             this.grpPreview.TabIndex = 51;
             this.grpPreview.TabStop = false;
             this.grpPreview.Text = "Preview";
@@ -225,8 +238,8 @@
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dtGrvPreview.DefaultCellStyle = dataGridViewCellStyle2;
             this.dtGrvPreview.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dtGrvPreview.Location = new System.Drawing.Point(2, 16);
-            this.dtGrvPreview.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.dtGrvPreview.Location = new System.Drawing.Point(3, 24);
+            this.dtGrvPreview.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.dtGrvPreview.Name = "dtGrvPreview";
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
@@ -238,7 +251,7 @@
             this.dtGrvPreview.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.dtGrvPreview.RowHeadersWidth = 62;
             this.dtGrvPreview.RowTemplate.Height = 24;
-            this.dtGrvPreview.Size = new System.Drawing.Size(669, 927);
+            this.dtGrvPreview.Size = new System.Drawing.Size(1003, 1430);
             this.dtGrvPreview.TabIndex = 60;
             // 
             // RecordId
@@ -248,26 +261,84 @@
             this.RecordId.MinimumWidth = 8;
             this.RecordId.Name = "RecordId";
             // 
+            // GrpPaging
+            // 
+            this.GrpPaging.Controls.Add(this.pnlPaging);
+            this.GrpPaging.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.GrpPaging.Location = new System.Drawing.Point(3, 1454);
+            this.GrpPaging.Name = "GrpPaging";
+            this.GrpPaging.Size = new System.Drawing.Size(1003, 95);
+            this.GrpPaging.TabIndex = 58;
+            this.GrpPaging.TabStop = false;
+            this.GrpPaging.Resize += new System.EventHandler(this.GrpPaging_Resize);
+            // 
+            // pnlPaging
+            // 
+            this.pnlPaging.Controls.Add(this.btnPrevious);
+            this.pnlPaging.Controls.Add(this.btnNext);
+            this.pnlPaging.Controls.Add(this.cmbNumberOfRecords);
+            this.pnlPaging.Controls.Add(this.lblPage);
+            this.pnlPaging.Controls.Add(this.lblPageNumber);
+            this.pnlPaging.Location = new System.Drawing.Point(308, 28);
+            this.pnlPaging.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.pnlPaging.Name = "pnlPaging";
+            this.pnlPaging.Size = new System.Drawing.Size(387, 60);
+            this.pnlPaging.TabIndex = 58;
+            // 
+            // cmbNumberOfRecords
+            // 
+            this.cmbNumberOfRecords.FormattingEnabled = true;
+            this.cmbNumberOfRecords.Items.AddRange(new object[] {
+            "10",
+            "25",
+            "50",
+            "75",
+            "100"});
+            this.cmbNumberOfRecords.Location = new System.Drawing.Point(186, 12);
+            this.cmbNumberOfRecords.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+            this.cmbNumberOfRecords.Name = "cmbNumberOfRecords";
+            this.cmbNumberOfRecords.Size = new System.Drawing.Size(74, 28);
+            this.cmbNumberOfRecords.TabIndex = 53;
+            this.cmbNumberOfRecords.Text = "10";
+            this.cmbNumberOfRecords.SelectedIndexChanged += new System.EventHandler(this.cmbNumberOfRecords_SelectedIndexChanged);
+            // 
+            // lblPage
+            // 
+            this.lblPage.AutoSize = true;
+            this.lblPage.Location = new System.Drawing.Point(8, 17);
+            this.lblPage.Name = "lblPage";
+            this.lblPage.Size = new System.Drawing.Size(58, 20);
+            this.lblPage.TabIndex = 55;
+            this.lblPage.Text = "Page : ";
+            // 
+            // lblPageNumber
+            // 
+            this.lblPageNumber.AutoSize = true;
+            this.lblPageNumber.Location = new System.Drawing.Point(62, 18);
+            this.lblPageNumber.Name = "lblPageNumber";
+            this.lblPageNumber.Size = new System.Drawing.Size(18, 20);
+            this.lblPageNumber.TabIndex = 56;
+            this.lblPageNumber.Text = "1";
+            // 
             // tabOperations
             // 
             this.tabOperations.Controls.Add(this.tabSearch);
             this.tabOperations.Controls.Add(this.tabFilter);
+            this.tabOperations.Controls.Add(this.tabLogs);
             this.tabOperations.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabOperations.Location = new System.Drawing.Point(0, 0);
-            this.tabOperations.Margin = new System.Windows.Forms.Padding(2);
             this.tabOperations.Name = "tabOperations";
             this.tabOperations.SelectedIndex = 0;
-            this.tabOperations.Size = new System.Drawing.Size(502, 1008);
+            this.tabOperations.Size = new System.Drawing.Size(753, 1554);
             this.tabOperations.TabIndex = 51;
             // 
             // tabSearch
             // 
             this.tabSearch.Controls.Add(this.panel1);
-            this.tabSearch.Location = new System.Drawing.Point(4, 22);
-            this.tabSearch.Margin = new System.Windows.Forms.Padding(2);
+            this.tabSearch.Location = new System.Drawing.Point(4, 29);
             this.tabSearch.Name = "tabSearch";
-            this.tabSearch.Padding = new System.Windows.Forms.Padding(2);
-            this.tabSearch.Size = new System.Drawing.Size(494, 982);
+            this.tabSearch.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabSearch.Size = new System.Drawing.Size(745, 1521);
             this.tabSearch.TabIndex = 0;
             this.tabSearch.Text = "Search";
             this.tabSearch.UseVisualStyleBackColor = true;
@@ -279,10 +350,9 @@
             this.panel1.Controls.Add(this.groupBox1);
             this.panel1.Controls.Add(this.grpFilterMethod);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(2, 2);
-            this.panel1.Margin = new System.Windows.Forms.Padding(2);
+            this.panel1.Location = new System.Drawing.Point(3, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(490, 978);
+            this.panel1.Size = new System.Drawing.Size(739, 1515);
             this.panel1.TabIndex = 62;
             // 
             // grpFilterByFetchXml
@@ -293,11 +363,11 @@
             this.grpFilterByFetchXml.Controls.Add(this.txtFetchXML);
             this.grpFilterByFetchXml.Controls.Add(this.linkLabel1);
             this.grpFilterByFetchXml.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpFilterByFetchXml.Location = new System.Drawing.Point(0, 360);
-            this.grpFilterByFetchXml.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.grpFilterByFetchXml.Location = new System.Drawing.Point(0, 554);
+            this.grpFilterByFetchXml.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.grpFilterByFetchXml.Name = "grpFilterByFetchXml";
-            this.grpFilterByFetchXml.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.grpFilterByFetchXml.Size = new System.Drawing.Size(490, 288);
+            this.grpFilterByFetchXml.Padding = new System.Windows.Forms.Padding(3, 5, 3, 5);
+            this.grpFilterByFetchXml.Size = new System.Drawing.Size(739, 441);
             this.grpFilterByFetchXml.TabIndex = 57;
             this.grpFilterByFetchXml.TabStop = false;
             this.grpFilterByFetchXml.Text = "Filter Data with FetchXML";
@@ -306,39 +376,36 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(238, 23);
-            this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label6.Location = new System.Drawing.Point(357, 35);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(183, 13);
+            this.label6.Size = new System.Drawing.Size(275, 20);
             this.label6.TabIndex = 38;
             this.label6.Text = "or using the FetchXML Builder Button";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(5, 23);
-            this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label5.Location = new System.Drawing.Point(8, 35);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(203, 13);
+            this.label5.Size = new System.Drawing.Size(301, 20);
             this.label5.TabIndex = 34;
             this.label5.Text = "You can build your Fetch XML from here :";
             // 
             // txtFetchXML
             // 
-            this.txtFetchXML.Location = new System.Drawing.Point(7, 39);
-            this.txtFetchXML.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.txtFetchXML.Location = new System.Drawing.Point(10, 60);
+            this.txtFetchXML.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.txtFetchXML.Multiline = true;
             this.txtFetchXML.Name = "txtFetchXML";
-            this.txtFetchXML.Size = new System.Drawing.Size(417, 230);
+            this.txtFetchXML.Size = new System.Drawing.Size(624, 352);
             this.txtFetchXML.TabIndex = 30;
             // 
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(209, 23);
-            this.linkLabel1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.linkLabel1.Location = new System.Drawing.Point(314, 35);
             this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(31, 13);
+            this.linkLabel1.Size = new System.Drawing.Size(44, 20);
             this.linkLabel1.TabIndex = 35;
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "LINK";
@@ -349,11 +416,11 @@
             this.grpFilterByView.Controls.Add(this.lblViews);
             this.grpFilterByView.Controls.Add(this.cmbViews);
             this.grpFilterByView.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpFilterByView.Location = new System.Drawing.Point(0, 269);
-            this.grpFilterByView.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.grpFilterByView.Location = new System.Drawing.Point(0, 414);
+            this.grpFilterByView.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.grpFilterByView.Name = "grpFilterByView";
-            this.grpFilterByView.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.grpFilterByView.Size = new System.Drawing.Size(490, 91);
+            this.grpFilterByView.Padding = new System.Windows.Forms.Padding(3, 5, 3, 5);
+            this.grpFilterByView.Size = new System.Drawing.Size(739, 140);
             this.grpFilterByView.TabIndex = 55;
             this.grpFilterByView.TabStop = false;
             this.grpFilterByView.Text = "Filter by View";
@@ -362,10 +429,10 @@
             // chkPersonalView
             // 
             this.chkPersonalView.AutoSize = true;
-            this.chkPersonalView.Location = new System.Drawing.Point(7, 26);
-            this.chkPersonalView.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.chkPersonalView.Location = new System.Drawing.Point(10, 40);
+            this.chkPersonalView.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.chkPersonalView.Name = "chkPersonalView";
-            this.chkPersonalView.Size = new System.Drawing.Size(123, 17);
+            this.chkPersonalView.Size = new System.Drawing.Size(179, 24);
             this.chkPersonalView.TabIndex = 43;
             this.chkPersonalView.Text = "Show Personal View";
             this.chkPersonalView.UseVisualStyleBackColor = true;
@@ -374,20 +441,19 @@
             // lblViews
             // 
             this.lblViews.AutoSize = true;
-            this.lblViews.Location = new System.Drawing.Point(5, 55);
-            this.lblViews.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblViews.Location = new System.Drawing.Point(8, 85);
             this.lblViews.Name = "lblViews";
-            this.lblViews.Size = new System.Drawing.Size(35, 13);
+            this.lblViews.Size = new System.Drawing.Size(51, 20);
             this.lblViews.TabIndex = 39;
             this.lblViews.Text = "Views";
             // 
             // cmbViews
             // 
             this.cmbViews.FormattingEnabled = true;
-            this.cmbViews.Location = new System.Drawing.Point(56, 55);
-            this.cmbViews.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.cmbViews.Location = new System.Drawing.Point(84, 85);
+            this.cmbViews.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.cmbViews.Name = "cmbViews";
-            this.cmbViews.Size = new System.Drawing.Size(293, 21);
+            this.cmbViews.Size = new System.Drawing.Size(438, 28);
             this.cmbViews.TabIndex = 40;
             this.cmbViews.SelectedIndexChanged += new System.EventHandler(this.cmbViews_SelectedIndexChanged);
             // 
@@ -398,11 +464,11 @@
             this.groupBox1.Controls.Add(this.rdSpecificField);
             this.groupBox1.Controls.Add(this.rdAllFields);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox1.Location = new System.Drawing.Point(0, 172);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.groupBox1.Location = new System.Drawing.Point(0, 265);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBox1.Size = new System.Drawing.Size(490, 97);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(3, 5, 3, 5);
+            this.groupBox1.Size = new System.Drawing.Size(739, 149);
             this.groupBox1.TabIndex = 54;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "View Audit History for";
@@ -410,10 +476,9 @@
             // lblField
             // 
             this.lblField.AutoSize = true;
-            this.lblField.Location = new System.Drawing.Point(5, 62);
-            this.lblField.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblField.Location = new System.Drawing.Point(8, 95);
             this.lblField.Name = "lblField";
-            this.lblField.Size = new System.Drawing.Size(29, 13);
+            this.lblField.Size = new System.Drawing.Size(43, 20);
             this.lblField.TabIndex = 3;
             this.lblField.Text = "Field";
             this.lblField.Visible = false;
@@ -421,20 +486,20 @@
             // cmbFields
             // 
             this.cmbFields.FormattingEnabled = true;
-            this.cmbFields.Location = new System.Drawing.Point(55, 62);
-            this.cmbFields.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.cmbFields.Location = new System.Drawing.Point(82, 95);
+            this.cmbFields.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.cmbFields.Name = "cmbFields";
-            this.cmbFields.Size = new System.Drawing.Size(293, 21);
+            this.cmbFields.Size = new System.Drawing.Size(438, 28);
             this.cmbFields.TabIndex = 2;
             this.cmbFields.Visible = false;
             // 
             // rdSpecificField
             // 
             this.rdSpecificField.AutoSize = true;
-            this.rdSpecificField.Location = new System.Drawing.Point(121, 29);
-            this.rdSpecificField.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.rdSpecificField.Location = new System.Drawing.Point(182, 45);
+            this.rdSpecificField.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.rdSpecificField.Name = "rdSpecificField";
-            this.rdSpecificField.Size = new System.Drawing.Size(110, 17);
+            this.rdSpecificField.Size = new System.Drawing.Size(160, 24);
             this.rdSpecificField.TabIndex = 1;
             this.rdSpecificField.Text = "Only specific Field";
             this.rdSpecificField.UseVisualStyleBackColor = true;
@@ -444,10 +509,10 @@
             // 
             this.rdAllFields.AutoSize = true;
             this.rdAllFields.Checked = true;
-            this.rdAllFields.Location = new System.Drawing.Point(7, 29);
-            this.rdAllFields.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.rdAllFields.Location = new System.Drawing.Point(10, 45);
+            this.rdAllFields.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.rdAllFields.Name = "rdAllFields";
-            this.rdAllFields.Size = new System.Drawing.Size(111, 17);
+            this.rdAllFields.Size = new System.Drawing.Size(163, 24);
             this.rdAllFields.TabIndex = 0;
             this.rdAllFields.TabStop = true;
             this.rdAllFields.Text = "All Fields changed";
@@ -467,10 +532,10 @@
             this.grpFilterMethod.Controls.Add(this.cmbEntities);
             this.grpFilterMethod.Dock = System.Windows.Forms.DockStyle.Top;
             this.grpFilterMethod.Location = new System.Drawing.Point(0, 0);
-            this.grpFilterMethod.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.grpFilterMethod.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.grpFilterMethod.Name = "grpFilterMethod";
-            this.grpFilterMethod.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.grpFilterMethod.Size = new System.Drawing.Size(490, 172);
+            this.grpFilterMethod.Padding = new System.Windows.Forms.Padding(3, 5, 3, 5);
+            this.grpFilterMethod.Size = new System.Drawing.Size(739, 265);
             this.grpFilterMethod.TabIndex = 53;
             this.grpFilterMethod.TabStop = false;
             this.grpFilterMethod.Text = "Filter Method";
@@ -480,10 +545,10 @@
             this.chkEntitiesWithAudit.AutoSize = true;
             this.chkEntitiesWithAudit.Checked = true;
             this.chkEntitiesWithAudit.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkEntitiesWithAudit.Location = new System.Drawing.Point(7, 25);
-            this.chkEntitiesWithAudit.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.chkEntitiesWithAudit.Location = new System.Drawing.Point(10, 38);
+            this.chkEntitiesWithAudit.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.chkEntitiesWithAudit.Name = "chkEntitiesWithAudit";
-            this.chkEntitiesWithAudit.Size = new System.Drawing.Size(168, 17);
+            this.chkEntitiesWithAudit.Size = new System.Drawing.Size(246, 24);
             this.chkEntitiesWithAudit.TabIndex = 48;
             this.chkEntitiesWithAudit.Text = "Show Only with Audit Enabled";
             this.chkEntitiesWithAudit.UseVisualStyleBackColor = true;
@@ -494,10 +559,9 @@
             this.lblAuditHistoryNotEnabled.AutoSize = true;
             this.lblAuditHistoryNotEnabled.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblAuditHistoryNotEnabled.ForeColor = System.Drawing.Color.Red;
-            this.lblAuditHistoryNotEnabled.Location = new System.Drawing.Point(4, 79);
-            this.lblAuditHistoryNotEnabled.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblAuditHistoryNotEnabled.Location = new System.Drawing.Point(6, 122);
             this.lblAuditHistoryNotEnabled.Name = "lblAuditHistoryNotEnabled";
-            this.lblAuditHistoryNotEnabled.Size = new System.Drawing.Size(150, 13);
+            this.lblAuditHistoryNotEnabled.Size = new System.Drawing.Size(212, 20);
             this.lblAuditHistoryNotEnabled.TabIndex = 47;
             this.lblAuditHistoryNotEnabled.Text = "Audit History not enabled";
             this.lblAuditHistoryNotEnabled.Visible = false;
@@ -505,39 +569,37 @@
             // cmbPrimaryKey
             // 
             this.cmbPrimaryKey.FormattingEnabled = true;
-            this.cmbPrimaryKey.Location = new System.Drawing.Point(114, 106);
-            this.cmbPrimaryKey.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.cmbPrimaryKey.Location = new System.Drawing.Point(171, 163);
+            this.cmbPrimaryKey.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.cmbPrimaryKey.Name = "cmbPrimaryKey";
-            this.cmbPrimaryKey.Size = new System.Drawing.Size(309, 21);
+            this.cmbPrimaryKey.Size = new System.Drawing.Size(462, 28);
             this.cmbPrimaryKey.TabIndex = 25;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(5, 109);
-            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label1.Location = new System.Drawing.Point(8, 168);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(87, 13);
+            this.label1.Size = new System.Drawing.Size(129, 20);
             this.label1.TabIndex = 27;
             this.label1.Text = "Primary Key Field";
             // 
             // lblFilterDataBy
             // 
             this.lblFilterDataBy.AutoSize = true;
-            this.lblFilterDataBy.Location = new System.Drawing.Point(5, 136);
-            this.lblFilterDataBy.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblFilterDataBy.Location = new System.Drawing.Point(8, 209);
             this.lblFilterDataBy.Name = "lblFilterDataBy";
-            this.lblFilterDataBy.Size = new System.Drawing.Size(92, 13);
+            this.lblFilterDataBy.Size = new System.Drawing.Size(137, 20);
             this.lblFilterDataBy.TabIndex = 46;
             this.lblFilterDataBy.Text = "Filter Data using : ";
             // 
             // rdbView
             // 
             this.rdbView.AutoSize = true;
-            this.rdbView.Location = new System.Drawing.Point(109, 135);
-            this.rdbView.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.rdbView.Location = new System.Drawing.Point(164, 208);
+            this.rdbView.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.rdbView.Name = "rdbView";
-            this.rdbView.Size = new System.Drawing.Size(48, 17);
+            this.rdbView.Size = new System.Drawing.Size(68, 24);
             this.rdbView.TabIndex = 43;
             this.rdbView.TabStop = true;
             this.rdbView.Text = "View";
@@ -547,20 +609,19 @@
             // lblEntities
             // 
             this.lblEntities.AutoSize = true;
-            this.lblEntities.Location = new System.Drawing.Point(5, 53);
-            this.lblEntities.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblEntities.Location = new System.Drawing.Point(8, 82);
             this.lblEntities.Name = "lblEntities";
-            this.lblEntities.Size = new System.Drawing.Size(33, 13);
+            this.lblEntities.Size = new System.Drawing.Size(49, 20);
             this.lblEntities.TabIndex = 41;
             this.lblEntities.Text = "Entity";
             // 
             // rdbFetchXml
             // 
             this.rdbFetchXml.AutoSize = true;
-            this.rdbFetchXml.Location = new System.Drawing.Point(160, 135);
-            this.rdbFetchXml.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.rdbFetchXml.Location = new System.Drawing.Point(240, 208);
+            this.rdbFetchXml.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.rdbFetchXml.Name = "rdbFetchXml";
-            this.rdbFetchXml.Size = new System.Drawing.Size(74, 17);
+            this.rdbFetchXml.Size = new System.Drawing.Size(108, 24);
             this.rdbFetchXml.TabIndex = 44;
             this.rdbFetchXml.TabStop = true;
             this.rdbFetchXml.Text = "FetchXML";
@@ -570,10 +631,10 @@
             // cmbEntities
             // 
             this.cmbEntities.FormattingEnabled = true;
-            this.cmbEntities.Location = new System.Drawing.Point(114, 51);
-            this.cmbEntities.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.cmbEntities.Location = new System.Drawing.Point(171, 78);
+            this.cmbEntities.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.cmbEntities.Name = "cmbEntities";
-            this.cmbEntities.Size = new System.Drawing.Size(309, 21);
+            this.cmbEntities.Size = new System.Drawing.Size(462, 28);
             this.cmbEntities.TabIndex = 42;
             this.cmbEntities.SelectedIndexChanged += new System.EventHandler(this.cmbEntities_SelectedIndexChanged);
             // 
@@ -583,11 +644,10 @@
             this.tabFilter.Controls.Add(this.grpUsers);
             this.tabFilter.Controls.Add(this.grpOperationDateTime);
             this.tabFilter.Controls.Add(this.grpOperations);
-            this.tabFilter.Location = new System.Drawing.Point(4, 22);
-            this.tabFilter.Margin = new System.Windows.Forms.Padding(2);
+            this.tabFilter.Location = new System.Drawing.Point(4, 29);
             this.tabFilter.Name = "tabFilter";
-            this.tabFilter.Padding = new System.Windows.Forms.Padding(2);
-            this.tabFilter.Size = new System.Drawing.Size(494, 982);
+            this.tabFilter.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabFilter.Size = new System.Drawing.Size(745, 1521);
             this.tabFilter.TabIndex = 1;
             this.tabFilter.Text = "Filter";
             this.tabFilter.UseVisualStyleBackColor = true;
@@ -596,11 +656,9 @@
             // 
             this.grpBoxActions.Controls.Add(this.chkLstActions);
             this.grpBoxActions.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpBoxActions.Location = new System.Drawing.Point(2, 381);
-            this.grpBoxActions.Margin = new System.Windows.Forms.Padding(2);
+            this.grpBoxActions.Location = new System.Drawing.Point(3, 587);
             this.grpBoxActions.Name = "grpBoxActions";
-            this.grpBoxActions.Padding = new System.Windows.Forms.Padding(2);
-            this.grpBoxActions.Size = new System.Drawing.Size(490, 452);
+            this.grpBoxActions.Size = new System.Drawing.Size(739, 695);
             this.grpBoxActions.TabIndex = 61;
             this.grpBoxActions.TabStop = false;
             this.grpBoxActions.Text = "Actions";
@@ -609,10 +667,9 @@
             // 
             this.chkLstActions.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chkLstActions.FormattingEnabled = true;
-            this.chkLstActions.Location = new System.Drawing.Point(2, 15);
-            this.chkLstActions.Margin = new System.Windows.Forms.Padding(2);
+            this.chkLstActions.Location = new System.Drawing.Point(3, 22);
             this.chkLstActions.Name = "chkLstActions";
-            this.chkLstActions.Size = new System.Drawing.Size(486, 435);
+            this.chkLstActions.Size = new System.Drawing.Size(733, 670);
             this.chkLstActions.TabIndex = 0;
             // 
             // grpUsers
@@ -622,11 +679,9 @@
             this.grpUsers.Controls.Add(this.lstSelectedUsers);
             this.grpUsers.Controls.Add(this.btnAddUsers);
             this.grpUsers.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpUsers.Location = new System.Drawing.Point(2, 192);
-            this.grpUsers.Margin = new System.Windows.Forms.Padding(2);
+            this.grpUsers.Location = new System.Drawing.Point(3, 296);
             this.grpUsers.Name = "grpUsers";
-            this.grpUsers.Padding = new System.Windows.Forms.Padding(2);
-            this.grpUsers.Size = new System.Drawing.Size(490, 189);
+            this.grpUsers.Size = new System.Drawing.Size(739, 291);
             this.grpUsers.TabIndex = 60;
             this.grpUsers.TabStop = false;
             this.grpUsers.Text = "Users";
@@ -638,10 +693,9 @@
             this.columnFullName,
             this.columnUserName});
             this.lstSelectedUsers.HideSelection = false;
-            this.lstSelectedUsers.Location = new System.Drawing.Point(5, 24);
-            this.lstSelectedUsers.Margin = new System.Windows.Forms.Padding(2);
+            this.lstSelectedUsers.Location = new System.Drawing.Point(8, 37);
             this.lstSelectedUsers.Name = "lstSelectedUsers";
-            this.lstSelectedUsers.Size = new System.Drawing.Size(461, 128);
+            this.lstSelectedUsers.Size = new System.Drawing.Size(690, 195);
             this.lstSelectedUsers.TabIndex = 1;
             this.lstSelectedUsers.UseCompatibleStateImageBehavior = false;
             this.lstSelectedUsers.View = System.Windows.Forms.View.Details;
@@ -668,11 +722,9 @@
             this.grpOperationDateTime.Controls.Add(this.dtpDateFrom);
             this.grpOperationDateTime.Controls.Add(this.lblFromDate);
             this.grpOperationDateTime.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpOperationDateTime.Location = new System.Drawing.Point(2, 98);
-            this.grpOperationDateTime.Margin = new System.Windows.Forms.Padding(2);
+            this.grpOperationDateTime.Location = new System.Drawing.Point(3, 151);
             this.grpOperationDateTime.Name = "grpOperationDateTime";
-            this.grpOperationDateTime.Padding = new System.Windows.Forms.Padding(2);
-            this.grpOperationDateTime.Size = new System.Drawing.Size(490, 94);
+            this.grpOperationDateTime.Size = new System.Drawing.Size(739, 145);
             this.grpOperationDateTime.TabIndex = 59;
             this.grpOperationDateTime.TabStop = false;
             this.grpOperationDateTime.Text = "Operation Date & Time";
@@ -681,33 +733,30 @@
             // 
             this.dtpTimeTo.CustomFormat = " ";
             this.dtpTimeTo.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtpTimeTo.Location = new System.Drawing.Point(210, 53);
-            this.dtpTimeTo.Margin = new System.Windows.Forms.Padding(2);
+            this.dtpTimeTo.Location = new System.Drawing.Point(315, 82);
             this.dtpTimeTo.MinDate = new System.DateTime(1999, 1, 1, 0, 0, 0, 0);
             this.dtpTimeTo.Name = "dtpTimeTo";
             this.dtpTimeTo.ShowUpDown = true;
-            this.dtpTimeTo.Size = new System.Drawing.Size(71, 20);
+            this.dtpTimeTo.Size = new System.Drawing.Size(104, 26);
             this.dtpTimeTo.TabIndex = 5;
             // 
             // dtpDateTo
             // 
             this.dtpDateTo.CustomFormat = " ";
             this.dtpDateTo.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtpDateTo.Location = new System.Drawing.Point(75, 52);
-            this.dtpDateTo.Margin = new System.Windows.Forms.Padding(2);
+            this.dtpDateTo.Location = new System.Drawing.Point(112, 80);
             this.dtpDateTo.MinDate = new System.DateTime(1999, 1, 1, 0, 0, 0, 0);
             this.dtpDateTo.Name = "dtpDateTo";
-            this.dtpDateTo.Size = new System.Drawing.Size(133, 20);
+            this.dtpDateTo.Size = new System.Drawing.Size(198, 26);
             this.dtpDateTo.TabIndex = 4;
             this.dtpDateTo.ValueChanged += new System.EventHandler(this.dtpDateTo_ValueChanged);
             // 
             // lblTo
             // 
             this.lblTo.AutoSize = true;
-            this.lblTo.Location = new System.Drawing.Point(10, 51);
-            this.lblTo.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblTo.Location = new System.Drawing.Point(15, 78);
             this.lblTo.Name = "lblTo";
-            this.lblTo.Size = new System.Drawing.Size(20, 13);
+            this.lblTo.Size = new System.Drawing.Size(27, 20);
             this.lblTo.TabIndex = 3;
             this.lblTo.Text = "To";
             // 
@@ -715,33 +764,30 @@
             // 
             this.dtpTimeFrom.CustomFormat = " ";
             this.dtpTimeFrom.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtpTimeFrom.Location = new System.Drawing.Point(210, 21);
-            this.dtpTimeFrom.Margin = new System.Windows.Forms.Padding(2);
+            this.dtpTimeFrom.Location = new System.Drawing.Point(315, 32);
             this.dtpTimeFrom.MinDate = new System.DateTime(1999, 1, 1, 0, 0, 0, 0);
             this.dtpTimeFrom.Name = "dtpTimeFrom";
             this.dtpTimeFrom.ShowUpDown = true;
-            this.dtpTimeFrom.Size = new System.Drawing.Size(71, 20);
+            this.dtpTimeFrom.Size = new System.Drawing.Size(104, 26);
             this.dtpTimeFrom.TabIndex = 2;
             // 
             // dtpDateFrom
             // 
             this.dtpDateFrom.CustomFormat = " ";
             this.dtpDateFrom.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtpDateFrom.Location = new System.Drawing.Point(75, 21);
-            this.dtpDateFrom.Margin = new System.Windows.Forms.Padding(2);
+            this.dtpDateFrom.Location = new System.Drawing.Point(112, 32);
             this.dtpDateFrom.MinDate = new System.DateTime(1999, 1, 1, 0, 0, 0, 0);
             this.dtpDateFrom.Name = "dtpDateFrom";
-            this.dtpDateFrom.Size = new System.Drawing.Size(133, 20);
+            this.dtpDateFrom.Size = new System.Drawing.Size(198, 26);
             this.dtpDateFrom.TabIndex = 1;
             this.dtpDateFrom.ValueChanged += new System.EventHandler(this.dtpDateFrom_ValueChanged);
             // 
             // lblFromDate
             // 
             this.lblFromDate.AutoSize = true;
-            this.lblFromDate.Location = new System.Drawing.Point(11, 22);
-            this.lblFromDate.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblFromDate.Location = new System.Drawing.Point(16, 34);
             this.lblFromDate.Name = "lblFromDate";
-            this.lblFromDate.Size = new System.Drawing.Size(33, 13);
+            this.lblFromDate.Size = new System.Drawing.Size(50, 20);
             this.lblFromDate.TabIndex = 0;
             this.lblFromDate.Text = "From ";
             // 
@@ -749,11 +795,9 @@
             // 
             this.grpOperations.Controls.Add(this.chkLstOperations);
             this.grpOperations.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpOperations.Location = new System.Drawing.Point(2, 2);
-            this.grpOperations.Margin = new System.Windows.Forms.Padding(2);
+            this.grpOperations.Location = new System.Drawing.Point(3, 3);
             this.grpOperations.Name = "grpOperations";
-            this.grpOperations.Padding = new System.Windows.Forms.Padding(2);
-            this.grpOperations.Size = new System.Drawing.Size(490, 96);
+            this.grpOperations.Size = new System.Drawing.Size(739, 148);
             this.grpOperations.TabIndex = 58;
             this.grpOperations.TabStop = false;
             this.grpOperations.Text = "Operation Types";
@@ -763,11 +807,10 @@
             this.chkLstOperations.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chkLstOperations.FormattingEnabled = true;
             this.chkLstOperations.HorizontalScrollbar = true;
-            this.chkLstOperations.Location = new System.Drawing.Point(2, 15);
-            this.chkLstOperations.Margin = new System.Windows.Forms.Padding(2);
+            this.chkLstOperations.Location = new System.Drawing.Point(3, 22);
             this.chkLstOperations.Name = "chkLstOperations";
             this.chkLstOperations.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.chkLstOperations.Size = new System.Drawing.Size(486, 79);
+            this.chkLstOperations.Size = new System.Drawing.Size(733, 123);
             this.chkLstOperations.TabIndex = 0;
             // 
             // grpActions
@@ -777,11 +820,11 @@
             this.grpActions.Controls.Add(this.btnPreview);
             this.grpActions.Controls.Add(this.btnExtractAuditHistory);
             this.grpActions.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.grpActions.Location = new System.Drawing.Point(0, 944);
-            this.grpActions.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.grpActions.Location = new System.Drawing.Point(0, 1456);
+            this.grpActions.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.grpActions.Name = "grpActions";
-            this.grpActions.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.grpActions.Size = new System.Drawing.Size(502, 64);
+            this.grpActions.Padding = new System.Windows.Forms.Padding(3, 5, 3, 5);
+            this.grpActions.Size = new System.Drawing.Size(753, 98);
             this.grpActions.TabIndex = 54;
             this.grpActions.TabStop = false;
             this.grpActions.Text = "Actions";
@@ -792,82 +835,55 @@
             this.panel8.Controls.Add(this.grpActions);
             this.panel8.Controls.Add(this.tabOperations);
             this.panel8.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel8.Location = new System.Drawing.Point(0, 27);
-            this.panel8.Margin = new System.Windows.Forms.Padding(2);
+            this.panel8.Location = new System.Drawing.Point(0, 38);
             this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(502, 1008);
+            this.panel8.Size = new System.Drawing.Size(753, 1554);
             this.panel8.TabIndex = 59;
             // 
-            // GrpPaging
+            // tabLogs
             // 
-            this.GrpPaging.Controls.Add(this.pnlPaging);
-            this.GrpPaging.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.GrpPaging.Location = new System.Drawing.Point(2, 943);
-            this.GrpPaging.Margin = new System.Windows.Forms.Padding(2);
-            this.GrpPaging.Name = "GrpPaging";
-            this.GrpPaging.Padding = new System.Windows.Forms.Padding(2);
-            this.GrpPaging.Size = new System.Drawing.Size(669, 62);
-            this.GrpPaging.TabIndex = 58;
-            this.GrpPaging.TabStop = false;
-            this.GrpPaging.Resize += new System.EventHandler(this.GrpPaging_Resize);
+            this.tabLogs.Controls.Add(this.dtGrvLogs);
+            this.tabLogs.Location = new System.Drawing.Point(4, 29);
+            this.tabLogs.Name = "tabLogs";
+            this.tabLogs.Padding = new System.Windows.Forms.Padding(3);
+            this.tabLogs.Size = new System.Drawing.Size(745, 1521);
+            this.tabLogs.TabIndex = 2;
+            this.tabLogs.Text = "Logs";
+            this.tabLogs.UseVisualStyleBackColor = true;
             // 
-            // pnlPaging
+            // dtGrvLogs
             // 
-            this.pnlPaging.Controls.Add(this.btnPrevious);
-            this.pnlPaging.Controls.Add(this.btnNext);
-            this.pnlPaging.Controls.Add(this.cmbNumberOfRecords);
-            this.pnlPaging.Controls.Add(this.lblPage);
-            this.pnlPaging.Controls.Add(this.lblPageNumber);
-            this.pnlPaging.Location = new System.Drawing.Point(205, 18);
-            this.pnlPaging.Name = "pnlPaging";
-            this.pnlPaging.Size = new System.Drawing.Size(258, 39);
-            this.pnlPaging.TabIndex = 58;
-            // 
-            // cmbNumberOfRecords
-            // 
-            this.cmbNumberOfRecords.FormattingEnabled = true;
-            this.cmbNumberOfRecords.Items.AddRange(new object[] {
-            "10",
-            "25",
-            "50",
-            "75",
-            "100"});
-            this.cmbNumberOfRecords.Location = new System.Drawing.Point(124, 8);
-            this.cmbNumberOfRecords.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.cmbNumberOfRecords.Name = "cmbNumberOfRecords";
-            this.cmbNumberOfRecords.Size = new System.Drawing.Size(51, 21);
-            this.cmbNumberOfRecords.TabIndex = 53;
-            this.cmbNumberOfRecords.Text = "10";
-            this.cmbNumberOfRecords.SelectedIndexChanged += new System.EventHandler(this.cmbNumberOfRecords_SelectedIndexChanged);
-            // 
-            // lblPage
-            // 
-            this.lblPage.AutoSize = true;
-            this.lblPage.Location = new System.Drawing.Point(5, 11);
-            this.lblPage.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblPage.Name = "lblPage";
-            this.lblPage.Size = new System.Drawing.Size(41, 13);
-            this.lblPage.TabIndex = 55;
-            this.lblPage.Text = "Page : ";
-            // 
-            // lblPageNumber
-            // 
-            this.lblPageNumber.AutoSize = true;
-            this.lblPageNumber.Location = new System.Drawing.Point(41, 12);
-            this.lblPageNumber.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblPageNumber.Name = "lblPageNumber";
-            this.lblPageNumber.Size = new System.Drawing.Size(13, 13);
-            this.lblPageNumber.TabIndex = 56;
-            this.lblPageNumber.Text = "1";
+            this.dtGrvLogs.AllowUserToAddRows = false;
+            this.dtGrvLogs.AllowUserToDeleteRows = false;
+            this.dtGrvLogs.AutoGenerateColumns = false;
+            this.dtGrvLogs.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            this.dtGrvLogs.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
+            this.dtGrvLogs.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dtGrvLogs.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.StatusImage,
+            this.infoLog,
+            this.GuidRecord,
+            this.recordKeyValueDataGridViewTextBoxColumn1,
+            this.messageDataGridViewTextBoxColumn});
+            this.dtGrvLogs.DataSource = this.logBindingSource1;
+            this.dtGrvLogs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dtGrvLogs.Location = new System.Drawing.Point(3, 3);
+            this.dtGrvLogs.Name = "dtGrvLogs";
+            this.dtGrvLogs.ReadOnly = true;
+            this.dtGrvLogs.RowHeadersWidth = 62;
+            this.dtGrvLogs.RowTemplate.Height = 28;
+            this.dtGrvLogs.Size = new System.Drawing.Size(739, 1515);
+            this.dtGrvLogs.TabIndex = 0;
+            this.dtGrvLogs.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.drGrwLogs_DataBindingComplete);
             // 
             // btnPrevious
             // 
             this.btnPrevious.Enabled = false;
             this.btnPrevious.Image = global::AuditHistoryExtractor.Properties.Resources.back;
-            this.btnPrevious.Location = new System.Drawing.Point(64, 4);
-            this.btnPrevious.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.btnPrevious.Location = new System.Drawing.Point(96, 6);
+            this.btnPrevious.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.btnPrevious.Name = "btnPrevious";
-            this.btnPrevious.Size = new System.Drawing.Size(56, 31);
+            this.btnPrevious.Size = new System.Drawing.Size(84, 48);
             this.btnPrevious.TabIndex = 52;
             this.btnPrevious.UseVisualStyleBackColor = true;
             this.btnPrevious.Click += new System.EventHandler(this.btnPrevious_Click);
@@ -876,10 +892,10 @@
             // 
             this.btnNext.Enabled = false;
             this.btnNext.Image = global::AuditHistoryExtractor.Properties.Resources.next;
-            this.btnNext.Location = new System.Drawing.Point(179, 4);
-            this.btnNext.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.btnNext.Location = new System.Drawing.Point(268, 6);
+            this.btnNext.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.btnNext.Name = "btnNext";
-            this.btnNext.Size = new System.Drawing.Size(56, 31);
+            this.btnNext.Size = new System.Drawing.Size(84, 48);
             this.btnNext.TabIndex = 54;
             this.btnNext.UseVisualStyleBackColor = true;
             this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
@@ -888,10 +904,9 @@
             // 
             this.btnClearFilters.Image = global::AuditHistoryExtractor.Properties.Resources.removeFilter;
             this.btnClearFilters.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnClearFilters.Location = new System.Drawing.Point(371, 21);
-            this.btnClearFilters.Margin = new System.Windows.Forms.Padding(2);
+            this.btnClearFilters.Location = new System.Drawing.Point(556, 32);
             this.btnClearFilters.Name = "btnClearFilters";
-            this.btnClearFilters.Size = new System.Drawing.Size(123, 31);
+            this.btnClearFilters.Size = new System.Drawing.Size(184, 48);
             this.btnClearFilters.TabIndex = 32;
             this.btnClearFilters.Text = "Clear Filters";
             this.btnClearFilters.UseVisualStyleBackColor = true;
@@ -901,10 +916,9 @@
             // 
             this.btnApplyFilters.Image = global::AuditHistoryExtractor.Properties.Resources.addFilter;
             this.btnApplyFilters.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnApplyFilters.Location = new System.Drawing.Point(251, 21);
-            this.btnApplyFilters.Margin = new System.Windows.Forms.Padding(2);
+            this.btnApplyFilters.Location = new System.Drawing.Point(376, 32);
             this.btnApplyFilters.Name = "btnApplyFilters";
-            this.btnApplyFilters.Size = new System.Drawing.Size(116, 31);
+            this.btnApplyFilters.Size = new System.Drawing.Size(174, 48);
             this.btnApplyFilters.TabIndex = 31;
             this.btnApplyFilters.Text = "Apply Filters";
             this.btnApplyFilters.UseVisualStyleBackColor = true;
@@ -914,10 +928,10 @@
             // 
             this.btnPreview.Image = global::AuditHistoryExtractor.Properties.Resources.preview24x24;
             this.btnPreview.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnPreview.Location = new System.Drawing.Point(8, 21);
-            this.btnPreview.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.btnPreview.Location = new System.Drawing.Point(12, 32);
+            this.btnPreview.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.btnPreview.Name = "btnPreview";
-            this.btnPreview.Size = new System.Drawing.Size(116, 31);
+            this.btnPreview.Size = new System.Drawing.Size(174, 48);
             this.btnPreview.TabIndex = 30;
             this.btnPreview.Text = "Preview Data";
             this.btnPreview.UseVisualStyleBackColor = true;
@@ -927,10 +941,10 @@
             // 
             this.btnExtractAuditHistory.Image = ((System.Drawing.Image)(resources.GetObject("btnExtractAuditHistory.Image")));
             this.btnExtractAuditHistory.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnExtractAuditHistory.Location = new System.Drawing.Point(126, 21);
-            this.btnExtractAuditHistory.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.btnExtractAuditHistory.Location = new System.Drawing.Point(189, 32);
+            this.btnExtractAuditHistory.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.btnExtractAuditHistory.Name = "btnExtractAuditHistory";
-            this.btnExtractAuditHistory.Size = new System.Drawing.Size(121, 31);
+            this.btnExtractAuditHistory.Size = new System.Drawing.Size(182, 48);
             this.btnExtractAuditHistory.TabIndex = 29;
             this.btnExtractAuditHistory.Text = "  Export to CSV";
             this.btnExtractAuditHistory.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -943,10 +957,9 @@
             this.btnRemoveUser.Enabled = false;
             this.btnRemoveUser.Image = global::AuditHistoryExtractor.Properties.Resources.removeUser22;
             this.btnRemoveUser.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnRemoveUser.Location = new System.Drawing.Point(129, 154);
-            this.btnRemoveUser.Margin = new System.Windows.Forms.Padding(2);
+            this.btnRemoveUser.Location = new System.Drawing.Point(194, 237);
             this.btnRemoveUser.Name = "btnRemoveUser";
-            this.btnRemoveUser.Size = new System.Drawing.Size(133, 31);
+            this.btnRemoveUser.Size = new System.Drawing.Size(200, 48);
             this.btnRemoveUser.TabIndex = 3;
             this.btnRemoveUser.Text = "Remove Users";
             this.btnRemoveUser.UseVisualStyleBackColor = true;
@@ -956,10 +969,9 @@
             // 
             this.btnClearUsers.Image = global::AuditHistoryExtractor.Properties.Resources.clear241;
             this.btnClearUsers.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnClearUsers.Location = new System.Drawing.Point(267, 154);
-            this.btnClearUsers.Margin = new System.Windows.Forms.Padding(2);
+            this.btnClearUsers.Location = new System.Drawing.Point(400, 237);
             this.btnClearUsers.Name = "btnClearUsers";
-            this.btnClearUsers.Size = new System.Drawing.Size(117, 31);
+            this.btnClearUsers.Size = new System.Drawing.Size(176, 48);
             this.btnClearUsers.TabIndex = 2;
             this.btnClearUsers.Text = "Clear Users";
             this.btnClearUsers.UseVisualStyleBackColor = true;
@@ -969,10 +981,9 @@
             // 
             this.btnAddUsers.Image = global::AuditHistoryExtractor.Properties.Resources.addUser22;
             this.btnAddUsers.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnAddUsers.Location = new System.Drawing.Point(5, 154);
-            this.btnAddUsers.Margin = new System.Windows.Forms.Padding(2);
+            this.btnAddUsers.Location = new System.Drawing.Point(8, 237);
             this.btnAddUsers.Name = "btnAddUsers";
-            this.btnAddUsers.Size = new System.Drawing.Size(120, 31);
+            this.btnAddUsers.Size = new System.Drawing.Size(180, 48);
             this.btnAddUsers.TabIndex = 0;
             this.btnAddUsers.Text = "Add Users";
             this.btnAddUsers.UseVisualStyleBackColor = true;
@@ -981,10 +992,9 @@
             // btnClearTo
             // 
             this.btnClearTo.Image = global::AuditHistoryExtractor.Properties.Resources.clear24;
-            this.btnClearTo.Location = new System.Drawing.Point(293, 51);
-            this.btnClearTo.Margin = new System.Windows.Forms.Padding(2);
+            this.btnClearTo.Location = new System.Drawing.Point(440, 78);
             this.btnClearTo.Name = "btnClearTo";
-            this.btnClearTo.Size = new System.Drawing.Size(32, 22);
+            this.btnClearTo.Size = new System.Drawing.Size(48, 34);
             this.btnClearTo.TabIndex = 7;
             this.btnClearTo.UseVisualStyleBackColor = true;
             this.btnClearTo.Click += new System.EventHandler(this.btnClearTo_Click);
@@ -993,10 +1003,9 @@
             // 
             this.btnClearFrom.FlatAppearance.BorderColor = System.Drawing.Color.White;
             this.btnClearFrom.Image = global::AuditHistoryExtractor.Properties.Resources.clear24;
-            this.btnClearFrom.Location = new System.Drawing.Point(293, 18);
-            this.btnClearFrom.Margin = new System.Windows.Forms.Padding(2);
+            this.btnClearFrom.Location = new System.Drawing.Point(440, 28);
             this.btnClearFrom.Name = "btnClearFrom";
-            this.btnClearFrom.Size = new System.Drawing.Size(32, 22);
+            this.btnClearFrom.Size = new System.Drawing.Size(48, 34);
             this.btnClearFrom.TabIndex = 6;
             this.btnClearFrom.UseVisualStyleBackColor = true;
             this.btnClearFrom.Click += new System.EventHandler(this.btnClearFrom_Click);
@@ -1006,7 +1015,7 @@
             this.tbClose.Image = ((System.Drawing.Image)(resources.GetObject("tbClose.Image")));
             this.tbClose.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tbClose.Name = "tbClose";
-            this.tbClose.Size = new System.Drawing.Size(60, 24);
+            this.tbClose.Size = new System.Drawing.Size(79, 33);
             this.tbClose.Text = "Close";
             this.tbClose.Click += new System.EventHandler(this.tbClose_Click);
             // 
@@ -1015,7 +1024,7 @@
             this.tbFromEntitiesEnabled.Image = ((System.Drawing.Image)(resources.GetObject("tbFromEntitiesEnabled.Image")));
             this.tbFromEntitiesEnabled.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tbFromEntitiesEnabled.Name = "tbFromEntitiesEnabled";
-            this.tbFromEntitiesEnabled.Size = new System.Drawing.Size(90, 24);
+            this.tbFromEntitiesEnabled.Size = new System.Drawing.Size(124, 33);
             this.tbFromEntitiesEnabled.Text = "Get Entities";
             this.tbFromEntitiesEnabled.ToolTipText = "Get Entities with Audit Enabled";
             this.tbFromEntitiesEnabled.Click += new System.EventHandler(this.tbFromEntitiesEnabled_Click);
@@ -1025,10 +1034,27 @@
             this.tbOpenFetchXMLBuilder.Image = ((System.Drawing.Image)(resources.GetObject("tbOpenFetchXMLBuilder.Image")));
             this.tbOpenFetchXMLBuilder.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tbOpenFetchXMLBuilder.Name = "tbOpenFetchXMLBuilder";
-            this.tbOpenFetchXMLBuilder.Size = new System.Drawing.Size(225, 24);
+            this.tbOpenFetchXMLBuilder.Size = new System.Drawing.Size(324, 29);
             this.tbOpenFetchXMLBuilder.Text = "Create Query from FetchXML Builder";
             this.tbOpenFetchXMLBuilder.Visible = false;
             this.tbOpenFetchXMLBuilder.Click += new System.EventHandler(this.tbOpenFetchXMLBuilder_Click);
+            // 
+            // StatusImage
+            // 
+            this.StatusImage.HeaderText = "";
+            this.StatusImage.MinimumWidth = 8;
+            this.StatusImage.Name = "StatusImage";
+            this.StatusImage.ReadOnly = true;
+            this.StatusImage.Width = 8;
+            // 
+            // GuidRecord
+            // 
+            this.GuidRecord.DataPropertyName = "recordId";
+            this.GuidRecord.HeaderText = "Guid";
+            this.GuidRecord.MinimumWidth = 8;
+            this.GuidRecord.Name = "GuidRecord";
+            this.GuidRecord.ReadOnly = true;
+            this.GuidRecord.Width = 79;
             // 
             // recordKeyValueDataGridViewTextBoxColumn
             // 
@@ -1090,22 +1116,61 @@
             // 
             this.auditHistoryBindingSource.DataSource = typeof(AuditHistoryExtractor.Classes.AuditHistory);
             // 
+            // infoLog
+            // 
+            this.infoLog.DataPropertyName = "infoLog";
+            this.infoLog.HeaderText = "infoLog";
+            this.infoLog.MinimumWidth = 8;
+            this.infoLog.Name = "infoLog";
+            this.infoLog.ReadOnly = true;
+            this.infoLog.Visible = false;
+            this.infoLog.Width = 98;
+            // 
+            // recordKeyValueDataGridViewTextBoxColumn1
+            // 
+            this.recordKeyValueDataGridViewTextBoxColumn1.DataPropertyName = "RecordKeyValue";
+            this.recordKeyValueDataGridViewTextBoxColumn1.HeaderText = "Record Key Value";
+            this.recordKeyValueDataGridViewTextBoxColumn1.MinimumWidth = 8;
+            this.recordKeyValueDataGridViewTextBoxColumn1.Name = "recordKeyValueDataGridViewTextBoxColumn1";
+            this.recordKeyValueDataGridViewTextBoxColumn1.ReadOnly = true;
+            this.recordKeyValueDataGridViewTextBoxColumn1.Width = 121;
+            // 
+            // messageDataGridViewTextBoxColumn
+            // 
+            this.messageDataGridViewTextBoxColumn.DataPropertyName = "Message";
+            this.messageDataGridViewTextBoxColumn.HeaderText = "Message";
+            this.messageDataGridViewTextBoxColumn.MinimumWidth = 8;
+            this.messageDataGridViewTextBoxColumn.Name = "messageDataGridViewTextBoxColumn";
+            this.messageDataGridViewTextBoxColumn.ReadOnly = true;
+            this.messageDataGridViewTextBoxColumn.Width = 110;
+            // 
+            // logBindingSource1
+            // 
+            this.logBindingSource1.DataSource = typeof(AuditHistoryExtractor.Classes.Models.Log);
+            // 
+            // logBindingSource
+            // 
+            this.logBindingSource.DataSource = typeof(AuditHistoryExtractor.Classes.Models.Log);
+            // 
             // MyPluginControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.Controls.Add(this.panel9);
             this.Controls.Add(this.panel8);
             this.Controls.Add(this.toolStrip1);
-            this.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.Name = "MyPluginControl";
-            this.Size = new System.Drawing.Size(1175, 1035);
+            this.Size = new System.Drawing.Size(1762, 1592);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.panel9.ResumeLayout(false);
             this.grpPreview.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dtGrvPreview)).EndInit();
+            this.GrpPaging.ResumeLayout(false);
+            this.pnlPaging.ResumeLayout(false);
+            this.pnlPaging.PerformLayout();
             this.tabOperations.ResumeLayout(false);
             this.tabSearch.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
@@ -1126,10 +1191,11 @@
             this.grpOperations.ResumeLayout(false);
             this.grpActions.ResumeLayout(false);
             this.panel8.ResumeLayout(false);
-            this.GrpPaging.ResumeLayout(false);
-            this.pnlPaging.ResumeLayout(false);
-            this.pnlPaging.PerformLayout();
+            this.tabLogs.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dtGrvLogs)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.auditHistoryBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.logBindingSource1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.logBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1218,5 +1284,14 @@
         private System.Windows.Forms.ComboBox cmbNumberOfRecords;
         private System.Windows.Forms.Label lblPage;
         private System.Windows.Forms.Label lblPageNumber;
+        private System.Windows.Forms.TabPage tabLogs;
+        private System.Windows.Forms.DataGridView dtGrvLogs;
+        private System.Windows.Forms.BindingSource logBindingSource;
+        private System.Windows.Forms.BindingSource logBindingSource1;
+        private System.Windows.Forms.DataGridViewImageColumn StatusImage;
+        private System.Windows.Forms.DataGridViewTextBoxColumn infoLog;
+        private System.Windows.Forms.DataGridViewTextBoxColumn GuidRecord;
+        private System.Windows.Forms.DataGridViewTextBoxColumn recordKeyValueDataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn messageDataGridViewTextBoxColumn;
     }
 }

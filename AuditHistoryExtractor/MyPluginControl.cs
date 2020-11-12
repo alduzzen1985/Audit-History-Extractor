@@ -18,7 +18,7 @@ using AuditHistoryExtractor.Collections;
 using AuditHistoryExtractor.Enums;
 using System.Web.UI.WebControls;
 using AuditHistoryExtractor.Classes.Managers;
-
+using AuditHistoryExtractor.Classes.Models;
 
 namespace AuditHistoryExtractor
 {
@@ -548,7 +548,7 @@ namespace AuditHistoryExtractor
             });
         }
 
-        private void WsmDialog_OnExtractCompleted(List<AuditHistory> lsAuditHistory)
+        private void WsmDialog_OnExtractCompleted(List<AuditHistory> lsAuditHistory, List<Log> lsLog)
         {
             this.lsAuditHistory = lsAuditHistory;
 
@@ -557,6 +557,8 @@ namespace AuditHistoryExtractor
             dtGrvPreview.DataSource = FilterData();
             SetBackgroundColor();
             btnNext.Enabled = lsAuditHistory != null && lsAuditHistory.Count > 0;
+
+            dtGrvLogs.DataSource = lsLog;
         }
 
         private List<AuditHistory> FilterData()
@@ -611,12 +613,12 @@ namespace AuditHistoryExtractor
 
 
 
-        private void WsmDialog_OnExtractCompletedSave(List<AuditHistory> lsAuditHistory)
+        private void WsmDialog_OnExtractCompletedSave(List<AuditHistory> lsAuditHistory, List<Log> lsLog)
         {
 
             //Fill
 
-            
+            dtGrvLogs.DataSource = lsLog;
 
 
             List<int> selectedOperations = new List<int>();
@@ -810,7 +812,7 @@ namespace AuditHistoryExtractor
         private void btnApplyFilters_Click(object sender, EventArgs e)
         {
             if (!CheckIfConnectedToCrm()) { return; }
-            
+
 
             dtGrvPreview.DataSource = FilterData();
             SetBackgroundColor();
@@ -896,6 +898,38 @@ namespace AuditHistoryExtractor
                 Y = GrpPaging.Height / 2 - pnlPaging.Height / 2
             };
             base.OnResize(e);
+        }
+
+        private void drGrwLogs_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            if (dtGrvLogs.Rows.Count > 1)
+            {
+                foreach (DataGridViewRow currentRow in dtGrvLogs.Rows)
+                {
+                    SetImageStatusOperation(currentRow);
+                }
+            }
+        }
+
+
+        private void SetImageStatusOperation(DataGridViewRow currentRow)
+        {
+            if (currentRow.Cells["infoLog"] != null)
+            {
+                switch ((InfoLogEnum)currentRow.Cells["infoLog"].Value)
+                {
+                    case InfoLogEnum.Info:
+                        currentRow.Cells["StatusImage"].Value = AuditHistoryExtractor.Properties.Resources.info;
+                        break;
+                    case InfoLogEnum.Success:
+                        currentRow.Cells["StatusImage"].Value = AuditHistoryExtractor.Properties.Resources.success;
+                        break;
+                    case InfoLogEnum.Error:
+                        currentRow.Cells["StatusImage"].Value = AuditHistoryExtractor.Properties.Resources.error;
+                        break;
+
+                };
+            }
         }
     }
 }

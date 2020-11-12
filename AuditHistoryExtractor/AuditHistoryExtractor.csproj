@@ -176,6 +176,7 @@
     <Compile Include="Classes\Managers\UserHelper.cs" />
     <Compile Include="Classes\Models\AuditHistory.cs" />
     <Compile Include="Classes\Managers\AuditHistoryManager.cs" />
+    <Compile Include="Classes\Models\Log.cs" />
     <Compile Include="Classes\Models\CsvMap\AuditHistoryRecordMap.cs" />
     <Compile Include="Classes\Models\ComboBoxEntities.cs" />
     <Compile Include="Classes\Models\ComboBoxEntityField.cs" />
@@ -198,6 +199,7 @@
     <Compile Include="Controls\FormSelectUsers.Designer.cs">
       <DependentUpon>FormSelectUsers.cs</DependentUpon>
     </Compile>
+    <Compile Include="Enums\InfoLogEnum.cs" />
     <Compile Include="Enums\OperationEnum.cs" />
     <Compile Include="MyPluginControl.cs">
       <SubType>UserControl</SubType>
@@ -217,6 +219,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Properties\DataSources\AuditHistoryExtractor.Classes.AuditHistory.datasource" />
+    <None Include="Properties\DataSources\AuditHistoryExtractor.Classes.Models.Log.datasource" />
     <None Include="XrmToolBox.exe.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -237,12 +240,16 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Icons\info.png" />
+    <Content Include="Icons\success.png" />
+    <None Include="Resources\success.png" />
     <None Include="Icons\removeFilter.png" />
     <None Include="Icons\addFilter.png" />
     <Content Include="Icons\addUser22.png" />
     <None Include="Icons\back.png" />
     <Content Include="Icons\cancel.png" />
     <Content Include="Icons\clear24.png" />
+    <Content Include="Icons\error.png" />
     <Content Include="Icons\excel.png" />
     <Content Include="Icons\extract.png" />
     <Content Include="Icons\excel24x24.png" />

@@ -28,28 +28,17 @@ namespace AuditHistoryExtractor
         {
             InitializeComponent();
 
-
             chkLstOperations.DataSource = null;
             chkLstOperations.Items.Clear();
             chkLstOperations.DataSource = AuditHistoryCollections.operations;
             chkLstOperations.DisplayMember = "description";
             chkLstOperations.ValueMember = "operationid";
 
-
-
             chkLstActions.DataSource = null;
             chkLstActions.Items.Clear();
             chkLstActions.DataSource = AuditHistoryCollections.actions;
             chkLstActions.DisplayMember = "description";
             chkLstActions.ValueMember = "operationid";
-
-
-
-
-
-
-            //chkLstOperations.DataBind();
-
 
         }
 
@@ -84,10 +73,14 @@ namespace AuditHistoryExtractor
         FetchExpression fetchExpressionRecordsToExtract;
         List<Entity> recordsExtracted;
         private enum RetrieveAuditHistoryMode { Preview = 1, Download = 2 };
-        private List<ComboBoxEntityField> listTextFieldsForEntity;
-        private List<ComboBoxEntityField> listAllFieldsForEntity;
-        private List<ComboBoxEntities> listEntities;
 
+
+        private List<ComboBoxEntityField> lsTextFieldsForEntity;
+        private List<ComboBoxEntityField> lsAllFieldsForEntity;
+        private List<ComboBoxEntities> lsEntities;
+        private List<ComboBoxEntityField> lsSelectedAttributes;
+
+        List<Guid> lsSelectedUsers;
 
         List<ViewDetail> lsViewsForEntity;
         List<EntityMetadata> lsStringFieldsForEntity;
@@ -95,7 +88,9 @@ namespace AuditHistoryExtractor
         List<AuditHistory> lsAuditHistory;
 
         private List<User> lsUsers;
-        private List<User> lsSelectedUsers;
+        //private List<User> lsSelectedUsers;
+
+        private bool selectAll = false;
 
         private int NumberOfRecordsToDisplay
         {
@@ -115,6 +110,12 @@ namespace AuditHistoryExtractor
                 Work = (w, e) =>
                 {
                     GetListEntities();
+
+
+                    UserHelper userHelper = new UserHelper(Service);
+                    lsUsers = userHelper.GetListUsers();
+                    lsSelectedUsers = new List<Guid>();
+
                 },
                 ProgressChanged = e =>
                 {
@@ -124,6 +125,7 @@ namespace AuditHistoryExtractor
                 PostWorkCallBack = e =>
                 {
                     FillListEntities(chkEntitiesWithAudit.Checked);
+                    FillListViewUsers(lsUsers);
                 },
                 AsyncArgument = null,
                 IsCancelable = true,
@@ -136,19 +138,21 @@ namespace AuditHistoryExtractor
         public void GetListEntities()
         {
 
-            listEntities = MetaDataManager.GetListEntities(Service);
+            lsEntities = MetaDataManager.GetListEntities(Service);
         }
 
         private void FillListEntities(bool withAuditEnabled)
         {
             cmbEntities.DataSource = null;
             cmbEntities.Items.Clear();
-            cmbEntities.DataSource = listEntities.Where(x => x.IsAuditEnabled == withAuditEnabled).ToList();
+            cmbEntities.DataSource = lsEntities.Where(x => x.IsAuditEnabled == withAuditEnabled).ToList();
             cmbEntities.DisplayMember = "DisplayName";
             cmbEntities.ValueMember = "ObjectTypeCode";
 
 
         }
+
+
 
 
 
@@ -160,7 +164,7 @@ namespace AuditHistoryExtractor
         {
             if (lsStringFieldsForEntity != null)
             {
-                listTextFieldsForEntity = lsStringFieldsForEntity[0].Attributes.Where(x => x.DisplayName.UserLocalizedLabel != null).Select(x => new ComboBoxEntityField()
+                lsTextFieldsForEntity = lsStringFieldsForEntity[0].Attributes.Where(x => x.DisplayName.UserLocalizedLabel != null).Select(x => new ComboBoxEntityField()
                 {
                     Value = x.LogicalName,
                     AttributeType = x.AttributeTypeName.Value,
@@ -171,27 +175,24 @@ namespace AuditHistoryExtractor
                 cmbPrimaryKey.Items.Clear();
                 cmbPrimaryKey.DisplayMember = "Text";
                 cmbPrimaryKey.ValueMember = "Value";
-                cmbPrimaryKey.DataSource = listTextFieldsForEntity.OrderBy(o => o.Text).ToList();
+                cmbPrimaryKey.DataSource = lsTextFieldsForEntity.OrderBy(o => o.Text).ToList();
                 if (lsStringFieldsForEntity[0].PrimaryNameAttribute != null)
                 {
-                    cmbPrimaryKey.SelectedItem = listTextFieldsForEntity.Where(x => x.Value == lsStringFieldsForEntity[0].PrimaryNameAttribute).FirstOrDefault();
+                    cmbPrimaryKey.SelectedItem = lsTextFieldsForEntity.Where(x => x.Value == lsStringFieldsForEntity[0].PrimaryNameAttribute).FirstOrDefault();
                 }
 
 
-                listAllFieldsForEntity = lsAllFields[0].Attributes.Where(x => x.DisplayName.UserLocalizedLabel != null).Select(x => new ComboBoxEntityField()
+                lsAllFieldsForEntity = lsAllFields[0].Attributes.Where(x => x.DisplayName.UserLocalizedLabel != null).Select(x => new ComboBoxEntityField()
                 {
                     Value = x.LogicalName,
                     AttributeType = x.AttributeTypeName.Value,
-                    Text = x.DisplayName.UserLocalizedLabel.Label + " (" + x.LogicalName + ")"
-                }).ToList();
+                    Text = x.DisplayName.UserLocalizedLabel.Label + " (" + x.LogicalName + ")",
+                    DisplayName = x.DisplayName.UserLocalizedLabel.Label
+                }).OrderBy(x => x.DisplayName).ToList();
 
+                lsSelectedAttributes = new List<ComboBoxEntityField>();
 
-                cmbFields.DataSource = null;
-                cmbFields.Items.Clear();
-                cmbFields.DisplayMember = "Text";
-                cmbFields.ValueMember = "Value";
-                cmbFields.DataSource = listAllFieldsForEntity.OrderBy(o => o.Text).ToList();
-
+                FillListAttributes(lsAllFieldsForEntity);
 
             }
 
@@ -224,6 +225,8 @@ namespace AuditHistoryExtractor
                 else
                 {
                     ExecuteMethod(RetrieveAndFillEntitiesList);
+
+
                 }
             }
             else
@@ -451,7 +454,7 @@ namespace AuditHistoryExtractor
 
             currentEntitySelected = (cmbEntities.SelectedItem as ComboBoxEntities).LogicalName;
             ComboBoxEntityField cmbPrimaryKeySelectedItem = cmbPrimaryKey.SelectedItem as ComboBoxEntityField;
-            ComboBoxEntityField cmbField = cmbFields.SelectedItem as ComboBoxEntityField;
+            //ComboBoxEntityField cmbField = cmbFields.SelectedItem as ComboBoxEntityField;
 
 
             WorkAsync(new WorkAsyncInfo
@@ -528,7 +531,7 @@ namespace AuditHistoryExtractor
                     {
                         var wsmDialog = new FormExtractData(Service, ev.Result as List<Entity>);
                         wsmDialog.Show();
-                        wsmDialog.RetrieveAuditHistoryForRecords(cmbPrimaryKeySelectedItem.Value, rdAllFields.Checked, cmbField.Value);
+                        wsmDialog.RetrieveAuditHistoryForRecords(cmbPrimaryKeySelectedItem.Value);
 
                         if (retrieveMode == RetrieveAuditHistoryMode.Preview)
                         {
@@ -592,18 +595,24 @@ namespace AuditHistoryExtractor
 
             if (lsSelectedUsers != null && lsSelectedUsers.Count > 0)
             {
-                lsAuditHistoryFiltered = lsAuditHistoryFiltered.Where(x => (lsSelectedUsers.Select(u => u.UserId).ToList()).Contains(x.UserId)).ToList();
+                lsAuditHistoryFiltered = lsAuditHistoryFiltered.Where(x => (lsSelectedUsers).Contains(x.UserId)).ToList();
             }
 
-            if (!string.IsNullOrWhiteSpace(dtpDateFrom.CustomFormat))
+            if (dtpDateFrom.Format != DateTimePickerFormat.Custom)
             {
                 lsAuditHistoryFiltered = lsAuditHistoryFiltered.Where(x => x.CreatedOn >= (dtpDateFrom.Value.Date + dtpTimeFrom.Value.TimeOfDay)).ToList();
             }
 
 
-            if (!string.IsNullOrWhiteSpace(dtpDateTo.CustomFormat))
+            if (dtpDateTo.Format != DateTimePickerFormat.Custom)
             {
                 lsAuditHistoryFiltered = lsAuditHistoryFiltered.Where(x => x.CreatedOn <= (dtpDateTo.Value.Date + dtpTimeTo.Value.TimeOfDay)).ToList();
+            }
+
+
+            if (lstAttributes.CheckedItems.Count > 0)
+            {
+                lsAuditHistoryFiltered = lsAuditHistoryFiltered.Where(x => lsSelectedAttributes.Where(a => x.AttributeName == a.Value).Any()).ToList();
             }
 
 
@@ -696,14 +705,12 @@ namespace AuditHistoryExtractor
             }
         }
 
-        private void rdSpecificField_CheckedChanged(object sender, EventArgs e)
-        {
-            lblField.Visible = cmbFields.Visible = true;
-        }
+
 
         private void rdAllFields_CheckedChanged(object sender, EventArgs e)
         {
-            lblField.Visible = cmbFields.Visible = false;
+
+            //TODO : Logic to enable the Filter for the Attributes
         }
 
         private void chkEntitiesWithAudit_CheckedChanged(object sender, EventArgs e)
@@ -755,59 +762,7 @@ namespace AuditHistoryExtractor
 
         }
 
-        private void btnAddUsers_Click(object sender, EventArgs e)
-        {
-            if (!CheckIfConnectedToCrm()) { return; }
 
-            if (lsUsers == null)
-            {
-                UserHelper userHelper = new UserHelper(Service);
-                lsUsers = userHelper.GetListUsers();
-            }
-
-
-            FormSelectUsers formUsers = new FormSelectUsers(lsUsers);
-            formUsers.OnUserSelected += FormUsers_OnUserSelected;
-            formUsers.Show();
-
-
-
-            /*
-            string[] t = { "A", "B", "C" };
-            //listView1.Items.Add("1", "HELLO", 0);
-
-
-            string[] foodList = new string[]{"Juice", "Coffee",
-          "Cereal & Milk", "Fruit Plate", "Toast & Jelly",
-          "Bagel & Cream Cheese"};
-            string[] foodPrice = new string[]{"1.09", "1.09", "2.19",
-          "2.49", "1.49", "1.49"};
-
-            for (int count = 0; count < foodList.Length; count++)
-            {
-                ListViewItem listItem = new ListViewItem(foodList[count]);
-                listItem.Name = foodList[count];
-                listItem.SubItems.Add(foodPrice[count]);
-                lstSelectedUsers.Items.Add(listItem);
-            }
-
-
-            lstSelectedUsers.Items[foodList[2]].Checked = true;
-            */
-        }
-
-        private void FormUsers_OnUserSelected(List<User> lsUsers)
-        {
-            lsSelectedUsers = lsUsers;
-            lstSelectedUsers.Items.Clear();
-            foreach (User user in lsUsers)
-            {
-                ListViewItem listItem = new ListViewItem(user.FullName);
-                listItem.Name = user.UserId.ToString();
-                listItem.SubItems.Add(user.Username);
-                lstSelectedUsers.Items.Add(listItem);
-            }
-        }
 
         private void btnApplyFilters_Click(object sender, EventArgs e)
         {
@@ -839,33 +794,11 @@ namespace AuditHistoryExtractor
             time.CustomFormat = " ";
         }
 
-        private void btnClearUsers_Click(object sender, EventArgs e)
-        {
-            if (!CheckIfConnectedToCrm()) { return; }
-            if (lsSelectedUsers != null)
-            {
-                lsSelectedUsers.Clear();
-            }
-            lstSelectedUsers.Items.Clear();
-        }
 
-        private void btnRemoveUser_Click(object sender, EventArgs e)
-        {
-
-            foreach (ListViewItem item in lstSelectedUsers.CheckedItems)
-            {
-                lstSelectedUsers.Items.Remove(item);
-            }
-        }
-
-        private void lstSelectedUsers_ItemChecked(object sender, ItemCheckedEventArgs e)
-        {
-            btnRemoveUser.Enabled = lstSelectedUsers.CheckedItems.Count > 0;
-        }
 
         private void btnClearFilters_Click(object sender, EventArgs e)
         {
-            lstSelectedUsers.Items.Clear();
+
 
             for (int i = 0; i < chkLstActions.Items.Count; i++)
             {
@@ -879,6 +812,20 @@ namespace AuditHistoryExtractor
             {
                 chkLstOperations.SetItemChecked(i, false);
             }
+
+
+
+            foreach (ListViewItem item in lstAttributes.Items)
+            {
+                item.Checked = false;
+            }
+
+            foreach (ListViewItem item in lstViewUsers.Items)
+            {
+                item.Checked = false;
+            }
+
+            //Todo : Finish the Clear
 
 
 
@@ -930,6 +877,170 @@ namespace AuditHistoryExtractor
 
                 };
             }
+        }
+
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            string txtToSearch = txtSearchAttribute.Text.ToLower();
+            FillListAttributes(lsAllFieldsForEntity.Where(x => x.DisplayName.ToLower().Contains(txtToSearch)).
+                OrderBy(x => x.DisplayName).ToList());
+        }
+
+
+        private void FillListAttributes(List<ComboBoxEntityField> lsAttributes)
+        {
+            lstAttributes.ItemChecked -= lstAttributes_ItemChecked;
+            lstAttributes.Items.Clear();
+            foreach (ComboBoxEntityField field in lsAttributes)
+            {
+                ListViewItem listItem = new ListViewItem(field.DisplayName);
+                listItem.Name = field.Value;
+                listItem.SubItems.Add(field.Value);
+                listItem.SubItems.Add(field.AttributeType);
+                listItem.Checked = (lsSelectedAttributes.Where(x => x.Value == field.Value).Any());
+                lstAttributes.Items.Add(listItem);
+            }
+            lstAttributes.ItemChecked += lstAttributes_ItemChecked;
+        }
+
+        private void lstAttributes_ItemChecked(object sender, ItemCheckedEventArgs e)
+        {
+            if (e.Item.Checked)
+            {
+
+                lsSelectedAttributes.Add(new ComboBoxEntityField()
+                {
+                    DisplayName = e.Item.SubItems[0].Text,
+                    Value = e.Item.SubItems[1].Text,
+                    AttributeType = e.Item.SubItems[2].Text
+                });
+
+
+
+                //listSelectedAttributes.Remove(e.Item)
+
+                // selectedRecords.Add(e.Item.Name);
+            }
+            else
+            {
+                lsSelectedAttributes.Remove(lsSelectedAttributes.Where(x => x.Value == e.Item.Name).FirstOrDefault());
+                //selectedRecords.Remove(e.Item.Name);
+            }
+        }
+
+        private void txtSearchAttribute_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Return)
+
+            {
+                string txtToSearch = txtSearchAttribute.Text.ToLower();
+                FillListAttributes(lsAllFieldsForEntity.Where(x => x.DisplayName.ToLower().Contains(txtToSearch)).
+                    OrderBy(x => x.DisplayName).ToList());
+
+            }
+        }
+
+        private bool selectAllAttributes = true;
+
+        private void lnkSelectAttributesAll_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            foreach (ListViewItem item in lstAttributes.Items)
+            {
+                item.Checked = selectAllAttributes;
+            }
+            selectAllAttributes = !selectAllAttributes;
+        }
+
+
+
+
+        private void FillListViewUsers(List<User> lsUsers)
+        {//lstViewUsers_ItemChecked
+
+
+            lstViewUsers.ItemChecked -= lstViewUsers_ItemChecked;
+
+
+            lstViewUsers.Items.Clear();
+            foreach (User user in lsUsers)
+            {
+                ListViewItem listItem = new ListViewItem(user.FullName);
+                listItem.Name = user.UserId.ToString();
+                listItem.SubItems.Add(user.Username);
+                lstViewUsers.Items.Add(listItem);
+
+            }
+
+
+            foreach (Guid selectedItem in lsSelectedUsers)
+            {
+                if (lstViewUsers.Items.ContainsKey(selectedItem.ToString()))
+                {
+                    lstViewUsers.Items[selectedItem.ToString()].Checked = true;
+                }
+            }
+
+            lstViewUsers.ItemChecked += lstViewUsers_ItemChecked;
+        }
+
+
+        private void lstViewUsers_ItemChecked(object sender, ItemCheckedEventArgs e)
+        {
+            if (e.Item.Checked)
+            {
+                lsSelectedUsers.Add(new Guid(e.Item.Name));
+            }
+            else
+            {
+                lsSelectedUsers.Remove(new Guid(e.Item.Name));
+            }
+
+        }
+
+        private void btnSearchUser_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem lstItem in lstViewUsers.Items)
+            {
+                lstItem.Checked = !selectAll;
+            }
+        }
+
+
+
+        private void txtUser_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Return)
+
+            {
+                string txt = txtUser.Text.ToLower();
+                FillListViewUsers(lsUsers.Where(x => x.FullName.ToLower().Contains(txt) || x.Username.Contains(txt)).ToList());
+
+            }
+        }
+
+        private void lnkSelectUsersAll_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            foreach (ListViewItem lstItem in lstViewUsers.Items)
+            {
+                lstItem.Checked = !selectAll;
+            }
+            selectAll = !selectAll;
+        }
+
+        private void txtUser_KeyPress_1(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Return)
+            {
+                string txt = txtUser.Text.ToLower();
+                FillListViewUsers(lsUsers.Where(x => x.FullName.ToLower().Contains(txt) || x.Username.Contains(txt)).ToList());
+            }
+        }
+
+        private void chkShowGuid_CheckedChanged(object sender, EventArgs e)
+        {
+
+            dtGrvLogs.Columns[2].Visible = chkShowGuid.Checked;
+
         }
     }
 }

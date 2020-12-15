@@ -27,7 +27,7 @@ namespace AuditHistoryExtractor.Controls
 
         List<Entity> entitiesList;
         string identificator, fieldToExtract, fileName;
-        bool allFields;
+    
         #endregion
 
         #region Business Logics
@@ -39,14 +39,13 @@ namespace AuditHistoryExtractor.Controls
             InitializeComponent();
         }
 
-        public void RetrieveAuditHistoryForRecords(string identificator, bool allFields, string fieldToExtract)
+        public void RetrieveAuditHistoryForRecords(string identificator)
         {
             this.fileName = fileName;
             this.identificator = identificator;
 
             this.fieldToExtract = fieldToExtract;
-            this.allFields = allFields;
-
+            
             if (BackgroundWorkerExtractAuditHistory.IsBusy != true)
             {
                 progressExportData.Step = 1;
@@ -78,15 +77,9 @@ namespace AuditHistoryExtractor.Controls
                 {
                     string keyValue = string.IsNullOrEmpty(entity.GetAttributeValue<string>(identificator)) ? string.Empty : entity.GetAttributeValue<string>(identificator);
 
-                    if (allFields)
-                    {
-                        lsStory.AddRange(auditHistoryManager.GetAuditHistoryForRecord(entity.Id, entity.LogicalName, entity.GetAttributeValue<string>(identificator), ref lslog));
-                    }
-                    else
-                    {
-                        lsStory.AddRange(auditHistoryManager.GetAuditHistoryForRecordAndField(entity.Id, entity.LogicalName, fieldToExtract, entity.GetAttributeValue<string>(identificator)));
 
-                    }
+                    lsStory.AddRange(auditHistoryManager.GetAuditHistoryForRecord(entity.Id, entity.LogicalName, entity.GetAttributeValue<string>(identificator), ref lslog));
+
 
 
                     BackgroundWorkerExtractAuditHistory.ReportProgress(1, keyValue);

@@ -76,14 +76,18 @@ namespace AuditHistoryExtractor.AppCode
                 List<AuditHistory> records = GetRecordChanges(detail, recordKeyValue);
                 auditHistoryForRecord.AddRange(records);
 
-                if (records.Count == 0)
+
+                if (logs.Contains(new Log() { recordId = entityID }))
                 {
-                    logs.Add(new Log() { Message = $"No changes found.", recordId = entityID, infoLog = Enums.InfoLogEnum.Info, RecordKeyValue = recordKeyValue });
+                    logs.Find(x => x.recordId.Equals(entityID)).AddNumberOfChanges(records.Count);
                 }
                 else
                 {
-                    logs.Add(new Log() { Message = $"{records.Count} changes found.", recordId = entityID, infoLog = Enums.InfoLogEnum.Success, RecordKeyValue = recordKeyValue });
+                    Log logRecord = new Log() { recordId = entityID, RecordKeyValue = recordKeyValue, NumberOfChanges = records.Count };
+
+                    logs.Add(logRecord);
                 }
+
             }
             return auditHistoryForRecord;
 

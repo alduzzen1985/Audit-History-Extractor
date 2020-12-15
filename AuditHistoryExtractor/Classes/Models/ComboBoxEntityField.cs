@@ -8,6 +8,8 @@ namespace AuditHistoryExtractor.AppCode
         public string Text { set; get; }
         public string AttributeType { set; get; }
 
+        public string DisplayName { set; get; }
+
 
         public ComboBoxEntityField()
         {

@@ -49,7 +49,7 @@ namespace AuditHistoryExtractor
         private const string MessageValidatingFetchXML = "Validating FetchXml and extracting Data.";
         private const string MessageMismatchEntitySelectedAndFetchXML = "In the FetchXml you are extracting data for {0} entity instead of the selected entity {1}";
         private const string MessageFetchXMLBuilderNotFound = "FetchXML Builder not found. Please install it";
-        private const string MessageOldVersion = "Dynamic CRM version 8 or newer is required";
+        private const string MessageOldVersion = "Dynamic CRM version 7 or newer is required";
 
 
         private const string MessageNoAuditHistoryForSelectedRecords = "No audit history data available for selected records.";
@@ -557,14 +557,14 @@ namespace AuditHistoryExtractor
 
 
 
-            dtGrvPreview.DataSource = FilterData();
+            dtGrvPreview.DataSource = FilterData(lsAuditHistory);
             SetBackgroundColor();
             btnNext.Enabled = lsAuditHistory != null && lsAuditHistory.Count > 0;
 
             dtGrvLogs.DataSource = lsLog;
         }
 
-        private List<AuditHistory> FilterData()
+        private List<AuditHistory> FilterData(List<AuditHistory> lsAuditHistory)
         {
             List<AuditHistory> lsAuditHistoryFiltered = lsAuditHistory;
 
@@ -644,7 +644,7 @@ namespace AuditHistoryExtractor
 
             try
             {
-                CSVHelper.WriteFile(saveFileDialog1.FileName, csvSeparator, cmbPrimaryKeySelectedItem.Text, FilterData());
+                CSVHelper.WriteFile(saveFileDialog1.FileName, csvSeparator, cmbPrimaryKeySelectedItem.Text, FilterData(lsAuditHistory));
                 DialogResult dialogResult = MessageBox.Show(FileSavedSuccessfully,
                                 TitleExportCSV,
                                  MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -707,12 +707,6 @@ namespace AuditHistoryExtractor
 
 
 
-        private void rdAllFields_CheckedChanged(object sender, EventArgs e)
-        {
-
-            //TODO : Logic to enable the Filter for the Attributes
-        }
-
         private void chkEntitiesWithAudit_CheckedChanged(object sender, EventArgs e)
         {
             FillListEntities(chkEntitiesWithAudit.Checked);
@@ -746,21 +740,9 @@ namespace AuditHistoryExtractor
         }
 
 
-        private void dtpDateFrom_ValueChanged(object sender, EventArgs e)
-        {
-            dtpDateFrom.Format = DateTimePickerFormat.Long;
-            dtpTimeFrom.Format = DateTimePickerFormat.Time;
-
-        }
 
 
 
-        private void dtpDateTo_ValueChanged(object sender, EventArgs e)
-        {
-            dtpDateTo.Format = DateTimePickerFormat.Long;
-            dtpTimeTo.Format = DateTimePickerFormat.Time;
-
-        }
 
 
 
@@ -769,14 +751,30 @@ namespace AuditHistoryExtractor
             if (!CheckIfConnectedToCrm()) { return; }
 
 
-            dtGrvPreview.DataSource = FilterData();
+            dtGrvPreview.DataSource = FilterData(lsAuditHistory);
             SetBackgroundColor();
             btnNext.Enabled = lsAuditHistory != null && lsAuditHistory.Count > 0;
         }
 
         private void btnClearFrom_Click(object sender, EventArgs e)
         {
-            ClearDateAndTimeField(dtpDateFrom, dtpDateFrom);
+            ClearDateAndTimeField(dtpDateFrom, dtpTimeFrom);
+        }
+
+
+        #region DateTime Filters
+        private void dtpDateFrom_ValueChanged(object sender, EventArgs e)
+        {
+            dtpDateFrom.Format = DateTimePickerFormat.Long;
+            dtpTimeFrom.Format = DateTimePickerFormat.Time;
+
+        }
+
+
+        private void dtpDateTo_ValueChanged(object sender, EventArgs e)
+        {
+            dtpDateTo.Format = DateTimePickerFormat.Long;
+            dtpTimeTo.Format = DateTimePickerFormat.Time;
         }
 
 
@@ -786,6 +784,7 @@ namespace AuditHistoryExtractor
         }
 
 
+
         private void ClearDateAndTimeField(DateTimePicker date, DateTimePicker time)
         {
             date.Format = DateTimePickerFormat.Custom;
@@ -793,6 +792,9 @@ namespace AuditHistoryExtractor
             time.Format = DateTimePickerFormat.Custom;
             time.CustomFormat = " ";
         }
+        #endregion
+
+
 
 
 
@@ -832,10 +834,6 @@ namespace AuditHistoryExtractor
 
         }
 
-        private void pnlPaging_Resize(object sender, EventArgs e)
-        {
-
-        }
 
         private void GrpPaging_Resize(object sender, EventArgs e)
         {
@@ -847,6 +845,8 @@ namespace AuditHistoryExtractor
             base.OnResize(e);
         }
 
+
+        #region Logs
         private void drGrwLogs_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
             if (dtGrvLogs.Rows.Count > 1)
@@ -857,8 +857,6 @@ namespace AuditHistoryExtractor
                 }
             }
         }
-
-
         private void SetImageStatusOperation(DataGridViewRow currentRow)
         {
             if (currentRow.Cells["infoLog"] != null)
@@ -879,14 +877,17 @@ namespace AuditHistoryExtractor
             }
         }
 
-        private void btnSearch_Click(object sender, EventArgs e)
+        private void chkShowGuid_CheckedChanged(object sender, EventArgs e)
         {
-            string txtToSearch = txtSearchAttribute.Text.ToLower();
-            FillListAttributes(lsAllFieldsForEntity.Where(x => x.DisplayName.ToLower().Contains(txtToSearch)).
-                OrderBy(x => x.DisplayName).ToList());
+            dtGrvLogs.Columns[2].Visible = chkShowGuid.Checked;
         }
 
+        #endregion
 
+
+
+
+        #region Attributes
         private void FillListAttributes(List<ComboBoxEntityField> lsAttributes)
         {
             lstAttributes.ItemChecked -= lstAttributes_ItemChecked;
@@ -933,9 +934,7 @@ namespace AuditHistoryExtractor
             if (e.KeyChar == (char)Keys.Return)
 
             {
-                string txtToSearch = txtSearchAttribute.Text.ToLower();
-                FillListAttributes(lsAllFieldsForEntity.Where(x => x.DisplayName.ToLower().Contains(txtToSearch)).
-                    OrderBy(x => x.DisplayName).ToList());
+                FilterAttributesBySearch();
 
             }
         }
@@ -951,9 +950,25 @@ namespace AuditHistoryExtractor
             selectAllAttributes = !selectAllAttributes;
         }
 
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            FilterAttributesBySearch();
+        }
 
 
+        private void FilterAttributesBySearch()
+        {
+            string txtToSearch = txtSearchAttribute.Text.ToLower();
 
+            FillListAttributes(lsAllFieldsForEntity.Where(x => x.Value.ToLower().Contains(txtToSearch) ||
+                x.DisplayName.ToLower().Contains(txtToSearch)).
+                OrderBy(x => x.DisplayName).ToList());
+        }
+
+        #endregion
+
+
+        #region Users
         private void FillListViewUsers(List<User> lsUsers)
         {//lstViewUsers_ItemChecked
 
@@ -1005,19 +1020,6 @@ namespace AuditHistoryExtractor
             }
         }
 
-
-
-        private void txtUser_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar == (char)Keys.Return)
-
-            {
-                string txt = txtUser.Text.ToLower();
-                FillListViewUsers(lsUsers.Where(x => x.FullName.ToLower().Contains(txt) || x.Username.Contains(txt)).ToList());
-
-            }
-        }
-
         private void lnkSelectUsersAll_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             foreach (ListViewItem lstItem in lstViewUsers.Items)
@@ -1036,11 +1038,8 @@ namespace AuditHistoryExtractor
             }
         }
 
-        private void chkShowGuid_CheckedChanged(object sender, EventArgs e)
-        {
+        #endregion
 
-            dtGrvLogs.Columns[2].Visible = chkShowGuid.Checked;
 
-        }
     }
 }

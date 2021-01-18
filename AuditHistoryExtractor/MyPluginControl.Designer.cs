@@ -45,15 +45,6 @@
             this.grpPreview = new System.Windows.Forms.GroupBox();
             this.dtGrvPreview = new System.Windows.Forms.DataGridView();
             this.RecordId = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.recordKeyValueDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.createdOnDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.usernameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.operationDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.actionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.attributeNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.oldValueDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.newValueDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.auditHistoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.GrpPaging = new System.Windows.Forms.GroupBox();
             this.pnlPaging = new System.Windows.Forms.Panel();
             this.btnPrevious = new System.Windows.Forms.Button();
@@ -121,11 +112,7 @@
             this.pnlLogResult = new System.Windows.Forms.Panel();
             this.dtGrvLogs = new System.Windows.Forms.DataGridView();
             this.StatusImage = new System.Windows.Forms.DataGridViewImageColumn();
-            this.infoLog = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.GuidRecord = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.recordKeyValueDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.messageDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.logBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.panel2 = new System.Windows.Forms.Panel();
             this.chkShowGuid = new System.Windows.Forms.CheckBox();
             this.grpActions = new System.Windows.Forms.GroupBox();
@@ -134,12 +121,24 @@
             this.btnPreview = new System.Windows.Forms.Button();
             this.btnExtractAuditHistory = new System.Windows.Forms.Button();
             this.panel8 = new System.Windows.Forms.Panel();
+            this.recordKeyValueDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.createdOnDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.usernameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.operationDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.actionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.attributeNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.oldValueDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.newValueDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.auditHistoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.infoLog = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.recordKeyValueDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.messageDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.logBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.logBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.toolStrip1.SuspendLayout();
             this.panel9.SuspendLayout();
             this.grpPreview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtGrvPreview)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.auditHistoryBindingSource)).BeginInit();
             this.GrpPaging.SuspendLayout();
             this.pnlPaging.SuspendLayout();
             this.tabOperations.SuspendLayout();
@@ -160,10 +159,11 @@
             this.tabLogs.SuspendLayout();
             this.pnlLogResult.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtGrvLogs)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.logBindingSource1)).BeginInit();
             this.panel2.SuspendLayout();
             this.grpActions.SuspendLayout();
             this.panel8.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.auditHistoryBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.logBindingSource1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.logBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
@@ -309,74 +309,6 @@
             this.RecordId.MinimumWidth = 8;
             this.RecordId.Name = "RecordId";
             this.RecordId.ReadOnly = true;
-            // 
-            // recordKeyValueDataGridViewTextBoxColumn
-            // 
-            this.recordKeyValueDataGridViewTextBoxColumn.DataPropertyName = "RecordKeyValue";
-            this.recordKeyValueDataGridViewTextBoxColumn.HeaderText = "RecordKeyValue";
-            this.recordKeyValueDataGridViewTextBoxColumn.MinimumWidth = 8;
-            this.recordKeyValueDataGridViewTextBoxColumn.Name = "recordKeyValueDataGridViewTextBoxColumn";
-            this.recordKeyValueDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // createdOnDataGridViewTextBoxColumn
-            // 
-            this.createdOnDataGridViewTextBoxColumn.DataPropertyName = "CreatedOn";
-            this.createdOnDataGridViewTextBoxColumn.HeaderText = "CreatedOn";
-            this.createdOnDataGridViewTextBoxColumn.MinimumWidth = 8;
-            this.createdOnDataGridViewTextBoxColumn.Name = "createdOnDataGridViewTextBoxColumn";
-            this.createdOnDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // usernameDataGridViewTextBoxColumn
-            // 
-            this.usernameDataGridViewTextBoxColumn.DataPropertyName = "Username";
-            this.usernameDataGridViewTextBoxColumn.HeaderText = "Username";
-            this.usernameDataGridViewTextBoxColumn.MinimumWidth = 8;
-            this.usernameDataGridViewTextBoxColumn.Name = "usernameDataGridViewTextBoxColumn";
-            this.usernameDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // operationDataGridViewTextBoxColumn
-            // 
-            this.operationDataGridViewTextBoxColumn.DataPropertyName = "Operation";
-            this.operationDataGridViewTextBoxColumn.HeaderText = "Operation";
-            this.operationDataGridViewTextBoxColumn.MinimumWidth = 8;
-            this.operationDataGridViewTextBoxColumn.Name = "operationDataGridViewTextBoxColumn";
-            this.operationDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // actionDataGridViewTextBoxColumn
-            // 
-            this.actionDataGridViewTextBoxColumn.DataPropertyName = "Action";
-            this.actionDataGridViewTextBoxColumn.HeaderText = "Action";
-            this.actionDataGridViewTextBoxColumn.MinimumWidth = 8;
-            this.actionDataGridViewTextBoxColumn.Name = "actionDataGridViewTextBoxColumn";
-            this.actionDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // attributeNameDataGridViewTextBoxColumn
-            // 
-            this.attributeNameDataGridViewTextBoxColumn.DataPropertyName = "AttributeName";
-            this.attributeNameDataGridViewTextBoxColumn.HeaderText = "AttributeName";
-            this.attributeNameDataGridViewTextBoxColumn.MinimumWidth = 8;
-            this.attributeNameDataGridViewTextBoxColumn.Name = "attributeNameDataGridViewTextBoxColumn";
-            this.attributeNameDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // oldValueDataGridViewTextBoxColumn
-            // 
-            this.oldValueDataGridViewTextBoxColumn.DataPropertyName = "OldValue";
-            this.oldValueDataGridViewTextBoxColumn.HeaderText = "OldValue";
-            this.oldValueDataGridViewTextBoxColumn.MinimumWidth = 8;
-            this.oldValueDataGridViewTextBoxColumn.Name = "oldValueDataGridViewTextBoxColumn";
-            this.oldValueDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // newValueDataGridViewTextBoxColumn
-            // 
-            this.newValueDataGridViewTextBoxColumn.DataPropertyName = "NewValue";
-            this.newValueDataGridViewTextBoxColumn.HeaderText = "NewValue";
-            this.newValueDataGridViewTextBoxColumn.MinimumWidth = 8;
-            this.newValueDataGridViewTextBoxColumn.Name = "newValueDataGridViewTextBoxColumn";
-            this.newValueDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // auditHistoryBindingSource
-            // 
-            this.auditHistoryBindingSource.DataSource = typeof(AuditHistoryExtractor.Classes.AuditHistory);
             // 
             // GrpPaging
             // 
@@ -1081,7 +1013,7 @@
             this.tabLogs.Location = new System.Drawing.Point(4, 29);
             this.tabLogs.Name = "tabLogs";
             this.tabLogs.Padding = new System.Windows.Forms.Padding(3);
-            this.tabLogs.Size = new System.Drawing.Size(745, 1521);
+            this.tabLogs.Size = new System.Drawing.Size(745, 1525);
             this.tabLogs.TabIndex = 2;
             this.tabLogs.Text = "Logs";
             this.tabLogs.UseVisualStyleBackColor = true;
@@ -1092,7 +1024,7 @@
             this.pnlLogResult.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlLogResult.Location = new System.Drawing.Point(3, 45);
             this.pnlLogResult.Name = "pnlLogResult";
-            this.pnlLogResult.Size = new System.Drawing.Size(739, 1473);
+            this.pnlLogResult.Size = new System.Drawing.Size(739, 1477);
             this.pnlLogResult.TabIndex = 3;
             // 
             // dtGrvLogs
@@ -1116,7 +1048,7 @@
             this.dtGrvLogs.ReadOnly = true;
             this.dtGrvLogs.RowHeadersWidth = 62;
             this.dtGrvLogs.RowTemplate.Height = 28;
-            this.dtGrvLogs.Size = new System.Drawing.Size(739, 1473);
+            this.dtGrvLogs.Size = new System.Drawing.Size(739, 1477);
             this.dtGrvLogs.TabIndex = 1;
             this.dtGrvLogs.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.drGrwLogs_DataBindingComplete);
             // 
@@ -1128,16 +1060,6 @@
             this.StatusImage.ReadOnly = true;
             this.StatusImage.Width = 8;
             // 
-            // infoLog
-            // 
-            this.infoLog.DataPropertyName = "infoLog";
-            this.infoLog.HeaderText = "infoLog";
-            this.infoLog.MinimumWidth = 8;
-            this.infoLog.Name = "infoLog";
-            this.infoLog.ReadOnly = true;
-            this.infoLog.Visible = false;
-            this.infoLog.Width = 98;
-            // 
             // GuidRecord
             // 
             this.GuidRecord.DataPropertyName = "recordId";
@@ -1147,28 +1069,6 @@
             this.GuidRecord.ReadOnly = true;
             this.GuidRecord.Visible = false;
             this.GuidRecord.Width = 79;
-            // 
-            // recordKeyValueDataGridViewTextBoxColumn1
-            // 
-            this.recordKeyValueDataGridViewTextBoxColumn1.DataPropertyName = "RecordKeyValue";
-            this.recordKeyValueDataGridViewTextBoxColumn1.HeaderText = "Record Key Value";
-            this.recordKeyValueDataGridViewTextBoxColumn1.MinimumWidth = 8;
-            this.recordKeyValueDataGridViewTextBoxColumn1.Name = "recordKeyValueDataGridViewTextBoxColumn1";
-            this.recordKeyValueDataGridViewTextBoxColumn1.ReadOnly = true;
-            this.recordKeyValueDataGridViewTextBoxColumn1.Width = 172;
-            // 
-            // messageDataGridViewTextBoxColumn
-            // 
-            this.messageDataGridViewTextBoxColumn.DataPropertyName = "Message";
-            this.messageDataGridViewTextBoxColumn.HeaderText = "Message";
-            this.messageDataGridViewTextBoxColumn.MinimumWidth = 8;
-            this.messageDataGridViewTextBoxColumn.Name = "messageDataGridViewTextBoxColumn";
-            this.messageDataGridViewTextBoxColumn.ReadOnly = true;
-            this.messageDataGridViewTextBoxColumn.Width = 110;
-            // 
-            // logBindingSource1
-            // 
-            this.logBindingSource1.DataSource = typeof(AuditHistoryExtractor.Classes.Models.Log);
             // 
             // panel2
             // 
@@ -1271,6 +1171,106 @@
             this.panel8.Size = new System.Drawing.Size(753, 1558);
             this.panel8.TabIndex = 59;
             // 
+            // recordKeyValueDataGridViewTextBoxColumn
+            // 
+            this.recordKeyValueDataGridViewTextBoxColumn.DataPropertyName = "RecordKeyValue";
+            this.recordKeyValueDataGridViewTextBoxColumn.HeaderText = "RecordKeyValue";
+            this.recordKeyValueDataGridViewTextBoxColumn.MinimumWidth = 8;
+            this.recordKeyValueDataGridViewTextBoxColumn.Name = "recordKeyValueDataGridViewTextBoxColumn";
+            this.recordKeyValueDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // createdOnDataGridViewTextBoxColumn
+            // 
+            this.createdOnDataGridViewTextBoxColumn.DataPropertyName = "CreatedOn";
+            this.createdOnDataGridViewTextBoxColumn.HeaderText = "CreatedOn";
+            this.createdOnDataGridViewTextBoxColumn.MinimumWidth = 8;
+            this.createdOnDataGridViewTextBoxColumn.Name = "createdOnDataGridViewTextBoxColumn";
+            this.createdOnDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // usernameDataGridViewTextBoxColumn
+            // 
+            this.usernameDataGridViewTextBoxColumn.DataPropertyName = "Username";
+            this.usernameDataGridViewTextBoxColumn.HeaderText = "Username";
+            this.usernameDataGridViewTextBoxColumn.MinimumWidth = 8;
+            this.usernameDataGridViewTextBoxColumn.Name = "usernameDataGridViewTextBoxColumn";
+            this.usernameDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // operationDataGridViewTextBoxColumn
+            // 
+            this.operationDataGridViewTextBoxColumn.DataPropertyName = "Operation";
+            this.operationDataGridViewTextBoxColumn.HeaderText = "Operation";
+            this.operationDataGridViewTextBoxColumn.MinimumWidth = 8;
+            this.operationDataGridViewTextBoxColumn.Name = "operationDataGridViewTextBoxColumn";
+            this.operationDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // actionDataGridViewTextBoxColumn
+            // 
+            this.actionDataGridViewTextBoxColumn.DataPropertyName = "Action";
+            this.actionDataGridViewTextBoxColumn.HeaderText = "Action";
+            this.actionDataGridViewTextBoxColumn.MinimumWidth = 8;
+            this.actionDataGridViewTextBoxColumn.Name = "actionDataGridViewTextBoxColumn";
+            this.actionDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // attributeNameDataGridViewTextBoxColumn
+            // 
+            this.attributeNameDataGridViewTextBoxColumn.DataPropertyName = "AttributeName";
+            this.attributeNameDataGridViewTextBoxColumn.HeaderText = "AttributeName";
+            this.attributeNameDataGridViewTextBoxColumn.MinimumWidth = 8;
+            this.attributeNameDataGridViewTextBoxColumn.Name = "attributeNameDataGridViewTextBoxColumn";
+            this.attributeNameDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // oldValueDataGridViewTextBoxColumn
+            // 
+            this.oldValueDataGridViewTextBoxColumn.DataPropertyName = "OldValue";
+            this.oldValueDataGridViewTextBoxColumn.HeaderText = "OldValue";
+            this.oldValueDataGridViewTextBoxColumn.MinimumWidth = 8;
+            this.oldValueDataGridViewTextBoxColumn.Name = "oldValueDataGridViewTextBoxColumn";
+            this.oldValueDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // newValueDataGridViewTextBoxColumn
+            // 
+            this.newValueDataGridViewTextBoxColumn.DataPropertyName = "NewValue";
+            this.newValueDataGridViewTextBoxColumn.HeaderText = "NewValue";
+            this.newValueDataGridViewTextBoxColumn.MinimumWidth = 8;
+            this.newValueDataGridViewTextBoxColumn.Name = "newValueDataGridViewTextBoxColumn";
+            this.newValueDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // auditHistoryBindingSource
+            // 
+            this.auditHistoryBindingSource.DataSource = typeof(AuditHistoryExtractor.Classes.AuditHistory);
+            // 
+            // infoLog
+            // 
+            this.infoLog.DataPropertyName = "infoLog";
+            this.infoLog.HeaderText = "infoLog";
+            this.infoLog.MinimumWidth = 8;
+            this.infoLog.Name = "infoLog";
+            this.infoLog.ReadOnly = true;
+            this.infoLog.Visible = false;
+            this.infoLog.Width = 98;
+            // 
+            // recordKeyValueDataGridViewTextBoxColumn1
+            // 
+            this.recordKeyValueDataGridViewTextBoxColumn1.DataPropertyName = "RecordKeyValue";
+            this.recordKeyValueDataGridViewTextBoxColumn1.HeaderText = "Record Key Value";
+            this.recordKeyValueDataGridViewTextBoxColumn1.MinimumWidth = 8;
+            this.recordKeyValueDataGridViewTextBoxColumn1.Name = "recordKeyValueDataGridViewTextBoxColumn1";
+            this.recordKeyValueDataGridViewTextBoxColumn1.ReadOnly = true;
+            this.recordKeyValueDataGridViewTextBoxColumn1.Width = 172;
+            // 
+            // messageDataGridViewTextBoxColumn
+            // 
+            this.messageDataGridViewTextBoxColumn.DataPropertyName = "Message";
+            this.messageDataGridViewTextBoxColumn.HeaderText = "Message";
+            this.messageDataGridViewTextBoxColumn.MinimumWidth = 8;
+            this.messageDataGridViewTextBoxColumn.Name = "messageDataGridViewTextBoxColumn";
+            this.messageDataGridViewTextBoxColumn.ReadOnly = true;
+            this.messageDataGridViewTextBoxColumn.Width = 110;
+            // 
+            // logBindingSource1
+            // 
+            this.logBindingSource1.DataSource = typeof(AuditHistoryExtractor.Classes.Models.Log);
+            // 
             // logBindingSource
             // 
             this.logBindingSource.DataSource = typeof(AuditHistoryExtractor.Classes.Models.Log);
@@ -1291,7 +1291,6 @@
             this.panel9.ResumeLayout(false);
             this.grpPreview.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dtGrvPreview)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.auditHistoryBindingSource)).EndInit();
             this.GrpPaging.ResumeLayout(false);
             this.pnlPaging.ResumeLayout(false);
             this.pnlPaging.PerformLayout();
@@ -1320,11 +1319,12 @@
             this.tabLogs.ResumeLayout(false);
             this.pnlLogResult.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dtGrvLogs)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.logBindingSource1)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.grpActions.ResumeLayout(false);
             this.panel8.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.auditHistoryBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.logBindingSource1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.logBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

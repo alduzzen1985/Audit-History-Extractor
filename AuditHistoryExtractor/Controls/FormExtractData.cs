@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 using AuditHistoryExtractor.Classes;
+using AuditHistoryExtractor.Classes.Models;
 
 namespace AuditHistoryExtractor.Controls
 {
@@ -13,7 +14,7 @@ namespace AuditHistoryExtractor.Controls
         private const string MessageAuditHistoryExtracted = "Audit History extracted successfully";
         private const string TitleExportSuccess = "Export success";
 
-        public delegate void ExtractCompleted(List<AuditHistory> lsAuditHistory);
+        public delegate void ExtractCompleted(List<AuditHistory> lsAuditHistory, List<Log> lsLogs);
         public event ExtractCompleted OnExtractCompleted;
 
         #region Variables
@@ -21,10 +22,12 @@ namespace AuditHistoryExtractor.Controls
 
 
         List<AuditHistory> lsStory = new List<AuditHistory>();
+        List<Log> lslog = new List<Log>();
+
 
         List<Entity> entitiesList;
         string identificator, fieldToExtract, fileName;
-        bool allFields;
+    
         #endregion
 
         #region Business Logics
@@ -32,18 +35,17 @@ namespace AuditHistoryExtractor.Controls
         {
             Service = service;
             this.entitiesList = entitiesList;
-    
+
             InitializeComponent();
         }
 
-        public void RetrieveAuditHistoryForRecords(string identificator, bool allFields, string fieldToExtract)
+        public void RetrieveAuditHistoryForRecords(string identificator)
         {
             this.fileName = fileName;
             this.identificator = identificator;
 
             this.fieldToExtract = fieldToExtract;
-            this.allFields = allFields;
-
+            
             if (BackgroundWorkerExtractAuditHistory.IsBusy != true)
             {
                 progressExportData.Step = 1;
@@ -75,15 +77,9 @@ namespace AuditHistoryExtractor.Controls
                 {
                     string keyValue = string.IsNullOrEmpty(entity.GetAttributeValue<string>(identificator)) ? string.Empty : entity.GetAttributeValue<string>(identificator);
 
-                    if (allFields)
-                    {
-                        lsStory.AddRange(auditHistoryManager.GetAuditHistoryForRecord(entity.Id, entity.LogicalName, entity.GetAttributeValue<string>(identificator)));
-                    }
-                    else
-                    {
-                        lsStory.AddRange(auditHistoryManager.GetAuditHistoryForRecordAndField(entity.Id, entity.LogicalName, fieldToExtract, entity.GetAttributeValue<string>(identificator)));
 
-                    }
+                    lsStory.AddRange(auditHistoryManager.GetAuditHistoryForRecord(entity.Id, entity.LogicalName, entity.GetAttributeValue<string>(identificator), ref lslog));
+
 
 
                     BackgroundWorkerExtractAuditHistory.ReportProgress(1, keyValue);
@@ -110,7 +106,7 @@ namespace AuditHistoryExtractor.Controls
         {
             if (OnExtractCompleted != null)
             {
-                OnExtractCompleted(lsStory);
+                OnExtractCompleted(lsStory, lslog);
             }
             this.Close();
         }

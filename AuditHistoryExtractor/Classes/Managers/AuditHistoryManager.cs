@@ -1,4 +1,5 @@
 ﻿using AuditHistoryExtractor.Classes;
+using AuditHistoryExtractor.Classes.Models;
 using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
 using System;
@@ -54,7 +55,7 @@ namespace AuditHistoryExtractor.AppCode
         {
             return string.IsNullOrEmpty(value) ? "(no value)" : value;
         }
-        
+
         private string GetValueEntityReference(EntityReference eRef)
         {
             if (eRef == null) { return string.Empty; }
@@ -62,7 +63,7 @@ namespace AuditHistoryExtractor.AppCode
         }
 
 
-        public List<AuditHistory> GetAuditHistoryForRecord(Guid entityID, string entityLogicalName, string recordKeyValue)
+        public List<AuditHistory> GetAuditHistoryForRecord(Guid entityID, string entityLogicalName, string recordKeyValue, ref List<Log> logs)
         {
             List<AuditHistory> auditHistoryForRecord = new List<AuditHistory>();
             RetrieveRecordChangeHistoryRequest changeRequest = new RetrieveRecordChangeHistoryRequest();
@@ -72,8 +73,21 @@ namespace AuditHistoryExtractor.AppCode
             AuditDetailCollection details = changeResponse.AuditDetailCollection;
             foreach (AuditDetail detail in details.AuditDetails)
             {
+                List<AuditHistory> records = GetRecordChanges(detail, recordKeyValue);
+                auditHistoryForRecord.AddRange(records);
 
-                auditHistoryForRecord.AddRange(GetRecordChanges(detail, recordKeyValue));
+
+                if (logs.Contains(new Log() { recordId = entityID }))
+                {
+                    logs.Find(x => x.recordId.Equals(entityID)).AddNumberOfChanges(records.Count);
+                }
+                else
+                {
+                    Log logRecord = new Log() { recordId = entityID, RecordKeyValue = recordKeyValue, NumberOfChanges = records.Count };
+
+                    logs.Add(logRecord);
+                }
+
             }
             return auditHistoryForRecord;
 
@@ -100,6 +114,8 @@ namespace AuditHistoryExtractor.AppCode
             RetrieveRecordChangeHistoryRequest changeRequest = new RetrieveRecordChangeHistoryRequest();
             changeRequest.Target = new EntityReference(entityLogicalName, entityID);
 
+
+
             RetrieveRecordChangeHistoryResponse changeResponse = (RetrieveRecordChangeHistoryResponse)_service.Execute(changeRequest);
             AuditDetailCollection details = changeResponse.AuditDetailCollection;
 
@@ -111,11 +127,7 @@ namespace AuditHistoryExtractor.AppCode
                 //AuditHistory change = GetRecordChanges(detail);
 
                 auditHistoryForRecord.AddRange(GetRecordChanges(detail, recordKeyValue));
-                //if (change != null)
-                //{
-                //    change.RecordKeyValue = recordKeyValue;
-                //    auditHistoryForRecord.Add(change);
-                //}
+
             }
             return auditHistoryForRecord;
         }
@@ -127,7 +139,7 @@ namespace AuditHistoryExtractor.AppCode
             Entity record = (Entity)detail.AuditRecord;
             List<AuditHistory> lsChanges = new List<AuditHistory>();
             // Write out some of the change history information in the audit record. 
-            
+
 
             Console.WriteLine("\nAudit record created on: {0}", record.GetAttributeValue<DateTime>("createdon").ToLocalTime());
             Console.WriteLine("Entity: {0}, Action: {1}, Operation: {2}, Transaction Id {3}", record.GetAttributeValue<EntityReference>("objectid").LogicalName, record.FormattedValues["action"], record.FormattedValues["operation"], record.GetAttributeValue<Guid>("auditid").ToString());

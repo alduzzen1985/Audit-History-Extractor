@@ -26,9 +26,10 @@ namespace AuditHistoryExtractor.AppCode
             string value = string.Empty;
             if (attributeAuditHistoryDetail.Contains(fieldKey))
             {
+                bool isTypeOptionSet = attributeAuditHistoryDetail[fieldKey] is OptionSetValue;
                 bool isOldValueAnEntityReference = attributeAuditHistoryDetail[fieldKey] is EntityReference;
                 bool isOldValueTypeMoney = attributeAuditHistoryDetail[fieldKey] is Money;
-                bool isTypeOptionSet = attributeAuditHistoryDetail[fieldKey] is OptionSetValue;
+
 
 
                 if (isOldValueAnEntityReference) { value = GetValueEntityReference(attributeAuditHistoryDetail[fieldKey] as EntityReference); }
@@ -175,6 +176,54 @@ namespace AuditHistoryExtractor.AppCode
                     auditHistory.NewValue = newValue;
                     auditHistory.AttributeName = attribute.Key;
 
+
+
+                    bool isTypeOptionSet = attributeDetail.OldValue[attribute.Key] is OptionSetValue;
+                    bool isOldValueAnEntityReference = attributeDetail.OldValue[attribute.Key] is EntityReference;
+
+                    if (isTypeOptionSet || isOldValueAnEntityReference)
+                    {
+                        AuditHistory auditHistoryOptLookup = new AuditHistory();
+                        FillAuditRecordWithBaseInfo(auditHistoryOptLookup, record);
+                        auditHistoryOptLookup.RecordKeyValue = recordKeyValue;
+                        auditHistoryOptLookup.AttributeName = attribute.Key;
+
+                        /*
+
+                        if (isOldValueAnEntityReference) { value = GetValueEntityReference(attributeAuditHistoryDetail[fieldKey] as EntityReference); }
+                        else if (isOldValueTypeMoney) { value = (attributeAuditHistoryDetail[fieldKey] as Money)?.Value.ToString(); }
+                        else if (isTypeOptionSet)
+                        {
+                            OptionSetValue optSetValue = (attributeDetail.OldValue[[attribute.Key] as OptionSetValue);
+                        */
+
+
+                        if (isOldValueAnEntityReference)
+                        {
+
+                            EntityReference oldRecord = attributeDetail.OldValue[attribute.Key] as EntityReference;
+                            EntityReference newRecord = attributeDetail.NewValue[attribute.Key] as EntityReference;
+                            auditHistoryOptLookup.OldValue = "(no value)";
+                            auditHistoryOptLookup.NewValue = "(no value)";
+                            auditHistoryOptLookup.AttributeName += "_id";
+                            if (oldRecord != null) { auditHistoryOptLookup.OldValue = oldRecord.Id.ToString(); }
+                            if (newRecord != null) { auditHistoryOptLookup.NewValue = newRecord.Id.ToString(); }
+
+                        }
+
+                        if (isTypeOptionSet)
+                        {
+                            OptionSetValue oldRecord = (attributeDetail.OldValue[attribute.Key] as OptionSetValue);
+                            OptionSetValue newRecord = (attributeDetail.NewValue[attribute.Key] as OptionSetValue);
+                            auditHistoryOptLookup.OldValue = "(no value)";
+                            auditHistoryOptLookup.NewValue = "(no value)";
+                            auditHistoryOptLookup.AttributeName += "_value";
+                            if (oldRecord != null) { auditHistoryOptLookup.OldValue = oldRecord.Value.ToString(); }
+                            if (newRecord != null) { auditHistoryOptLookup.NewValue = newRecord.Value.ToString(); }
+                        }
+
+                        lsChanges.Add(auditHistoryOptLookup);
+                    }
 
 
                     lsChanges.Add(auditHistory);

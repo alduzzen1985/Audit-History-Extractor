@@ -19,6 +19,8 @@ using AuditHistoryExtractor.Enums;
 using System.Web.UI.WebControls;
 using AuditHistoryExtractor.Classes.Managers;
 using AuditHistoryExtractor.Classes.Models;
+using Newtonsoft.Json;
+using System.IO;
 
 namespace AuditHistoryExtractor
 {
@@ -64,6 +66,10 @@ namespace AuditHistoryExtractor
         private const string TitleExportCSV = "Export CSV";
 
 
+        private const string TitleNotConnected = "No connection";
+
+        private const string TitleWrongConnection = "Wrong connection";
+        private const string MessageWrongConnection = "Your saved configuration is configured to work with {0}";
 
         #endregion
 
@@ -72,7 +78,7 @@ namespace AuditHistoryExtractor
         string currentEntitySelected;
         FetchExpression fetchExpressionRecordsToExtract;
         List<Entity> recordsExtracted;
-        private enum RetrieveAuditHistoryMode { Preview = 1, Download = 2 };
+
 
 
         private List<ComboBoxEntityField> lsTextFieldsForEntity;
@@ -226,7 +232,7 @@ namespace AuditHistoryExtractor
                 {
                     ExecuteMethod(RetrieveAndFillEntitiesList);
 
-
+                    tbOpenFile.Enabled = true;
                 }
             }
             else
@@ -277,6 +283,7 @@ namespace AuditHistoryExtractor
                 grpFilterByView.Visible = true;
                 grpFilterByFetchXml.Visible = false;
                 grpActions.Visible = true;
+                tbSaveAs.Enabled = true;
                 grpActions.Location = new Point(grpFilterByView.Location.X, grpFilterByView.Height + grpFilterByView.Location.Y);
                 tbOpenFetchXMLBuilder.Visible = false;
             }
@@ -290,6 +297,7 @@ namespace AuditHistoryExtractor
                 grpFilterByFetchXml.Visible = true;
                 grpFilterByFetchXml.Location = grpFilterByView.Location;
                 grpActions.Visible = true;
+                tbSaveAs.Enabled = true;
                 grpActions.Location = new Point(grpFilterByView.Location.X, grpFilterByFetchXml.Height + grpFilterByFetchXml.Location.Y);
                 tbOpenFetchXMLBuilder.Visible = true;
             }
@@ -348,7 +356,7 @@ namespace AuditHistoryExtractor
         /// Fill the Views and Fields comboboxes by the selected entity
         /// </summary>
         /// <param name="selectedEntity"></param>
-        private void FillComboBoxesFieldaAndViews(ComboBoxEntities selectedEntity)
+        private void FillComboBoxesFieldaAndViews(ComboBoxEntities selectedEntity, Guid? selectedView = null, List<string> lstAttributesToCheck = null)
         {
 
             lblAuditHistoryNotEnabled.Visible = !selectedEntity.IsAuditEnabled;
@@ -381,8 +389,12 @@ namespace AuditHistoryExtractor
                 {
                     if (ev.Result == null)
                     {
-                        FillComboListViews();
+                        FillComboListViews(selectedView);
                         FillComboListFieldsForEntity(selectedEntity.LogicalName);
+                        if (lstAttributesToCheck != null && lstAttributesToCheck.Any())
+                        {
+                            CheckAttributes(lstAttributesToCheck);
+                        }
                     }
                     else
                     {
@@ -399,13 +411,28 @@ namespace AuditHistoryExtractor
 
         }
 
-        private void FillComboListViews()
+        private void FillComboListViews(Guid? selectedView = null)
         {
+
+
             cmbViews.DataSource = null;
             cmbViews.Items.Clear();
             cmbViews.DataSource = lsViewsForEntity;
             cmbViews.ValueMember = "Savedqueryid";
             cmbViews.DisplayMember = "Name";
+
+            if (selectedView != null && selectedView != Guid.Empty)
+            {
+                ViewDetail viewToSet = cmbViews.Items.OfType<ViewDetail>().Where(x => x.Savedqueryid == selectedView).FirstOrDefault();
+                if (viewToSet != null)
+                {
+                    cmbViews.SelectedItem = viewToSet;
+                }
+                else
+                {
+                    //TODO : Show Error
+                }
+            }
         }
 
 
@@ -529,7 +556,14 @@ namespace AuditHistoryExtractor
                     }
                     else
                     {
-                        var wsmDialog = new FormExtractData(Service, ev.Result as List<Entity>);
+
+                        string csvSeparator = ",";
+                        if (saveFileDialog1.FilterIndex == 1) { csvSeparator = ","; }
+                        if (saveFileDialog1.FilterIndex == 2) { csvSeparator = ";"; }
+
+
+
+                        var wsmDialog = new FormExtractData(Service, ev.Result as List<Entity>, retrieveMode, saveFileDialog1.FileName, csvSeparator, ConfigureFilterData());
                         wsmDialog.Show();
                         wsmDialog.RetrieveAuditHistoryForRecords(cmbPrimaryKeySelectedItem.Value);
 
@@ -555,20 +589,25 @@ namespace AuditHistoryExtractor
         {
             this.lsAuditHistory = lsAuditHistory;
 
+            Configuration filterData = ConfigureFilterData();
 
-
-            dtGrvPreview.DataSource = FilterData(lsAuditHistory);
+            dtGrvPreview.DataSource = FilterDataManager.ApplyFilterData(lsAuditHistory, filterData);
             SetBackgroundColor();
             btnNext.Enabled = lsAuditHistory != null && lsAuditHistory.Count > 0;
 
             dtGrvLogs.DataSource = lsLog;
         }
 
-        private List<AuditHistory> FilterData(List<AuditHistory> lsAuditHistory)
+        private Configuration ConfigureFilterData()
         {
-            List<AuditHistory> lsAuditHistoryFiltered = lsAuditHistory;
 
-            if (lsAuditHistoryFiltered == null) { return null; }
+            Configuration filterData = new Configuration();
+
+
+
+            //     List<AuditHistory> lsAuditHistoryFiltered = lsAuditHistory;
+
+            //     if (lsAuditHistoryFiltered == null) { return null; }
 
             if (chkLstOperations.CheckedItems.Count > 0)
             {
@@ -578,7 +617,7 @@ namespace AuditHistoryExtractor
                     selectedOperations.Add(operationItem.operationid);
                 }
 
-                lsAuditHistoryFiltered = lsAuditHistoryFiltered.Where(x => selectedOperations.Contains(x.OperationId)).ToList();
+                filterData.SelectedOperations = selectedOperations;
             }
 
             if (chkLstActions.CheckedItems.Count > 0)
@@ -588,44 +627,81 @@ namespace AuditHistoryExtractor
                 {
                     selectedActions.Add(operationItem.operationid);
                 }
-
-                lsAuditHistoryFiltered = lsAuditHistoryFiltered.Where(x => selectedActions.Contains(x.ActionId)).ToList();
+                filterData.SelectedActions = selectedActions;
             }
 
 
             if (lsSelectedUsers != null && lsSelectedUsers.Count > 0)
             {
-                lsAuditHistoryFiltered = lsAuditHistoryFiltered.Where(x => (lsSelectedUsers).Contains(x.UserId)).ToList();
+                filterData.SelectedUsers = lsSelectedUsers;
             }
 
             if (dtpDateFrom.Format != DateTimePickerFormat.Custom)
             {
-                lsAuditHistoryFiltered = lsAuditHistoryFiltered.Where(x => x.CreatedOn >= (dtpDateFrom.Value.Date + dtpTimeFrom.Value.TimeOfDay)).ToList();
+                filterData.DateFrom = dtpDateFrom.Value.Date + dtpTimeFrom.Value.TimeOfDay;
+            }
+            else
+            {
+                filterData.DateFrom = null;
             }
 
 
             if (dtpDateTo.Format != DateTimePickerFormat.Custom)
             {
-                lsAuditHistoryFiltered = lsAuditHistoryFiltered.Where(x => x.CreatedOn <= (dtpDateTo.Value.Date + dtpTimeTo.Value.TimeOfDay)).ToList();
+                filterData.DateTo = dtpDateTo.Value.Date + dtpTimeTo.Value.TimeOfDay;
+            }
+            else
+            {
+                filterData.DateTo = null;
             }
 
 
             if (lstAttributes.CheckedItems.Count > 0)
             {
-                lsAuditHistoryFiltered = lsAuditHistoryFiltered.Where(x => lsSelectedAttributes.Where(a => x.AttributeName == a.Value).Any()).ToList();
+                
+
+                filterData.SetListAttributes(lsSelectedAttributes);
             }
 
+            filterData.OrganizationID = ConnectionDetail.Organization;
+            filterData.OrganizationURLName = ConnectionDetail.OrganizationUrlName;
+            filterData.EntityLogicalName = (cmbEntities.SelectedItem as ComboBoxEntities).LogicalName;
+            filterData.PrimaryKeyLogicalName = (cmbPrimaryKey.SelectedItem as ComboBoxEntityField).Value;
+            filterData.ShowPersonalViews = chkPersonalView.Checked;
+            if (rdbFetchXml.Checked)
+            {
+                filterData.FilterDataUsing = "FetchXML";
+                filterData.FetchXML = txtFetchXML.Text;
+            }
+
+            if (rdbView.Checked)
+            {
+                filterData.FilterDataUsing = "View";
+                filterData.ViewID = (cmbViews.SelectedItem as ViewDetail).Savedqueryid;
+            }
+
+  
 
 
-            return lsAuditHistoryFiltered;
+
+
+
+            return filterData;
+
+
+
         }
 
 
 
         private void WsmDialog_OnExtractCompletedSave(List<AuditHistory> lsAuditHistory, List<Log> lsLog)
         {
+            DialogResult dialogResult = MessageBox.Show(FileSavedSuccessfully,
+                               TitleExportCSV,
+                                MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-            //Fill
+            return;
+            /*
 
             dtGrvLogs.DataSource = lsLog;
 
@@ -656,7 +732,7 @@ namespace AuditHistoryExtractor
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-
+            */
         }
 
 
@@ -749,9 +825,8 @@ namespace AuditHistoryExtractor
         private void btnApplyFilters_Click(object sender, EventArgs e)
         {
             if (!CheckIfConnectedToCrm()) { return; }
-
-
-            dtGrvPreview.DataSource = FilterData(lsAuditHistory);
+            Configuration filterData = ConfigureFilterData();
+            dtGrvPreview.DataSource = FilterDataManager.ApplyFilterData(lsAuditHistory, filterData);
             SetBackgroundColor();
             btnNext.Enabled = lsAuditHistory != null && lsAuditHistory.Count > 0;
         }
@@ -816,21 +891,19 @@ namespace AuditHistoryExtractor
             }
 
 
-
+            lsSelectedAttributes.Clear();
             foreach (ListViewItem item in lstAttributes.Items)
             {
                 item.Checked = false;
             }
 
+            lsSelectedUsers.Clear();
             foreach (ListViewItem item in lstViewUsers.Items)
             {
                 item.Checked = false;
             }
 
-            //Todo : Finish the Clear
-
-
-
+            btnApplyFilters_Click(null, null);
 
         }
 
@@ -906,14 +979,19 @@ namespace AuditHistoryExtractor
 
         private void lstAttributes_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
-            if (e.Item.Checked)
+            SetListAttributesChecked(e.Item);
+        }
+
+        private void SetListAttributesChecked(ListViewItem item)
+        {
+            if (item.Checked)
             {
 
                 lsSelectedAttributes.Add(new ComboBoxEntityField()
                 {
-                    DisplayName = e.Item.SubItems[0].Text,
-                    Value = e.Item.SubItems[1].Text,
-                    AttributeType = e.Item.SubItems[2].Text
+                    DisplayName = item.SubItems[0].Text,
+                    Value = item.SubItems[1].Text,
+                    AttributeType = item.SubItems[2].Text
                 });
 
 
@@ -924,7 +1002,7 @@ namespace AuditHistoryExtractor
             }
             else
             {
-                lsSelectedAttributes.Remove(lsSelectedAttributes.Where(x => x.Value == e.Item.Name).FirstOrDefault());
+                lsSelectedAttributes.Remove(lsSelectedAttributes.Where(x => x.Value == item.Name).FirstOrDefault());
                 //selectedRecords.Remove(e.Item.Name);
             }
         }
@@ -1038,8 +1116,223 @@ namespace AuditHistoryExtractor
             }
         }
 
+
         #endregion
 
+        private void tbOpenFile_Click(object sender, EventArgs e)
+        {
+            if (Service == null)
+            {
+                MessageBox.Show(MessageMustBeConnectedToOrganization,
+                       TitleNotConnected,
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                openConfiguration.Filter = "JSON (*.json)|*.json;";
+                openConfiguration.DefaultExt = "json";
+                openConfiguration.AddExtension = true;
+                openConfiguration.ShowDialog();
+            }
+        }
 
+        private void openConfiguration_FileOk(object sender, CancelEventArgs e)
+        {
+
+            string jsonString = File.ReadAllText(openConfiguration.FileName);
+            Configuration conf = JsonConvert.DeserializeObject<Configuration>(jsonString);
+
+            if (!conf.OrganizationID.Equals(ConnectionDetail.Organization))
+            {
+
+                MessageBox.Show(MessageWrongConnection,
+                    TitleWrongConnection,
+                     MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                SetConfiguration(conf);
+            }
+        }
+
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            saveConfiguration.Filter = "JSON (*.json)|*.json;";
+            saveConfiguration.DefaultExt = "json";
+            saveConfiguration.AddExtension = true;
+            saveConfiguration.ShowDialog();
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void saveConfiguration_FileOk(object sender, CancelEventArgs e)
+        {
+            Configuration filterData = ConfigureFilterData();
+            JsonSerializer serializer = new JsonSerializer();
+            serializer.NullValueHandling = NullValueHandling.Ignore;
+            using (StreamWriter sw = new StreamWriter(saveConfiguration.FileName))
+            using (JsonWriter writer = new JsonTextWriter(sw))
+            {
+                serializer.Serialize(writer, ConfigureFilterData());
+            }
+        }
+
+
+
+        private void SetConfiguration(Configuration filterData)
+        {
+
+            ComboBoxEntities entity = cmbEntities.Items.OfType<ComboBoxEntities>().Where(x => x.LogicalName == filterData.EntityLogicalName).FirstOrDefault();
+            cmbEntities.SelectedItem = entity;
+
+
+            chkPersonalView.CheckedChanged -= ChkPersonalView_CheckedChanged;
+
+            if (filterData.FilterDataUsing != "View")
+            {
+                rdbFetchXml.Checked = true;
+                txtFetchXML.Text = filterData.FetchXML;
+            }
+            else
+            {
+                rdbView.Checked = true;
+
+               
+
+                chkPersonalView.Checked = filterData.ShowPersonalViews;
+            }
+
+            
+            FillComboBoxesFieldaAndViews(entity, filterData.ViewID, filterData.ListAttributes);
+            chkPersonalView.CheckedChanged += ChkPersonalView_CheckedChanged;
+
+            //Config Actions
+            if (filterData.SelectedActions != null && filterData.SelectedActions.Any())
+            {
+                
+                foreach (int action in filterData.SelectedActions)
+                {
+                    Operation opt = chkLstActions.Items.OfType<Operation>().Where(x => x.operationid == action).FirstOrDefault();
+                    int idx = chkLstActions.Items.IndexOf(opt);
+                    chkLstActions.SetItemChecked(idx, true);
+                }
+            }
+
+            //Config Operations
+            if (filterData.SelectedOperations != null && filterData.SelectedOperations.Any())
+            {
+                
+                foreach (int operation in filterData.SelectedOperations)
+                {
+                    Operation opt = chkLstOperations.Items.OfType<Operation>().Where(x => x.operationid == operation).FirstOrDefault();
+                    int idx = chkLstOperations.Items.IndexOf(opt);
+                    chkLstOperations.SetItemChecked(idx, true);
+                }
+            }
+
+            //Config Users
+            if (filterData.SelectedUsers != null)
+            {
+                lstViewUsers.ItemChecked -= lstViewUsers_ItemChecked;
+                foreach (ListViewItem itemUser in lstViewUsers.Items)
+                {
+                    itemUser.Checked = false;
+                }
+
+                foreach (Guid user in filterData.SelectedUsers)
+                {
+                    lstViewUsers.Items[user.ToString()].Checked = true;
+                }
+                lstViewUsers.ItemChecked += lstViewUsers_ItemChecked;
+
+                lsSelectedUsers = filterData.SelectedUsers;
+            }
+
+            if (filterData.DateFrom != null)
+            {
+                dtpDateFrom.Value = filterData.DateFrom.Value.Date;
+                dtpTimeFrom.Value = filterData.DateFrom.Value;
+            }
+
+            if (filterData.DateTo != null)
+            {
+                dtpDateTo.Value = filterData.DateTo.Value.Date;
+                dtpTimeTo.Value = filterData.DateTo.Value;
+            }
+
+
+
+
+
+
+
+
+
+
+
+            //for (int i = 0; i < chkLstActions.Items.Count; i++)
+            //{
+
+
+
+            //    if ((chkLstActions.Items[i] as Operation).operationid)
+            //    {
+
+            //    }
+
+
+            //}
+            return;
+            ClearDateAndTimeField(dtpDateFrom, dtpTimeFrom);
+            ClearDateAndTimeField(dtpDateTo, dtpTimeTo);
+
+            for (int i = 0; i < chkLstOperations.Items.Count; i++)
+            {
+                chkLstOperations.SetItemChecked(i, false);
+            }
+
+
+
+            foreach (ListViewItem item in lstAttributes.Items)
+            {
+                item.Checked = false;
+            }
+
+            foreach (ListViewItem item in lstViewUsers.Items)
+            {
+                item.Checked = false;
+            }
+
+
+        }
+
+        private void ChkPersonalView_CheckedChanged(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void CheckAttributes(List<string> lsAttributes)
+        {
+            //Config Attributes
+            //lstAttributes.ItemChecked -= lstAttributes_ItemChecked;
+            lstAttributes.ItemChecked += lstAttributes_ItemChecked;
+            foreach (ListViewItem itemField in lstAttributes.Items)
+            {
+                itemField.Checked = false;
+                SetListAttributesChecked(itemField);
+            }
+
+            foreach (string attribute in lsAttributes)
+            {
+                lstAttributes.Items[attribute].Checked = true;
+                SetListAttributesChecked(lstAttributes.Items[attribute]);
+            }
+
+            //
+        }
     }
 }

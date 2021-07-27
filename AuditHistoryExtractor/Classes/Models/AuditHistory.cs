@@ -17,6 +17,7 @@ namespace AuditHistoryExtractor.Classes
         public string OldValue { get; set; }
 
         public string NewValue { get; set; }
+            
 
         public DateTime CreatedOn { get; set; }
 
@@ -33,5 +34,10 @@ namespace AuditHistoryExtractor.Classes
         public string Operation { get; set; }
 
         public string Username { get; set; }
+
+
+        public Guid LookupOldValue { get; set; }
+
+        public Guid LookupNewValue { get; set; }
     }
 }

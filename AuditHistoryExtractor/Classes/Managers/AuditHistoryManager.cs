@@ -178,8 +178,15 @@ namespace AuditHistoryExtractor.AppCode
 
 
 
-                    bool isTypeOptionSet = attributeDetail.OldValue[attribute.Key] is OptionSetValue;
-                    bool isOldValueAnEntityReference = attributeDetail.OldValue[attribute.Key] is EntityReference;
+                    bool isTypeOptionSet = false;
+                    bool isOldValueAnEntityReference = false;
+
+
+                    isTypeOptionSet = attributeDetail.NewValue[attribute.Key] is OptionSetValue;
+                    isOldValueAnEntityReference = attributeDetail.NewValue[attribute.Key] is EntityReference;
+
+
+
 
                     if (isTypeOptionSet || isOldValueAnEntityReference)
                     {
@@ -200,9 +207,17 @@ namespace AuditHistoryExtractor.AppCode
 
                         if (isOldValueAnEntityReference)
                         {
+                            EntityReference oldRecord = null;
+                            EntityReference newRecord = null;
 
-                            EntityReference oldRecord = attributeDetail.OldValue[attribute.Key] as EntityReference;
-                            EntityReference newRecord = attributeDetail.NewValue[attribute.Key] as EntityReference;
+                            if (attributeDetail.OldValue.Contains(attribute.Key))
+                            {
+                                oldRecord = attributeDetail.OldValue[attribute.Key] as EntityReference;
+                                
+                            }
+
+                            newRecord = attributeDetail.NewValue[attribute.Key] as EntityReference;
+
                             auditHistoryOptLookup.OldValue = "(no value)";
                             auditHistoryOptLookup.NewValue = "(no value)";
                             auditHistoryOptLookup.AttributeName += "_id";
@@ -213,8 +228,16 @@ namespace AuditHistoryExtractor.AppCode
 
                         if (isTypeOptionSet)
                         {
-                            OptionSetValue oldRecord = (attributeDetail.OldValue[attribute.Key] as OptionSetValue);
-                            OptionSetValue newRecord = (attributeDetail.NewValue[attribute.Key] as OptionSetValue);
+                            OptionSetValue oldRecord = null;
+                            OptionSetValue newRecord = null;
+
+                            if (attributeDetail.OldValue.Contains(attribute.Key))
+                            {
+                                oldRecord = (attributeDetail.OldValue[attribute.Key] as OptionSetValue);
+                              
+                            }
+
+                            newRecord = (attributeDetail.NewValue[attribute.Key] as OptionSetValue);
                             auditHistoryOptLookup.OldValue = "(no value)";
                             auditHistoryOptLookup.NewValue = "(no value)";
                             auditHistoryOptLookup.AttributeName += "_value";

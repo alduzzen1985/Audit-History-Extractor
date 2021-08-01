@@ -984,6 +984,8 @@ namespace AuditHistoryExtractor
 
         private void SetListAttributesChecked(ListViewItem item)
         {
+       
+
             if (item.Checked)
             {
 
@@ -994,6 +996,7 @@ namespace AuditHistoryExtractor
                     AttributeType = item.SubItems[2].Text
                 });
 
+                
 
 
                 //listSelectedAttributes.Remove(e.Item)
